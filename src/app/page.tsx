@@ -2,7 +2,7 @@ import Hero from "@/assets/Hero";
 import Title from "@/components/landing/Title";
 import Navbar from "@/components/ui/Navbar";
 
-import { Flex, Spacer } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 export default function Home() {
   return (
@@ -11,20 +11,23 @@ export default function Home() {
         overflowY="hidden"
         flexDirection="column"
         backgroundColor="teal.50"
-        minHeight="100vh"
+
+        height="100vh"
+        width="100vw"
       >
         <Navbar />
         <Flex
-          paddingX="60"
+          paddingX="50"
           flexDirection="row"
-          minHeight="90vh"
-          minWidth="90vw"
+          flex='1'
+
         >
-          <Flex direction="column" justifyContent="center" maxWidth="50vw">
+          <Flex direction="column" width='80%' justifyContent="center">
             <Title />
           </Flex>
-          <Spacer />
+  
           <Hero />
+
         </Flex>
       </Flex>
     </>

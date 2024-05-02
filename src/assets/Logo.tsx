@@ -5,8 +5,8 @@ export default function Logo() {
 
             <Image
             src='/logo.png'
-            width='120'
-            height='120'
+            width='80'
+            height='80'
             alt='Logo of the application'
         />
 

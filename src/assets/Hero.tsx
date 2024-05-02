@@ -2,11 +2,14 @@ import Image from "next/image";
 
 export default function Hero() {
   return (
-    <Image
+    <div>
+      <Image
       src="/hero.png"
-      height="500"
-      width="700"
+      height="300"
+      width="300"
       alt="Hero image for the page"
+      layout="responsive"
     />
+    </div>
   );
 }

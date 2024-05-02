@@ -5,14 +5,13 @@ import Link from "next/link";
 export default function Navbar() {
   return (
     <Flex
+      height='10vh'
       flexDirection="row"
       alignItems="center"
-      minWidth="max-content"
-      gap="2"
       backgroundColor="teal.900"
     >
       <Link href="/">
-        <Box paddingLeft="10" paddingTop="4" paddingBottom="2">
+        <Box paddingLeft="10" paddingTop="2" paddingBottom="2">
           <Logo />
         </Box>
       </Link>
