@@ -1,5 +1,5 @@
 import Footer from "./Footer";
-import ContactInfo from "./ContactInfo";
+import ContactInfo from "../about-us/ContactInfo";
 export default function Sidebar() {
   return (
     <>

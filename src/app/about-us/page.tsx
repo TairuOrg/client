@@ -1,5 +1,4 @@
-import Header from "@/components/about-us/Header";
-import { Flex, Divider, Heading, Stack, Spacer } from "@chakra-ui/react";
+import { Flex, Heading, Stack } from "@chakra-ui/react";
 import Navbar from "@/components/ui/Navbar";
 import Sidebar from "@/components/ui/Sidebar";
 
@@ -50,13 +49,21 @@ export default function Page() {
             justifyContent="center"
             alignItems="center"
           >
-            <Stack  borderLeftWidth='3px' alignItems='center' borderColor='teal.900'  spacing='3em' direction="column" h="40%" px="10%">
-
+            <Stack
+              borderLeftWidth="3px"
+              alignItems="center"
+              borderColor="teal.900"
+              spacing="3em"
+              direction="column"
+              h="40%"
+              px="10%"
+            >
+              {/* Sidebar */}
               <Sidebar />
             </Stack>
           </Flex>
         </Flex>
-      </Flex> 
+      </Flex>
     </Flex>
   );
 }

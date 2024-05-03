@@ -12,7 +12,7 @@ export default function Navbar() {
     >
       <Link href="/">
         <Box paddingLeft="10" paddingTop="2" paddingBottom="2">
-          <Logo />
+          <Logo h={80} w={80}/>
         </Box>
       </Link>
       
