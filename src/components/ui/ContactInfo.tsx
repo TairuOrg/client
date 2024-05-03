@@ -1,6 +1,6 @@
 import { Heading, VStack, HStack, Text } from "@chakra-ui/react";
 import GithubLogo from "@/assets/GithubLogo";
-
+import Link from "next/link";
 export default function ContactInfo() {
   return (
     <VStack>
@@ -8,8 +8,11 @@ export default function ContactInfo() {
         Contact info
       </Heading>
       <HStack>
-      <GithubLogo />
-      <Text fontSize="2xl"> Github org </Text>
+        <GithubLogo />
+        <Text fontSize="2xl">
+          {" "}
+          <Link href="https://github.com/TairuOrg">Github org</Link>
+        </Text>
       </HStack>
     </VStack>
   );
