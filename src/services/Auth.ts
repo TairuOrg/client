@@ -1,6 +1,17 @@
-import { AuthData } from "@/lib/data";
+import { AuthData, AuthMessage } from "@/lib/data";
 
-export function login(user: AuthData): boolean {
+export function login(user: AuthData): AuthMessage {
     console.log(user);
-    return false
+    return {
+        title: "Inicio de sesión exitoso",
+        description: "¡Bienvenido!",
+        isError: false,
+        notificationStatus: "success",
+    }// returns true to simulate a failed login
 }
+
+export function logout(): boolean {
+    console.log("Logged out");
+    return true
+}
+

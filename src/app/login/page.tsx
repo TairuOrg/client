@@ -11,13 +11,19 @@ import {
   Button,
   VStack,
   HStack,
+  useDisclosure,
+  useToast
 } from "@chakra-ui/react";
 import Logo from "@/assets/Logo";
 import { useState } from "react";
 import { AuthData } from "@/lib/data";
-import { login } from "@/services/Auth";
-
+import { login } from "@/services/auth";
+import ResetPassword from "@/components/login/ResetPassword";
+import { useRouter } from "next/navigation";
 export default function Page() {
+  const toast = useToast();
+  const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const [authData, setAuthData] = useState<AuthData>({
     isAdmin: false,
@@ -38,6 +44,7 @@ export default function Page() {
 
   return (
     <>
+      <ResetPassword isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
       {/* This flex represents the whole page */}
       <Flex
         direction="row"
@@ -120,8 +127,19 @@ export default function Page() {
               <FormControl
                 onSubmit={(evt: React.FormEvent<HTMLDivElement>) => {
                   evt.preventDefault();
+                  const { isError, title, description, notificationStatus } =
+                    login(authData);
+                  toast({
+                    title,
+                    description,
+                    status: notificationStatus,
+                  });
+                  
+                  setIsInvalid(isError);
+                  if(!isError) {
+                    router.push('/dashboard')
+                  }
 
-                  setIsInvalid(login(authData));
                 }}
                 isRequired
                 isInvalid={isInvalid}
@@ -151,6 +169,7 @@ export default function Page() {
                     {authData.isAdmin && (
                       <HStack mt="4" justifyContent="flex-start">
                         <Button
+                          onClick={onOpen}
                           size="sm"
                           height="30"
                           bg="teal.100"
