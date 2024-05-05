@@ -66,14 +66,14 @@ export default function Page() {
               marginY="5%"
               height="100%"
               bgColor="teal.900"
-              width="90%"
+              width="80%"
               borderRadius="30"
               justifyContent="start"
               alignItems="center"
-              gap="2em"
+              gap="3em"
               paddingTop="25%"
             >
-              <Logo h={200} w={200} />
+              <Logo h={250} w={250} /> {/* Logo component */}
               <Heading color="teal.50" size="3xl">
                 Bienvenido
               </Heading>

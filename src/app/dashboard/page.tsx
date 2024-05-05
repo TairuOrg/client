@@ -8,7 +8,8 @@ import {
   HStack,
   Box,
 } from "@chakra-ui/react";
-import Exchange from "@/assets/Exchange";
+
+import { GoArrowSwitch } from "react-icons/go";
 
 export default function Home() {
   return (
@@ -58,7 +59,7 @@ export default function Home() {
                 {" "}
                 32.255,25 VES
               </Heading>
-              <Exchange />
+              <GoArrowSwitch />
               <Heading
                 fontSize="2xl"
                 fontWeight="regular"

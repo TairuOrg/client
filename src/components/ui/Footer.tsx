@@ -1,6 +1,8 @@
 import { VStack, Text, Heading, HStack } from "@chakra-ui/react";
 import ReactLogo from "@/assets/ReactLogo";
 import Link from "next/link";
+import { FaReact } from "react-icons/fa";
+import { VscHeart } from "react-icons/vsc";
 export default function Footer() {
   return (
     <VStack>
@@ -9,9 +11,9 @@ export default function Footer() {
       </Heading>
       <HStack>
         <Link href="https://react.dev?uwu=true">
-          <ReactLogo />
+          <FaReact size={45} />
         </Link>
-        <Text fontSize="4xl"> 🩵 </Text>
+        <VscHeart size={45} />
       </HStack>
     </VStack>
   );

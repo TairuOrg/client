@@ -1,5 +1,7 @@
 import { Heading, VStack, HStack, Text } from "@chakra-ui/react";
-import GithubLogo from "@/assets/GithubLogo";
+
+import { FaGithubSquare } from "react-icons/fa";
+
 import Link from "next/link";
 export default function ContactInfo() {
   return (
@@ -8,10 +10,10 @@ export default function ContactInfo() {
         Contact info
       </Heading>
       <HStack>
-        <GithubLogo />
+        <FaGithubSquare size={45} />
         <Text fontSize="2xl">
           {" "}
-          <Link href="https://github.com/TairuOrg">Github org</Link>
+          <Link href="https://github.com/TairuOrg"> Github org</Link>
         </Text>
       </HStack>
     </VStack>
