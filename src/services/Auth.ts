@@ -1,4 +1,4 @@
-import { AuthData, AuthMessage } from "@/lib/data";
+import { AuthData, AuthMessage } from "@/types";
 
 export function login(user: AuthData): AuthMessage {
     console.log(user);

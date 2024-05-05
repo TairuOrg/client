@@ -1,5 +1,4 @@
 import { VStack, Text, Heading, HStack } from "@chakra-ui/react";
-import ReactLogo from "@/assets/ReactLogo";
 import Link from "next/link";
 import { FaReact } from "react-icons/fa";
 import { VscHeart } from "react-icons/vsc";

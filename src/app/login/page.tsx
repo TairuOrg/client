@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 import Logo from "@/assets/Logo";
 import { useState } from "react";
-import { AuthData } from "@/lib/data";
+import { AuthData } from "@/types";
 import { login } from "@/services/auth";
 import ResetPassword from "@/components/login/ResetPassword";
 import { useRouter } from "next/navigation";

@@ -1,4 +1,4 @@
-import { AuthMessage } from "../lib/data";
+import { AuthMessage } from "../types";
 
 const URL = {
     email: "https://api.example.com/reset-password-email",
