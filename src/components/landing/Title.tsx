@@ -5,7 +5,7 @@ export default function Title() {
   return (
     <>
       <Heading
-        size={["sm", "2xl", "3xl", "4xl"]}
+        fontSize={{ base: "3xl", sm: "3xl", md: "4xl", lg: "5xl", xl: "6xl" }}
         color="teal.900"
         padding="4"
         style={{
@@ -16,24 +16,34 @@ export default function Title() {
         <Highlight
           query={["Tairu", "Crea,", "Negocio", "administra"]}
           styles={{
-            px: "8",
+            px: { base: "1", sm: "1", md: "2" },
             py: "0",
             color: "teal.900",
-            rounded: "25",
+            rounded: {base: "10", sm: "15", md:"25"},
             bg: "teal.100",
           }}
         >
-          {"crea, administra,\ny haz crecer tu negocio con Tairu"}
+          {"Crea, Administra,\ny haz crecer tu Negocio\n con Tairu"}
         </Highlight>
       </Heading>
 
-      <Flex flexDirection='row' alignItems='baseline'>
-        <Heading fontSize="3xl" fontWeight="bold" color="teal.900" padding="4" pr='0'>
+      <Box
+        display="flex"
+        flexDirection={{ base: "column", lg: "row" }}
+        alignItems="baseline"
+      >
+        <Heading
+          fontSize="3xl"
+          fontWeight="bold"
+          color="teal.900"
+          padding="4"
+          pr="0"
+        >
           Empieza ahora e
         </Heading>
 
         <LoginButton />
-      </Flex>
+      </Box>
     </>
   );
 }
