@@ -2,10 +2,20 @@
 import Card from "@/components/dashboard/Card";
 import IncomingBalance from "@/components/dashboard/IncomingBalance";
 import Summmary from "@/components/dashboard/Summary";
-
-import { Flex, VStack, Grid, GridItem, Heading, Box } from "@chakra-ui/react";
+import Logo from "@/assets/Logo";
+import Link from "next/link";
+import { Flex, VStack, Grid, GridItem, Heading, Box, Divider, Text, HStack } from "@chakra-ui/react";
 import { useCashierStore } from "@/store/useCashier";
 import { useStockStore } from "@/store/useStock";
+import { HiOutlineHome } from "react-icons/hi2";
+import { TbReportSearch } from "react-icons/tb";
+import { BsBox } from "react-icons/bs";
+import { FaRegCircleUser } from "react-icons/fa6";
+import { IoSettingsOutline, IoLogoReact } from "react-icons/io5";
+import { CiLogout } from "react-icons/ci";
+import { FaHeart } from "react-icons/fa";
+
+
 
 export default function Home() {
   const cashier = useCashierStore((state) => state);
@@ -20,8 +30,99 @@ export default function Home() {
         minW="400px"
         height="100%"
         minH="100vh"
+        gap={6}
+        px={"80px"}
+        alignItems={"flex-start"}
       >
-        <Heading>Left sidebar</Heading>
+        <Flex width="100%"paddingTop= "30px" justifyContent="center">
+          <Logo h={100} w={100} />
+          
+        </Flex>
+
+        <Divider
+        borderColor='teal.900' 
+        orientation="horizontal" 
+        marginTop="20px"
+        />
+          <Link href="/principal">
+              <HStack>
+              <HiOutlineHome size={25}/>
+                <Text>
+                  
+                  Principal
+                </Text>
+              </HStack>
+
+          </Link>
+          <Link href="/generar-reporte">
+              <HStack>
+              <TbReportSearch size={25} />
+                <Text>
+                  Generar Reporte
+                </Text>
+              </HStack>
+
+          </Link>
+      
+          <Link href="/inventario">
+              <HStack>
+              <BsBox size={25} />
+                <Text>
+                  Inventario
+                </Text>
+              </HStack>
+
+          </Link>
+          
+          <Link href="/perfil">
+              <HStack>
+              <FaRegCircleUser size={25} />
+                <Text>
+                  Perfil
+                </Text>
+              </HStack>
+
+          </Link>
+      
+
+          <Divider
+            borderColor='teal.900' 
+            orientation="horizontal" 
+            marginTop="20px"
+          />
+          <Link href="/configuración">
+              <HStack>
+              <IoSettingsOutline size={25} />
+                <Text>
+                  Configuración
+                </Text>
+              </HStack>
+
+          </Link>
+          <Link href="/cerrar-sesión">
+              <HStack>
+              <CiLogout size={25} />
+                <Text>
+                  Cerrar Sesión
+                </Text>
+              </HStack>
+
+          </Link>
+          
+          <Divider
+            borderColor='teal.900' 
+            orientation="horizontal" 
+            marginTop="20px"
+          />
+
+        <VStack alignItems='center' w='100%'>
+          <Text fontSize="lg" marginLeft="10px" cursor="pointer">Made with</Text>
+          <HStack>
+            <IoLogoReact size={25} />
+            <FaHeart size={25} />
+          </HStack>
+        </VStack>
+
       </VStack>
       {/* Middle panel*/}
       <Grid
