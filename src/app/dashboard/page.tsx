@@ -23,6 +23,7 @@ export default function Home() {
   const stock = useStockStore((state) => state);
 
   return (
+    
     <Flex
       direction={{ base: "column", lg: "row" }}
       height="100vh"
@@ -39,6 +40,8 @@ export default function Home() {
         
       >
         <Heading>Left sidebar</Heading>
+
+        
       </VStack>
 
       {/* Middle panel*/}
