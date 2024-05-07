@@ -3,17 +3,29 @@ import Card from "@/components/dashboard/Card";
 import IncomingBalance from "@/components/dashboard/IncomingBalance";
 import Summmary from "@/components/dashboard/Summary";
 
+import {
+  Flex,
+  VStack,
+  Heading,
+  Box,
+  useBreakpointValue,
+  Divider,
+  HStack,
+  Link,
+  Text,
+  Spacer,
+  Stack,
+} from "@chakra-ui/react";
 import { useCashierStore } from "@/store/useCashier";
 import { useStockStore } from "@/store/useStock";
-import { HiOutlineHome } from "react-icons/hi2";
-import { TbReportSearch } from "react-icons/tb";
+import Logo from "@/assets/Logo";
 import { BsBox } from "react-icons/bs";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { IoSettingsOutline, IoLogoReact } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { FaHeart } from "react-icons/fa";
-
-
+import { FaRegCircleUser } from "react-icons/fa6";
+import { HiOutlineHome } from "react-icons/hi";
+import { IoSettingsOutline, IoLogoReact } from "react-icons/io5";
+import { TbReportSearch } from "react-icons/tb";
 
 export default function Home() {
   const isMediumScreen = useBreakpointValue({
@@ -21,11 +33,15 @@ export default function Home() {
     md: true,
     lg: false,
   });
+  const isSmallScreen = useBreakpointValue({
+    base: true,
+    md: false,
+  });
+
   const cashier = useCashierStore((state) => state);
   const stock = useStockStore((state) => state);
 
   return (
-    
     <Flex
       direction={{ base: "column", lg: "row" }}
       height="100vh"
@@ -33,116 +49,169 @@ export default function Home() {
       overflowY={"auto"}
     >
       {/*Left panel which is sidepanel and menu */}
-      <VStack
+      <Stack
+        direction={{ base: "row", lg: "column" }}
         bgColor="teal.50"
-        width="20%"
-        minW="400px"
-        height="100%"
-        minH="100vh"
-        gap={6}
-        px={"80px"}
-        alignItems={"flex-start"}
-      >
-        <Flex width="100%"paddingTop= "30px" justifyContent="center">
-          <Logo h={100} w={100} />
-          
-        </Flex>
-
-        <Divider
-        borderColor='teal.900' 
-        orientation="horizontal" 
-        marginTop="20px"
-        />
-          <Link href="/principal">
-              <HStack>
-              <HiOutlineHome size={25}/>
-                <Text>
-                  
-                  Principal
-                </Text>
-              </HStack>
-
-          </Link>
-          <Link href="/generar-reporte">
-              <HStack>
-              <TbReportSearch size={25} />
-                <Text>
-                  Generar Reporte
-                </Text>
-              </HStack>
-
-          </Link>
-      
-          <Link href="/inventario">
-              <HStack>
-              <BsBox size={25} />
-                <Text>
-                  Inventario
-                </Text>
-              </HStack>
-
-          </Link>
-          
-          <Link href="/perfil">
-              <HStack>
-              <FaRegCircleUser size={25} />
-                <Text>
-                  Perfil
-                </Text>
-              </HStack>
-
-          </Link>
-      
-
-          <Divider
-            borderColor='teal.900' 
-            orientation="horizontal" 
-            marginTop="20px"
-          />
-          <Link href="/configuración">
-              <HStack>
-              <IoSettingsOutline size={25} />
-                <Text>
-                  Configuración
-                </Text>
-              </HStack>
-
-          </Link>
-          <Link href="/cerrar-sesión">
-              <HStack>
-              <CiLogout size={25} />
-                <Text>
-                  Cerrar Sesión
-                </Text>
-              </HStack>
-
-          </Link>
-          
-          <Divider
-            borderColor='teal.900' 
-            orientation="horizontal" 
-            marginTop="20px"
-          />
-
-        <VStack alignItems='center' w='100%'>
-          <Text fontSize="lg" marginLeft="10px" cursor="pointer">Made with</Text>
-          <HStack>
-            <IoLogoReact size={25} />
-            <FaHeart size={25} />
-          </HStack>
-        </VStack>
-
-
         w={{ base: "100%", lg: "20%" }}
-        h={{ base: "10vh", lg: "100%" }}
+        minH={{ base: "10vh", lg: "100%" }}
+        maxH={{ base: "10vh", lg: "100%" }}
         position={"fixed"}
         left={0}
-        
+        gap={{ base: 2, lg: 5 }}
+        px="60px"
+        alignItems={{ base: "center", lg: "start" }}
       >
-        <Heading>Left sidebar</Heading>
+        <Flex
+          width="100%"
+          pt={{ base: 0, lg: "5" }}
+          justifyContent="center"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <Logo h={100} w={100} />
+        </Flex>
 
+        {isMediumScreen ? null : (
+          <Divider
+            borderColor="teal.900"
+            orientation="horizontal"
+            marginTop="20px"
+          />
+        )}
+        <Link
+          href="/dashboard"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <HiOutlineHome size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Principal
+            </Text>
+          </HStack>
+        </Link>
+        <Link
+          href="/reports"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <TbReportSearch size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Reportes
+            </Text>
+          </HStack>
+        </Link>
 
-      </VStack>
+        <Link
+          href="/stock"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <BsBox size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Inventario
+            </Text>
+          </HStack>
+        </Link>
+        <Link
+          href="/cashier"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <BsBox size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Cajeros
+            </Text>
+          </HStack>
+        </Link>
+
+        <Link
+          href="/profile"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <FaRegCircleUser size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Perfil
+            </Text>
+          </HStack>
+        </Link>
+
+        {isMediumScreen ? null : (
+          <Divider
+            borderColor="teal.900"
+            orientation="horizontal"
+            marginTop="20px"
+          />
+        )}
+
+        <Link
+          href="/settings"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <IoSettingsOutline size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Configuración
+            </Text>
+          </HStack>
+        </Link>
+        <Link
+          href="/logout"
+          _hover={{ transform: "scale(1.05)" }}
+          transition="transform 0.3s ease-in-out"
+        >
+          <HStack>
+            <CiLogout size={30} />
+            <Text
+              hidden={isMediumScreen ? true : false}
+              fontSize={{ base: "2xl", lg: "2xl" }}
+            >
+              Cerrar Sesión
+            </Text>
+          </HStack>
+        </Link>
+        <Spacer />
+
+        {isMediumScreen ? null : (
+          <VStack alignItems="center" w="100%">
+            <Text
+              fontSize={{ base: "2xl", lg: "2xl" }}
+              marginLeft="10px"
+              cursor="pointer"
+            >
+              Made with
+            </Text>
+            <HStack>
+              <IoLogoReact size={30} />
+              <FaHeart size={30} />
+            </HStack>
+          </VStack>
+        )}
+      </Stack>
 
       {/* Middle panel*/}
       <Flex
