@@ -13,9 +13,10 @@ export default function Card({
       mx="5%"
       bg="teal.50"
       p="5"
-      maxH={"auto"}
+      h={"auto"}
+      minW={"auto"}
       maxW={{ sm: "100%", lg: w }}
-      gap="8"
+      gap="6"
       align="flex-start"
       justify="center"
       borderRadius="15"

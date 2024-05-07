@@ -39,3 +39,17 @@ export interface SummaryProps {
   data: Cashier | Stock;
   reloadContent: () => void;
 }
+
+export interface Notification {
+  id: number;
+  date: Date;
+  description: string;
+  isRead: boolean;
+  isIgnored: boolean;
+}
+export interface NotificationStore {
+  notifications: Notification[];
+  updateNotifications: () => void;
+  MarkAsRead: () => void;
+  MarkAsIgnored: () => void;
+}

@@ -3,7 +3,7 @@ import { Button, Heading, HStack, Spacer, Text } from "@chakra-ui/react";
 import { CiShoppingCart } from "react-icons/ci";
 import { IoReload } from "react-icons/io5";
 import { CgMoreR } from "react-icons/cg";
-import { FaCaravan } from "react-icons/fa";
+import { BsTruck } from "react-icons/bs";
 import { Cashier, Stock, SummaryProps } from "@/types";
 // TODO: REFACTOR ME
 export default function Summary({ type, data, reloadContent }: SummaryProps) {
@@ -13,7 +13,7 @@ export default function Summary({ type, data, reloadContent }: SummaryProps) {
     type === "cashier_stats" ? (
       <CiShoppingCart size={40} />
     ) : (
-      <FaCaravan size={40} />
+      <BsTruck size={40} />
     );
 
   let content_1, content_2;
