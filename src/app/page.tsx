@@ -18,13 +18,13 @@ export default function Home() {
         {/* Navbar goes on top of the page and takes approximately 10% of the whole horizontal viewport*/}
         <Navbar />
         <Flex paddingX="50" flexDirection="row" height="100%">
-          <Flex direction="column" width="60%" justifyContent="center">
+          <Flex  direction="column" marginLeft='30' minW='300' width={{sm:"400px", md: '60%', lg: '60%'}} justifyContent="center">
             <Title />
           </Flex>
 
-          <Flex direction='column' justifyContent='center' width='40%'>
-            <Hero />
-          </Flex>
+        <Flex direction='column' justifyContent='center' minW='300' width={{sm:"400px", md: '40%', lg: '40%'}} >
+          <Hero />
+        </Flex>
         </Flex>
       </Flex>
     </>

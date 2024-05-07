@@ -9,6 +9,7 @@ export default function Navbar() {
       flexDirection="row"
       alignItems="center"
       backgroundColor="teal.900"
+      minW={{ base: "700", md: "100vw", lg: "100vw", xl: "100vw" }}
     >
       <Link href="/">
         <Box paddingLeft="10" paddingTop="2" paddingBottom="2">
