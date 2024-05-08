@@ -1,5 +1,6 @@
-import { RiDeleteBin2Line } from "react-icons/ri";
+import { MdOutlineDeleteOutline } from "react-icons/md";
 import { LuCopyCheck } from "react-icons/lu";
+import { LuCopy } from "react-icons/lu";
 import { IoReload } from "react-icons/io5";
 import { useNotificationStore } from "@/store/useNotification";
 import { NotificationStore} from "@/types";
@@ -17,6 +18,8 @@ import { useEffect, useState } from "react";
 export default function Notification() {
   const store: NotificationStore = useNotificationStore((state) => state);
   const [isReloaded, setIsReloaded] = useState(false);
+  const [isRead, setIsRead] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
     store.updateNotifications();
@@ -53,16 +56,31 @@ export default function Notification() {
                   key={notification.id}
                   bg={notification.isRead ? "teal.50" : "transparent"}
                 >
-                  <VStack>
-                    <Text>Fecha: {notification.date.toString()}</Text>
-                    <Text> Mensaje: {notification.description}</Text>
-                  </VStack>
+                <HStack alignItems="center"> {/* Utiliza HStack para colocar los elementos en una fila */}
+                  <Text>
+                    <strong>Fecha:</strong> {notification.date.toString()}
+                  </Text>
+                  <Button
+                    bg="transparent"
+                    onClick={() => setIsRead(!isRead)}
+                  >
+                    {notification.isRead ? < LuCopyCheck size={25} /> : <LuCopy size={25} />}
+                  </Button>
+                </HStack>
+                <VStack>
+                  <Text>
+                  <strong>Mensaje:</strong> {notification.description}
+                  </Text>
+                </VStack>
                 </Card>
               )
             )}
         </VStack>
-        <Spacer />
-        <Heading>eliminar</Heading>
+        <HStack alignItems="flex-start" mr="80">
+          <Button bg="transparent" onClick={() => setIsDelete(!isDelete)}>
+            <MdOutlineDeleteOutline size={40}/>
+          </Button>
+        </HStack>
       </VStack>
     </VStack>
   );
