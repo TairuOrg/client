@@ -10,8 +10,10 @@ import { User } from "@/types";
 
 export default function SummaryPanel() {
   // if the user gets to this page, we're sure they are logged in, hence we can safely parse the user from localStorage
-  const {fullname} = JSON.parse(localStorage.getItem("user") as string) as User;
-  
+  // It will load the first time from the server, that's why the error is being thrown
+  // We can safely ignore it since the interface is later hydrated with the data from the server
+ const {fullname} = JSON.parse(localStorage.getItem('user') as string ) as User;
+  console.log('dadasd ' + fullname)
   const cashier = useCashierStore((state) => state);
   const stock = useStockStore((state) => state);
   return (
@@ -24,7 +26,7 @@ export default function SummaryPanel() {
     >
       <Box p="4" display="flex" h="auto">
         <Heading fontWeight="regular" fontSize={"4xl"}>
-          <strong>Hola!</strong>, {fullname} Bienvenido/a
+          <strong>Hola!</strong>, {'a'} Bienvenido/a
         </Heading>
       </Box>
 

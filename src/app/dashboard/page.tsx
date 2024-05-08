@@ -1,4 +1,3 @@
-"use client";
 import { Flex } from "@chakra-ui/react";
 
 import SideMenu from "@/components/dashboard/SideMenu";

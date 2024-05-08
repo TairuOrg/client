@@ -1,3 +1,4 @@
+'use client'
 import Logo from "@/assets/Logo";
 import {
   Stack,

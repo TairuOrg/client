@@ -1,3 +1,4 @@
+'use client'
 import { MdOutlineDeleteOutline } from "react-icons/md";
 import { LuCopyCheck } from "react-icons/lu";
 import { LuCopy } from "react-icons/lu";
@@ -62,7 +63,7 @@ export default function Notification() {
                   </Text>
                   <Button
                     bg="transparent"
-                    onClick={() => setIsRead(!isRead)}
+                    onClick={() => store.MarkAsRead(notification.id)}
                   >
                     {notification.isRead ? < LuCopyCheck size={25} /> : <LuCopy size={25} />}
                   </Button>
@@ -76,9 +77,10 @@ export default function Notification() {
               )
             )}
         </VStack>
-        <HStack alignItems="flex-start" mr="80">
-          <Button bg="transparent" onClick={() => setIsDelete(!isDelete)}>
-            <MdOutlineDeleteOutline size={40}/>
+        <Spacer />
+        <HStack alignItems="flex-start" mr="80" h={'40px'}>
+          <Button bg="transparent" onClick={() => store.MarkAsIgnored()}>
+            <MdOutlineDeleteOutline size={35}/>
           </Button>
         </HStack>
       </VStack>
