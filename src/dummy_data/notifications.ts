@@ -30,7 +30,7 @@ export const notifications: Notification[] = [
     date: new Date("2024-05-11T00:00:00.000Z"),
     description:
       "A new report has been issued by another admin. Please review it at your earliest convenience.",
-    isRead: false,
+    isRead: true,
     isIgnored: false,
   },
 ];

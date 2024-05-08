@@ -5,7 +5,8 @@ export const users: User[] = [
     id: 1,
     fullname: "Arlina Tuny",
     email: "atuny0@sohu.com",
-    password: "125",
+    password:
+      "0f8ef3377b30fc47f96b48247f463a726a802f62f3faa03d56403751d2f66c67",
     isAdmin: false,
   },
   {
@@ -27,7 +28,6 @@ export const findCashier = (user: AuthData): AuthResponse => {
   const user_found: User | undefined = users.find(
     (u) => u.email === user.email && u.password === user.password
   );
-  user_found && localStorage.setItem("user", JSON.stringify(user_found));
 
   return {
     error: !user_found,

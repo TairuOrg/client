@@ -2,16 +2,18 @@ import { VStack } from "@chakra-ui/react";
 
 export default function Card({
   w,
+  bg = "teal.50",
   children,
 }: {
   w: string;
+  bg?: string;
   children: React.ReactNode;
 }) {
   return (
     <VStack
       boxSizing="content-box"
       mx="5%"
-      bg="teal.50"
+      bg={bg}
       p="5"
       h={"auto"}
       minW={"auto"}

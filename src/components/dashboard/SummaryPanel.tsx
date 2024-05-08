@@ -1,3 +1,4 @@
+'use client'
 import { Flex, Heading, Box } from "@chakra-ui/react";
 import Card from "./Card";
 import IncomingBalance from "./IncomingBalance";

@@ -9,6 +9,7 @@ import {
   Heading,
   HStack,
   Button,
+  Spacer,
 } from "@chakra-ui/react";
 import Card from "./Card";
 import { useEffect, useState } from "react";
@@ -19,11 +20,11 @@ export default function Notification() {
 
   useEffect(() => {
     store.updateNotifications();
-    console.log('reloadddd')
+    console.log("reloadddd");
   }, [isReloaded]);
 
   return (
-    <VStack direction="column" w="30%" >
+    <VStack direction="column" w="30%">
       {/* Flex content */}
       <VStack
         py={4}
@@ -36,23 +37,32 @@ export default function Notification() {
         m="auto"
         rounded="15"
         alignItems="center"
-        overflow={"auto"}
       >
-        <HStack w="100%" justify={"center"} gap="10">
-          <Heading>Notificaciones</Heading>
-          <Button bg="transparent" onClick={()=> setIsReloaded(!isReloaded)}>
-            <IoReload size={25} />
-          </Button>
-        </HStack>
-        {store.notifications.length > 0 &&
-          store.notifications.map((notification) => (
-            <Card w="100%" key={notification.id}>
-              <VStack>
-                <Text>Fecha: {notification.date.toString()}</Text>
-                <Text> Mensaje: {notification.description}</Text>
-              </VStack>
-            </Card>
-          ))}
+        <VStack overflow={"auto"}>
+          <HStack w="100%" justify={"center"} gap="10">
+            <Heading>Notificaciones</Heading>
+            <Button bg="transparent" onClick={() => setIsReloaded(!isReloaded)}>
+              <IoReload size={25} />
+            </Button>
+          </HStack>
+          {store.notifications.length > 0 &&
+            store.notifications.map((notification) =>
+              notification.isIgnored ? null : (
+                <Card
+                  w="100%"
+                  key={notification.id}
+                  bg={notification.isRead ? "teal.50" : "transparent"}
+                >
+                  <VStack>
+                    <Text>Fecha: {notification.date.toString()}</Text>
+                    <Text> Mensaje: {notification.description}</Text>
+                  </VStack>
+                </Card>
+              )
+            )}
+        </VStack>
+        <Spacer />
+        <Heading>eliminar</Heading>
       </VStack>
     </VStack>
   );

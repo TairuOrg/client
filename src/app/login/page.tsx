@@ -20,6 +20,8 @@ import { AuthData } from "@/types";
 import { login } from "@/services/auth";
 import ResetPassword from "@/components/login/ResetPassword";
 import { useRouter } from "next/navigation";
+import Cookie from "js-cookie";
+
 export default function Page() {
   const toast = useToast();
   const router = useRouter();
@@ -136,10 +138,8 @@ export default function Page() {
                   });
                   
                   setIsInvalid(isError);
-                  if(!isError) {
-                    router.push('/dashboard')
-                  }
 
+                  !isError && router.push("/dashboard");
                 }}
                 isRequired
                 isInvalid={isInvalid}
