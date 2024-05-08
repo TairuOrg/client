@@ -1,17 +1,14 @@
-import { AuthData, AuthMessage } from "@/types";
+import { AuthData, AuthMessage, User } from "@/types";
+import { findAdmin, findCashier } from "@/dummy_data/users";
 
 export function login(user: AuthData): AuthMessage {
-    console.log(user);
-    return {
-        title: "Inicio de sesión exitoso",
-        description: "¡Bienvenido!",
-        isError: false,
-        notificationStatus: "success",
-    }// returns true to simulate a failed login
+  const URL_LOGIN = "idk";
+
+  const { error, body } = user.isAdmin ? findAdmin(user) : findCashier(user);
+  return { ...body.message, isError: error };
 }
 
 export function logout(): boolean {
-    console.log("Logged out");
-    return true
+  console.log("Logged out");
+  return true;
 }
-

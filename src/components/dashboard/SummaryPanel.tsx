@@ -4,8 +4,13 @@ import IncomingBalance from "./IncomingBalance";
 import Summary from "./Summary";
 import { useCashierStore } from "@/store/useCashier";
 import { useStockStore } from "@/store/useStock";
+import { User } from "@/types";
+
 
 export default function SummaryPanel() {
+  // if the user gets to this page, we're sure they are logged in, hence we can safely parse the user from localStorage
+  const {fullname} = JSON.parse(localStorage.getItem("user") as string) as User;
+  
   const cashier = useCashierStore((state) => state);
   const stock = useStockStore((state) => state);
   return (
@@ -18,7 +23,7 @@ export default function SummaryPanel() {
     >
       <Box p="4" display="flex" h="auto">
         <Heading fontWeight="regular" fontSize={"4xl"}>
-          <strong>Hola!</strong>,[usuario] Bienvenido
+          <strong>Hola!</strong>, {fullname} Bienvenido/a
         </Heading>
       </Box>
 
