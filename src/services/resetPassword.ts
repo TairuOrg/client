@@ -1,9 +1,9 @@
 import { AuthMessage } from "../types";
 
 const URL = {
-    email: "https://api.example.com/reset-password-email",
-    PIN: "https://api.example.com/reset-password-PIN",
-    newPassword: "https://api.example.com/reset-password-new-password",
+  email: "https://api.example.com/reset-password-email",
+  PIN: "https://api.example.com/reset-password-PIN",
+  newPassword: "https://api.example.com/reset-password-new-password",
 };
 
 export function checkAdminEmail(email: string): AuthMessage {
@@ -17,21 +17,22 @@ export function checkAdminEmail(email: string): AuthMessage {
   };
 }
 
-export function checkPINCode (PIN: string): AuthMessage  {
-    // fetch the PIN code from the database
-    return {
-        title: "PIN correcto",
-        description: "El código PIN es correcto. Ahora puedes ingresar tu nueva contraseña.",
-        notificationStatus: "success",
-        isError: false,
-    };
+export function checkPINCode(PIN: string): AuthMessage {
+  // fetch the PIN code from the database
+  return {
+    title: "PIN correcto",
+    description:
+      "El código PIN es correcto. Ahora puedes ingresar tu nueva contraseña.",
+    notificationStatus: "success",
+    isError: false,
+  };
 }
 export function saveNewPassword(newPassword: string): AuthMessage {
-    // save the new password in the database
-    return {
-        title: "Contraseña actualizada",
-        description: "Tu contraseña ha sido actualizada correctamente.",
-        notificationStatus: "success",
-        isError: false,
-    };
+  // save the new password in the database
+  return {
+    title: "Contraseña actualizada",
+    description: "Tu contraseña ha sido actualizada correctamente.",
+    notificationStatus: "success",
+    isError: false,
+  };
 }
