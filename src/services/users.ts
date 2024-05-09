@@ -1,30 +1,17 @@
+// services/auth.ts
 import { AuthData, AuthResponse, User } from "@/types";
 
-export const users: User[] = [
-  {
-    id: 1,
-    fullname: "Arlina Tuny",
-    email: "atuny0@sohu.com",
-    password:
-      "0f8ef3377b30fc47f96b48247f463a726a802f62f3faa03d56403751d2f66c67",
-    isAdmin: false,
-  },
-  {
-    id: 2,
-    fullname: "Kevan Tregian",
-    email: "rshawe2@51.la",
-    isAdmin: false,
-    password: "t8BQ5d00",
-  },
-  {
-    id: 3,
-    fullname: "Rozalin Shawe",
-    email: "yraigatt3@nature.com",
-    isAdmin: true,
-    password: "1234",
-  },
-];
-export const findCashier = (user: AuthData): AuthResponse => {
+const fetchUsers = async (): Promise<User[]> => {
+  const response = await fetch("/api/users");
+  console.log(await response.json())
+  if (!response.ok) {
+    throw new Error("Failed to fetch user data");
+  }
+  return response.json();
+};
+
+export const findCashier = async (user: AuthData): Promise<AuthResponse> => {
+  const users = await fetchUsers();
   const user_found: User | undefined = users.find(
     (u) => u.email === user.email && u.password === user.password
   );
@@ -44,8 +31,8 @@ export const findCashier = (user: AuthData): AuthResponse => {
   };
 };
 
-// do the same
-export const findAdmin = (user: AuthData): AuthResponse => {
+export const findAdmin = async (user: AuthData): Promise<AuthResponse> => {
+  const users = await fetchUsers();
   const user_found: User | undefined = users.find(
     (u) => u.email === user.email && u.password === user.password && u.isAdmin
   );

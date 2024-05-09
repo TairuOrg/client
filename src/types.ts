@@ -76,3 +76,9 @@ export interface NotificationStore {
   MarkAsRead: (id: number) => Promise<void>;
   MarkAsIgnored: () => Promise<void>;
 }
+
+// All the routes that are going to be used in the application, must be defined with this prefix to determine the role
+export const PrefixRoutes = {
+  ADMIN: "/admin",
+  CASHIER: "/cashier",
+} as const;

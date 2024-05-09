@@ -6,7 +6,8 @@ import Summary from "./Summary";
 import { useCashierStore } from "@/store/useCashier";
 import { useStockStore } from "@/store/useStock";
 import { User } from "@/types";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import CardSkeleton from "../ui/CardSkeleton";
 
 /**
  * Renders the summary panel component.
@@ -40,28 +41,34 @@ export default function SummaryPanel() {
         </Heading>
       </Box>
 
-      <Card w={"80%"}>
-        <IncomingBalance />
-      </Card>
+      <Suspense fallback={<CardSkeleton />}>
+        <Card w={"80%"}>
+          <IncomingBalance />
+        </Card>
+      </Suspense>
 
-      <Card w={"50%"}>
-        {/**
-         * Read the Summary component
-         */}
-        <Summary
-          type={"cashier_stats"}
-          data={cashier}
-          reloadContent={cashier.updateCashierStatus}
-        />
-      </Card>
+      <Suspense fallback={<CardSkeleton />} >
+        <Card w={"50%"}>
+          {/**
+           * Read the Summary component
+           */}
+          <Summary
+            type={"cashier_stats"}
+            data={cashier}
+            reloadContent={cashier.updateCashierStatus}
+          />
+        </Card>
+      </Suspense>
 
-      <Card w={"50%"}>
-        <Summary
-          type={"stock_stats"}
-          data={stock}
-          reloadContent={stock.updateStockStatus}
-        />
-      </Card>
+      <Suspense fallback={<CardSkeleton />} >
+        <Card w={"50%"}>
+          <Summary
+            type={"stock_stats"}
+            data={stock}
+            reloadContent={stock.updateStockStatus}
+          />
+        </Card>
+      </Suspense>
     </Flex>
   );
 }

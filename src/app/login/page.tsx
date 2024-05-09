@@ -12,15 +12,14 @@ import {
   VStack,
   HStack,
   useDisclosure,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import Logo from "@/assets/Logo";
 import { useState } from "react";
-import { AuthData } from "@/types";
-import { login } from "@/services/auth";
+import { AuthData, PrefixRoutes, AuthResponse } from "@/types";
 import ResetPassword from "@/components/login/ResetPassword";
 import { useRouter } from "next/navigation";
-import Cookie from "js-cookie";
+import prepareAuth from "@/utils/prepareAuth";
 
 export default function Page() {
   const toast = useToast();
@@ -127,19 +126,37 @@ export default function Page() {
               </HStack>
 
               <FormControl
-                onSubmit={(evt: React.FormEvent<HTMLDivElement>) => {
+                onSubmit={async (evt: React.FormEvent<HTMLDivElement>) => {
                   evt.preventDefault();
-                  const { isError, title, description, notificationStatus } =
-                    login(authData);
+                  // Hash the password
+                  const preparedAuthData = prepareAuth(authData);
+                  // Send a post to the server and wait for its response, the server will validate the user credentials
+                  const { error, body }: AuthResponse = await (
+                    await fetch("/api/login", {
+                      method: "POST",
+                      headers: {
+                        "Content-Type": "application/json",
+                      },
+                      body: JSON.stringify(preparedAuthData),
+                    })
+                  ).json();
+
+                  const { title, description, notificationStatus } =
+                    body.message;
+
                   toast({
                     title,
                     description,
                     status: notificationStatus,
                   });
-                  
-                  setIsInvalid(isError);
 
-                  !isError && router.push("/dashboard");
+                  setIsInvalid(error);
+
+                  if (!error) {
+                    authData.isAdmin
+                      ? router.push(`${PrefixRoutes.ADMIN}/dashboard`)
+                      : router.push(`${PrefixRoutes.CASHIER}/dashboard`);
+                  }
                 }}
                 isRequired
                 isInvalid={isInvalid}
