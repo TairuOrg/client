@@ -19,8 +19,6 @@ import { useEffect, useState } from "react";
 export default function Notification() {
   const store: NotificationStore = useNotificationStore((state) => state);
   const [isReloaded, setIsReloaded] = useState(false);
-  const [isRead, setIsRead] = useState(false);
-  const [isDelete, setIsDelete] = useState(false);
 
   useEffect(() => {
     store.updateNotifications();

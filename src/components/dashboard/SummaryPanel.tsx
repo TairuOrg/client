@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { Flex, Heading, Box } from "@chakra-ui/react";
 import Card from "./Card";
 import IncomingBalance from "./IncomingBalance";
@@ -6,16 +6,26 @@ import Summary from "./Summary";
 import { useCashierStore } from "@/store/useCashier";
 import { useStockStore } from "@/store/useStock";
 import { User } from "@/types";
+import { useEffect, useState } from "react";
 
-
+/**
+ * Renders the summary panel component.
+ *
+ * @returns The summary panel component.
+ */
 export default function SummaryPanel() {
-  // if the user gets to this page, we're sure they are logged in, hence we can safely parse the user from localStorage
-  // It will load the first time from the server, that's why the error is being thrown
-  // We can safely ignore it since the interface is later hydrated with the data from the server
- const {fullname} = JSON.parse(localStorage.getItem('user') as string ) as User;
-  console.log('dadasd ' + fullname)
   const cashier = useCashierStore((state) => state);
   const stock = useStockStore((state) => state);
+  const [value, setValue] = useState<User | undefined>(undefined);
+
+  // Retrieve the user from local storage once the component mounts and set the value
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+
+    // If the user exists, parse the user and set the value
+    user && setValue(JSON.parse(user) as User);
+  }, []);
+
   return (
     <Flex
       direction={"column"}
@@ -26,7 +36,7 @@ export default function SummaryPanel() {
     >
       <Box p="4" display="flex" h="auto">
         <Heading fontWeight="regular" fontSize={"4xl"}>
-          <strong>Hola!</strong>, {'a'} Bienvenido/a
+          <strong>Hola</strong>, {value?.fullname} Bienvenido/a
         </Heading>
       </Box>
 
