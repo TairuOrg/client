@@ -72,7 +72,7 @@ export interface Notification {
 }
 export interface NotificationStore {
   notifications: Notification[];
-  updateNotifications: () => void;
-  MarkAsRead: (id: number) => void;
-  MarkAsIgnored: () => void;
+  updateNotifications:  () => Promise<void>;
+  MarkAsRead: (id: number) => Promise<void>;
+  MarkAsIgnored: () => Promise<void>;
 }

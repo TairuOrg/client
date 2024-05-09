@@ -4,11 +4,25 @@ import { notifications as nt } from "@/dummy_data/notifications";
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
   notifications: [],
-  updateNotifications: () => {
+  updateNotifications: async () => { // Make function async
+    // Simulate asynchronous data fetching
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 7000);
+    });
+
     set({ notifications: nt });
   },
-  MarkAsRead: (id: number) => {
-    // Implementar lógica para marcar notificaciones como leídas
+  MarkAsRead: async (id: number) => { // Make function async
+    // Simulate asynchronous update
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    });
+
+    // Implement logic to mark notification as read
     set((state) => ({
       notifications: state.notifications.map((notification) =>
         notification.id === id
@@ -16,16 +30,23 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
           : notification
       )
     }));
-    // Comunicar al servidor que la notificación ha sido leída
+    // Communicate with the server that the notification has been read
   },
-  MarkAsIgnored: () => {
-    // Implementar lógica para marcar notificaciones como ignoradas
-    // todas aquellas notificaciones que estén marcadas como leídas
+  MarkAsIgnored: async () => { // Make function async
+    // Simulate asynchronous update
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 500);
+    });
+
+    // Implement logic to mark notifications as ignored
+    // all those notifications that are marked as read
     set((state) => ({
       notifications: state.notifications.map((notification) =>
         notification.isRead ? { ...notification, isIgnored: true } : notification
       )
     }));
-    // Comunicar al servidor que la notificación ha sido ignorada
+    // Communicate with the server that the notification has been ignored
   },
 }));
