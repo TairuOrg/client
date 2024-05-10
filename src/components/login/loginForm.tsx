@@ -24,16 +24,10 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [authData, setAuthData] = useState<AuthData>({
-    isAdmin: isAdmin,
     email: "",
     password: "",
   });
-  useEffect(() => {
-    setAuthData((prevAuthData) => ({
-      ...prevAuthData,
-      isAdmin: isAdmin,
-    }));
-  }, [isAdmin]);
+
   const updateEmail = (evt: React.ChangeEvent<HTMLInputElement>) => {
     setAuthData({ ...authData, email: evt.target.value });
   };
@@ -82,11 +76,10 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
 
               setIsInvalid(error);
 
-              if (!error) {
-                authData.isAdmin
+              !error && // if no error occured, redirect to dashboard page depending on the user role
+                (isAdmin
                   ? router.push(`${PrefixRoutes.ADMIN}/dashboard`)
-                  : router.push(`${PrefixRoutes.CASHIER}/dashboard`);
-              }
+                  : router.push(`${PrefixRoutes.CASHIER}/dashboard`));
             }}
             isRequired
             isInvalid={isInvalid}
@@ -113,7 +106,7 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                   onChange={(evt) => updatePassword(evt)}
                 />
 
-                {authData.isAdmin && (
+                {isAdmin && (
                   <HStack mt="4" justifyContent="flex-start">
                     <Button
                       onClick={onOpen}

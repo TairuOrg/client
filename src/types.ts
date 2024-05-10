@@ -4,7 +4,6 @@
 // AuthData is an interface that defines the structure of the user data that is going to be sent to the server for authentication.
 
 export interface AuthData {
-  isAdmin: boolean;
   email: string;
   password: string;
 }
