@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Logo from "@/assets/Logo";
 import {
   Stack,
@@ -168,7 +168,10 @@ export default function SideMenu() {
         </HStack>
       </Link>
       <Link
-        href="/logout"
+        onClick={() => {
+          localStorage.removeItem("user");
+        }}
+        href="/api/logout"
         _hover={{ transform: "scale(1.05)" }}
         transition="transform 0.3s ease-in-out"
       >
@@ -186,11 +189,7 @@ export default function SideMenu() {
 
       {isMediumScreen ? null : (
         <VStack alignItems="center" w="100%">
-          <Text
-            fontSize={{ base: "2xl", lg: "2xl" }}
-            marginLeft="10px"
-            cursor="pointer"
-          >
+          <Text fontSize={{ base: "2xl", lg: "2xl" }} marginLeft="10px">
             Made with
           </Text>
           <HStack>
