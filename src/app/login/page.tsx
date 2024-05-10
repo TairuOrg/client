@@ -10,7 +10,6 @@ export default function Page() {
   const handleCheckbox = () => {
     setIsAdmin(!isAdmin);
   };
-  console.log(isAdmin)
   return (
     <>
       {/* This flex represents the whole page */}

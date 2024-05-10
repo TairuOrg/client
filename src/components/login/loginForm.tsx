@@ -1,5 +1,5 @@
 "use client";
-import { AuthData, AuthResponse, PrefixRoutes } from "@/types";
+import { AuthData, AuthResponse, PrefixRoutes, FormData } from "@/types";
 import prepareAuth from "@/utils/prepareAuth";
 import {
   Button,
@@ -15,24 +15,26 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ResetPassword from "./ResetPassword";
+
+const LOGIN_URL = "/api/login" as const;
 
 export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
   const toast = useToast();
   const router = useRouter();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [authData, setAuthData] = useState<AuthData>({
+  const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
 
   const updateEmail = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setAuthData({ ...authData, email: evt.target.value });
+    setFormData({ ...formData, email: evt.target.value });
   };
   const updatePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setAuthData({ ...authData, password: evt.target.value });
+    setFormData({ ...formData, password: evt.target.value });
   };
   return (
     <>
@@ -54,18 +56,24 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
             onSubmit={async (evt: React.FormEvent<HTMLDivElement>) => {
               evt.preventDefault();
               // Hash the password
-              const preparedAuthData = prepareAuth(authData);
+              const preparedFormData: FormData = prepareAuth(formData);
               // Send a post to the server and wait for its response, the server will validate the user credentials
+
+              // Prepare the data to be sent to the server
+              const authData: AuthData = {
+                formData: preparedFormData,
+                isAdmin,
+              };
+
               const { error, body }: AuthResponse = await (
-                await fetch("/api/login", {
+                await fetch(LOGIN_URL, {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
                   },
-                  body: JSON.stringify(preparedAuthData),
+                  body: JSON.stringify(authData),
                 })
               ).json();
-
               const { title, description, notificationStatus } = body.message;
 
               toast({

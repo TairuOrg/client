@@ -1,32 +1,54 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { PrefixRoutes } from "./types";
+import { decrypt } from "./app/lib/session";
+
+const routes = {
+  admin: [
+    "/admin",
+    "/admin/dashboard",
+    "/admin/settings",
+    "/admin/cashier",
+    "/admin/stats",
+    "/admin/stock",
+  ],
+  cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
+  public: ["/login", "/about-us", "/unauthorized", "/api/login"],
+};
 
 export default async function handler(req: NextRequest) {
-  const isLoggedIn = cookies().has('session');
-  const isAdmin = isLoggedIn ? JSON.parse(cookies().get('session')?.value as string).isAdmin : false;
-  const isCashier = isLoggedIn ? JSON.parse(cookies().get('session')?.value as string).isCashier : false;
-  
-  console.log("Is admin:", isAdmin);
-  console.log("Is cashier:", isCashier);
+  const cookie = cookies().get("SESSION")?.value;
+  // Decrypt the session
+  const session = await decrypt(cookie);
 
-  const isAdminRoute = req.nextUrl.pathname.startsWith(PrefixRoutes.ADMIN);
-  const isCashierRoute = req.nextUrl.pathname.startsWith(PrefixRoutes.CASHIER);
+  // Get the path of the request
+  const path = req.nextUrl.pathname;
+  // Determine if the route is protected for admin, cashier or public
+  const isProtectedRouteAdmin = routes.admin.includes(path);
+  const isProtectedRouteCashier = routes.cashier.includes(path);
+  const isPublicRoute = routes.public.includes(path);
 
-  if (isLoggedIn) {
-    if ((isAdmin && isAdminRoute) || (isCashier && isCashierRoute)) {
-      // User is logged in and has the appropriate role
-      return NextResponse.rewrite(new URL(req.nextUrl));
-    } else {
-      // User is logged in but does not have access to the route
-      return NextResponse.redirect(new URL("/unauthorized", req.nextUrl)); // Redirect to unauthorized page
-    }
-  } else {
-    // User is not logged in
-    return NextResponse.redirect(new URL("/login", req.nextUrl)); // Redirect to login page
+
+  if (isPublicRoute) {
+    return NextResponse.next();
   }
-}
+  if (!session && !isPublicRoute)
+    return Response.redirect(new URL("/login", req.nextUrl));
 
+  if (isProtectedRouteAdmin && session?.userRole !== "admin") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+  if (isProtectedRouteCashier && session?.userRole !== "cashier") {
+    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  }
+
+  // redirect anyways
+  return NextResponse.next();
+}
 export const config = {
-  matcher: ["/dashboard/:path", "/admin/:path", "/cashier/:path", "/settings/:path"],
+  matcher: [
+    "/((?!api|_next/static|_next/image|.*\\.png$).*)",
+    "/favicon.ico",
+    "/api/login",
+  ],
 };

@@ -1,17 +1,21 @@
 // Definition of types used in the application
-
 // Path: src/types.ts
-// AuthData is an interface that defines the structure of the user data that is going to be sent to the server for authentication.
 
-export interface AuthData {
+// FormData is an interface that defines the structure of the form data that is going to be sent to the server for authentication.
+export interface FormData {
   email: string;
   password: string;
+}
+
+// AuthData is an interface that defines the structure of the user data that is going to be sent to the server for authentication.
+export interface AuthData {
+  formData: FormData;
+  isAdmin: boolean;
 }
 // User is an interface that defines the structure of the user data that is going to be stored in the application.
 export interface User {
   id: number;
   email: string;
-  password: string;
   fullname: string;
   isAdmin: boolean;
 }

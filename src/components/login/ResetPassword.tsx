@@ -142,7 +142,6 @@ export default function ResetPassword({
         <FormControl
           onSubmit={(e: FormEvent<HTMLDivElement>) => {
             e.preventDefault();
-            console.log("Se va a cambiar la contraseña");
             const { description, notificationStatus, title, isError } =
               saveNewPassword(newPassword);
             toast({
