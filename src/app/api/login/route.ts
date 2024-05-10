@@ -6,7 +6,7 @@ export async function POST(req: NextRequest): Promise<Response> {
   // This code here should send the external service a fetch and determine if the current attempt to login failed or not.
   // Meanwhile this is going to read dummy data
   const fileContents = await fs.promises.readFile(
-    "./dummy_data/users.json",
+    "./src/dummy_data/users.json",
     "utf-8"
   );
   // Parse the JSON data

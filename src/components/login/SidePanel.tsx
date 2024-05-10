@@ -3,8 +3,6 @@ import { Flex, Heading, Spacer, Checkbox } from "@chakra-ui/react";
 
 export default function LogoSection({ handleCheckbox} : {handleCheckbox: () => void}){
   return (
-    <Flex direction="row" height="100%" width="100%">
-      {/* This flex represents the left side of the page  and it stores the logo*/}
       <Flex
         direction="column"
         justifyContent="center"
@@ -38,7 +36,7 @@ export default function LogoSection({ handleCheckbox} : {handleCheckbox: () => v
             marginBottom="5%"
           >
             <Checkbox
-              onChange={handleCheckbox}
+              onChange={() => handleCheckbox()}
               mx="5%"
               w="100%"
               justifyContent="center"
@@ -50,6 +48,5 @@ export default function LogoSection({ handleCheckbox} : {handleCheckbox: () => v
           </Flex>
         </Flex>
       </Flex>
-    </Flex>
   );
 }
