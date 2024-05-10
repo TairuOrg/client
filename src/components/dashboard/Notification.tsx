@@ -5,6 +5,7 @@ import { LuCopy } from "react-icons/lu";
 import { IoReload } from "react-icons/io5";
 import { useNotificationStore } from "@/store/useNotification";
 import { NotificationStore } from "@/types";
+import formatDate from "@/utils/formatDate";
 import {
   VStack,
   Text,
@@ -24,7 +25,6 @@ export default function Notification() {
 
   useEffect(() => {
     store.updateNotifications().then(() => setIsLoading(false)); // Step 6: Update loading state once notifications are loaded
-    console.log("reloadddd");
   }, [isReloaded]);
 
   return (
@@ -59,14 +59,16 @@ export default function Notification() {
                 store.notifications.map((notification) =>
                   notification.isIgnored ? null : (
                     <Card
+                      gap="1"
                       w="100%"
                       key={notification.id}
                       bg={notification.isRead ? "teal.50" : "transparent"}
                     >
-                      <HStack alignItems="center">
+                      <HStack alignItems="center" w='100%'>
                         <Text>
-                          <strong>Fecha:</strong> {notification.date.toString()}
+                          <strong>Fecha:</strong> {formatDate(notification.date)}
                         </Text>
+                        <Spacer />
                         <Button
                           bg="transparent"
                           onClick={() => store.MarkAsRead(notification.id)}
@@ -79,8 +81,8 @@ export default function Notification() {
                         </Button>
                       </HStack>
                       <VStack>
-                        <Text>
-                          <strong>Mensaje:</strong> {notification.description}
+                        <Text whiteSpace={'pre-line'}>
+                          <strong>Mensaje:</strong> {'\n'}{notification.description}
                         </Text>
                       </VStack>
                     </Card>

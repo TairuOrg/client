@@ -3,10 +3,12 @@ import { VStack } from "@chakra-ui/react";
 export default function Card({
   w,
   bg = "teal.50",
+  gap="6",
   children,
 }: {
   w: string;
   bg?: string;
+  gap?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -18,7 +20,7 @@ export default function Card({
       h={"auto"}
       minW={"auto"}
       maxW={{ sm: "100%", lg: w }}
-      gap="6"
+      gap={gap}
       align="flex-start"
       justify="center"
       borderRadius="15"
