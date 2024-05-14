@@ -8,6 +8,7 @@ const secret = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secret);
 
 export async function encrypt(payload: { userRole: string; expiresAt: Date }) {
+  console.log('cifradooo', payload)
   const jwt = new SignJWT(payload);
   return jwt
     .setProtectedHeader({ alg: "HS256" })
@@ -17,6 +18,7 @@ export async function encrypt(payload: { userRole: string; expiresAt: Date }) {
 }
 
 export async function decrypt(session: string | undefined = "") {
+  console.log('descifrado', session)
   try {
     const { payload } = await jwtVerify(session, encodedKey, {
       algorithms: ["HS256"],

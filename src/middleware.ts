@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { PrefixRoutes } from "./types";
 import { decrypt } from "./app/lib/session";
 
 const routes = {
@@ -16,10 +15,10 @@ const routes = {
   public: ["/login", "/about-us", "/unauthorized", "/api/login"],
 };
 
-export default async function handler(req: NextRequest) {
+export  async function handler(req: NextRequest) {
   const cookie = cookies().get("SESSION")?.value;
   // Decrypt the session
-  const session = await decrypt(cookie);
+  const session = cookie ?  await decrypt(cookie) : undefined
 
   // Get the path of the request
   const path = req.nextUrl.pathname;
