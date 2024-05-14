@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decrypt } from "./app/lib/session";
+import { decrypt } from "./actions/lib/session";
 
 const routes = {
   admin: [
@@ -15,7 +15,7 @@ const routes = {
   public: ["/login", "/about-us", "/unauthorized", "/api/login"],
 };
 
-export  async function handler(req: NextRequest) {
+export default async function handler(req: NextRequest) {
   const cookie = cookies().get("SESSION")?.value;
   // Decrypt the session
   const session = cookie ?  await decrypt(cookie) : undefined

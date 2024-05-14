@@ -1,6 +1,5 @@
 "use client";
-import { AuthData, AuthResponse, PrefixRoutes, FormData } from "@/types";
-import prepareAuth from "@/utils/prepareAuth";
+import { PrefixRoutes } from "@/types";
 import {
   Button,
   Flex,
@@ -17,25 +16,13 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ResetPassword from "./ResetPassword";
-
-const LOGIN_URL = "/api/login" as const;
+import { login } from "@/actions/auth";
 
 export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
   const toast = useToast();
   const router = useRouter();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState<FormData>({
-    email: "",
-    password: "",
-  });
-
-  const updateEmail = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, email: evt.target.value });
-  };
-  const updatePassword = (evt: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, password: evt.target.value });
-  };
   return (
     <>
       <ResetPassword isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
@@ -52,66 +39,48 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
             </Heading>
           </HStack>
 
-          <FormControl
-            onSubmit={async (evt: React.FormEvent<HTMLDivElement>) => {
-              evt.preventDefault();
-              // Hash the password
-              const preparedFormData: FormData = prepareAuth(formData);
-              // Send a post to the server and wait for its response, the server will validate the user credentials
-
-              // Prepare the data to be sent to the server
-              const authData: AuthData = {
-                formData: preparedFormData,
-                isAdmin,
-              };
-
-              const { error, body }: AuthResponse = await (
-                await fetch(LOGIN_URL, {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body: JSON.stringify(authData),
-                })
-              ).json();
-              const { title, description, notificationStatus } = body.message;
-
-              toast({
-                title,
-                description,
-                status: notificationStatus,
-              });
-
-              setIsInvalid(error);
-
-              !error && // if no error occured, redirect to dashboard page depending on the user role
-                (isAdmin
-                  ? router.push(`${PrefixRoutes.ADMIN}/dashboard`)
-                  : router.push(`${PrefixRoutes.CASHIER}/dashboard`));
-            }}
-            isRequired
-            isInvalid={isInvalid}
-          >
-            <form>
+          <FormControl isRequired isInvalid={isInvalid}>
+            <form
+              action={async (formData: FormData) => {
+                console.log("before the function login");
+                const { error, body } = await login(
+                  formData,
+                  isAdmin ? "admin" : "cashier"
+                );
+                console.log("after the function login");
+                const { title, description, notificationStatus } = body.message;
+                const { userId } = body;
+                toast({
+                  title,
+                  description,
+                  status: notificationStatus,
+                  isClosable: true,
+                });
+                !error &&
+                  (isAdmin
+                    ? router.push(`${PrefixRoutes.ADMIN}/dashboard`)
+                    : router.push(`${PrefixRoutes.CASHIER}/dashboard`));
+                setIsInvalid(true);
+              }}
+            >
               <Stack direction="column" mx="10%" spacing="4" h="100%">
                 <FormLabel fontSize="2xl">Correo Eléctronico</FormLabel>
                 <Input
-                  id="email"
+                  name="email"
                   borderColor="teal.900"
                   size="lg"
                   placeholder="example@email.com"
                   type="email"
-                  onChange={(evt) => updateEmail(evt)}
                 />
 
                 <FormLabel fontSize="2xl">Contraseña</FormLabel>
                 <Input
+                  name="password"
                   id="password"
                   borderColor="teal.900"
                   size="lg"
                   placeholder="*********"
                   type="password"
-                  onChange={(evt) => updatePassword(evt)}
                 />
 
                 {isAdmin && (

@@ -19,10 +19,25 @@ export interface User {
   fullname: string;
   isAdmin: boolean;
 }
+
+/*
+Sample response from the server
+{
+  "error": false,
+  "body": {
+    "userId": "4",
+    "message": {
+      "title": "Admin login Successful",
+      "description": "Welcome back",
+      "notificationStatus": "success"
+    }
+  }
+}
+*/
 export interface AuthResponse {
   error: boolean;
   body: {
-    data: User | {};
+    userId: number;
     message: {
       title: string;
       description: string;
