@@ -42,12 +42,13 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
           <FormControl isRequired isInvalid={isInvalid}>
             <form
               action={async (formData: FormData) => {
-                console.log("before the function login");
+                console.log("before the function login", formData);
                 const { error, body } = await login(
                   formData,
                   isAdmin ? "admin" : "cashier"
                 );
-                console.log("after the function login");
+                console.log("after the function login", body);
+
                 const { title, description, notificationStatus } = body.message;
                 const { userId } = body;
                 toast({

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decrypt } from "./actions/lib/session";
-
+import { decryptSessionCookie } from "./actions/lib/session";
 const routes = {
   admin: [
     "/admin",
@@ -12,37 +11,40 @@ const routes = {
     "/admin/stock",
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
-  public: ["/login", "/about-us", "/unauthorized", "/api/login"],
+  public: ["/login", "/about-us", "/unauthorized", "/"],
 };
 
 export default async function handler(req: NextRequest) {
-  const cookie = cookies().get("SESSION")?.value;
-  // Decrypt the session
-  const session = cookie ?  await decrypt(cookie) : undefined
-
-  // Get the path of the request
+  const cookie = cookies().get("SESSION_TOKEN")?.value;
   const path = req.nextUrl.pathname;
-  // Determine if the route is protected for admin, cashier or public
-  const isProtectedRouteAdmin = routes.admin.includes(path);
-  const isProtectedRouteCashier = routes.cashier.includes(path);
-  const isPublicRoute = routes.public.includes(path);
+  // Decrypt the session
 
-
-  if (isPublicRoute) {
+  if (
+    (!cookie && routes.public.includes(path)) ||
+    (cookie && routes.public.includes(path))
+  ) {
     return NextResponse.next();
   }
-  if (!session && !isPublicRoute)
-    return Response.redirect(new URL("/login", req.nextUrl));
 
-  if (isProtectedRouteAdmin && session?.userRole !== "admin") {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
-  }
-  if (isProtectedRouteCashier && session?.userRole !== "cashier") {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+  if (!cookie && !routes.public.includes(path)) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
   }
 
-  // redirect anyways
-  return NextResponse.next();
+  const [error, session] = await decryptSessionCookie(cookie as string);
+  if (error) {
+    return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
+  }
+
+  const role = session?.role;
+  if (role === "admin" && routes.admin.includes(path)) {
+    return NextResponse.next();
+  }
+  if (role === "cashier" && routes.cashier.includes(path)) {
+    return NextResponse.next();
+  }
+
+  console.log("session cookie:", session);
+  return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
 }
 export const config = {
   matcher: [
