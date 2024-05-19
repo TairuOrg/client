@@ -2,7 +2,6 @@
 
 import { AuthResponse } from "@/types";
 import SHA256 from "crypto-js/sha256";
-import { setDefaultResultOrder } from "dns";
 const BASE_URL = process.env.BASE_URL as string;
 import { cookies } from 'next/headers';
 

@@ -4,6 +4,7 @@ import {
   Button,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   HStack,
@@ -17,12 +18,23 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ResetPassword from "./ResetPassword";
 import { login } from "@/actions/auth";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLogin } from "@/hooks/useLogin";
+import { loginSchema, LoginSchema } from "@/schemas/loginSchema";
+import { useForm } from "react-hook-form";
 
 export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
-  const toast = useToast();
-  const router = useRouter();
   const [isInvalid, setIsInvalid] = useState<boolean>(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+  });
+  const handleLogin = useLogin({ isAdmin, setIsInvalid });
+  console.log("adadad", errors)
   return (
     <>
       <ResetPassword isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
@@ -39,43 +51,25 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
             </Heading>
           </HStack>
 
-          <FormControl isRequired isInvalid={isInvalid}>
-            <form
-              action={async (formData: FormData) => {
-                console.log("before the function login", formData);
-                const { error, body } = await login(
-                  formData,
-                  isAdmin ? "admin" : "cashier"
-                );
-                console.log("after the function login", body);
-
-                const { title, description, notificationStatus } = body.message;
-                const { userId } = body;
-                toast({
-                  title,
-                  description,
-                  status: notificationStatus,
-                  isClosable: true,
-                });
-                !error &&
-                  (isAdmin
-                    ? router.push(`${PrefixRoutes.ADMIN}/dashboard`)
-                    : router.push(`${PrefixRoutes.CASHIER}/dashboard`));
-                setIsInvalid(true);
-              }}
-            >
+          <FormControl isRequired isInvalid={Boolean(errors)}>
+            <form onSubmit={handleSubmit(handleLogin)}>
               <Stack direction="column" mx="10%" spacing="4" h="100%">
                 <FormLabel fontSize="2xl">Correo Eléctronico</FormLabel>
                 <Input
+                  {...register("email")}
                   name="email"
                   borderColor="teal.900"
                   size="lg"
                   placeholder="example@email.com"
                   type="email"
                 />
+                {errors.email && (
+                  <FormErrorMessage> {errors.email.message} </FormErrorMessage>
+                )}
 
                 <FormLabel fontSize="2xl">Contraseña</FormLabel>
                 <Input
+                  {...register("password")}
                   name="password"
                   id="password"
                   borderColor="teal.900"
@@ -83,7 +77,9 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                   placeholder="*********"
                   type="password"
                 />
-
+                {errors.password && (
+                  <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+                )}
                 {isAdmin && (
                   <HStack mt="4" justifyContent="flex-start">
                     <Button
