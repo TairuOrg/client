@@ -9,9 +9,10 @@ import { PrefixRoutes } from '@/types'; // Adjust the import according to your p
 type useLoginProps = {
     isAdmin: boolean;
     setIsInvalid: (value: boolean) => void;
+    isInvalid: boolean;
 
 }
-export const useLogin = ({isAdmin, setIsInvalid}: useLoginProps) => {
+export const useLogin = ({isAdmin, setIsInvalid, isInvalid}: useLoginProps) => {
   const toast = useToast();
   const router = useRouter();
 
@@ -31,7 +32,7 @@ export const useLogin = ({isAdmin, setIsInvalid}: useLoginProps) => {
     if (!error) {
       router.push(isAdmin ? `${PrefixRoutes.ADMIN}/dashboard` : `${PrefixRoutes.CASHIER}/dashboard`);
     }
-    setIsInvalid(true);
+    setIsInvalid(!isInvalid);
   }, [isAdmin, router, setIsInvalid, toast]);
 
   return handleLogin;

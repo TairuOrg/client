@@ -11,7 +11,6 @@ import {
   Input,
   Stack,
   useDisclosure,
-  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
@@ -32,28 +31,27 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
     formState: { errors },
   } = useForm<LoginSchema>({
     resolver: zodResolver(loginSchema),
+    mode: "onChange",
+    shouldFocusError: true,
+    delayError: 5,
   });
-  const handleLogin = useLogin({ isAdmin, setIsInvalid });
-  console.log("adadad", errors)
+  const handleLogin = useLogin({ isAdmin, setIsInvalid, isInvalid });
+  console.log("adadad", errors);
+
   return (
     <>
       <ResetPassword isOpen={isOpen} onClose={onClose} onOpen={onOpen} />
       <Flex direction="column" height="100%" width="50%" alignItems="center">
         <VStack direction="column" width="100%" height="100%" marginTop="20%">
-          <HStack
-            direction="row"
-            justifyContent="center"
-            marginBottom="10%"
-            width="100%"
-          >
+          <HStack justifyContent="center" marginBottom="10%" width="100%">
             <Heading color="teal.900" size="4xl">
               Iniciar sesión
             </Heading>
           </HStack>
 
-          <FormControl isRequired isInvalid={Boolean(errors)}>
-            <form onSubmit={handleSubmit(handleLogin)}>
-              <Stack direction="column" mx="10%" spacing="4" h="100%">
+          <form onSubmit={handleSubmit(handleLogin)} style={{ width: "100%" }}>
+            <Stack direction="column" mx="5%" pr="10%" spacing="4" width="100%">
+              <FormControl isRequired isInvalid={!!errors.email}>
                 <FormLabel fontSize="2xl">Correo Eléctronico</FormLabel>
                 <Input
                   {...register("email")}
@@ -64,9 +62,11 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                   type="email"
                 />
                 {errors.email && (
-                  <FormErrorMessage> {errors.email.message} </FormErrorMessage>
+                  <FormErrorMessage>{errors.email.message}</FormErrorMessage>
                 )}
+              </FormControl>
 
+              <FormControl isRequired isInvalid={!!errors.password}>
                 <FormLabel fontSize="2xl">Contraseña</FormLabel>
                 <Input
                   {...register("password")}
@@ -80,45 +80,46 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                 {errors.password && (
                   <FormErrorMessage>{errors.password.message}</FormErrorMessage>
                 )}
-                {isAdmin && (
-                  <HStack mt="4" justifyContent="flex-start">
-                    <Button
-                      onClick={onOpen}
-                      size="sm"
-                      height="30"
-                      bg="teal.100"
-                      variant="solid"
-                      fontSize="lm"
-                      _hover={{
-                        color: "teal.50",
-                        variant: "solid",
-                        bg: "teal.900",
-                      }}
-                    >
-                      Olvidé mi contraseña{" "}
-                    </Button>
-                  </HStack>
-                )}
-                <HStack mt="2" justifyContent="center">
+              </FormControl>
+
+              {isAdmin && (
+                <HStack mt="4" justifyContent="flex-start" width="100%">
                   <Button
-                    type="submit"
-                    size="lg"
-                    height="50"
+                    onClick={onOpen}
+                    size="sm"
+                    height="30"
                     bg="teal.100"
                     variant="solid"
-                    fontSize="2xl"
+                    fontSize="lm"
                     _hover={{
                       color: "teal.50",
                       variant: "solid",
                       bg: "teal.900",
                     }}
                   >
-                    Iniciar Sesión
+                    Olvidé mi contraseña
                   </Button>
                 </HStack>
-              </Stack>
-            </form>
-          </FormControl>
+              )}
+              <HStack mt="2" justifyContent="center" width="100%">
+                <Button
+                  type="submit"
+                  size="lg"
+                  height="50"
+                  bg="teal.100"
+                  variant="solid"
+                  fontSize="2xl"
+                  _hover={{
+                    color: "teal.50",
+                    variant: "solid",
+                    bg: "teal.900",
+                  }}
+                >
+                  Iniciar Sesión
+                </Button>
+              </HStack>
+            </Stack>
+          </form>
         </VStack>
       </Flex>
     </>
