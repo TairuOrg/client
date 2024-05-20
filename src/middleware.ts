@@ -43,7 +43,6 @@ export default async function handler(req: NextRequest) {
     return NextResponse.next();
   }
 
-  console.log("session cookie:", session);
   return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
 }
 export const config = {

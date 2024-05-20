@@ -36,7 +36,6 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
     delayError: 5,
   });
   const handleLogin = useLogin({ isAdmin, setIsInvalid, isInvalid });
-  console.log("adadad", errors);
 
   return (
     <>

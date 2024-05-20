@@ -20,7 +20,6 @@ export const useLogin = ({isAdmin, setIsInvalid, isInvalid}: useLoginProps) => {
     const formData = new FormData();
     formData.append('email', data.email);
     formData.append('password', data.password);
-    console.log('formData', formData)
     const { error, body } = await login(formData, isAdmin ? 'admin' : 'cashier');
     const { title, description, notificationStatus } = body.message;
     toast({

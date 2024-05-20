@@ -15,9 +15,18 @@ export interface AuthData {
 // User is an interface that defines the structure of the user data that is going to be stored in the application.
 export interface User {
   id: number;
+  personal_id: string;
   email: string;
-  fullname: string;
-  isAdmin: boolean;
+  name: string;
+  phone_number: string;
+  residence_location: string;
+}
+type ServerResponse<T> = {
+  error: boolean;
+  body: {
+    message: string;
+    data: T;
+  }
 }
 
 /*
@@ -65,7 +74,7 @@ export interface AuthMessage {
 export type Cashier = {
   active: number;
   inactive: number;
-  updateCashierStatus: () => void;
+  updateCashierStatus: () => Promise<void>;
 };
 export type Stock = {
   products: number;
