@@ -1,203 +1,85 @@
 "use client";
-import Logo from "@/assets/Logo";
 import {
-  Stack,
+  Box,
   Flex,
-  Divider,
+  Heading,
   HStack,
-  Spacer,
   VStack,
   Text,
-  useBreakpointValue,
+  Button,
 } from "@chakra-ui/react";
-import { Link } from "@chakra-ui/react";
-import { BsBox } from "react-icons/bs";
-import { CiLogout } from "react-icons/ci";
-import { FaHeart } from "react-icons/fa";
-import { FaRegCircleUser } from "react-icons/fa6";
-import { HiOutlineHome } from "react-icons/hi";
-import {
-  IoPersonOutline,
-  IoSettingsOutline,
-  IoLogoReact,
-} from "react-icons/io5";
-import { TbReportSearch } from "react-icons/tb";
+import { CgMoreR } from "react-icons/cg";
+import { FiTruck } from "react-icons/fi";
 
 export default function SideMenu() {
-  const isMediumScreen = useBreakpointValue({
-    base: false,
-    md: true,
-    lg: false,
-  });
+  const CardInformation = {
+    stock: {
+      icon: <FiTruck size={40} />,
+      amount: ["45 Artículos", "1 Categorías"],
+      details: "/admn/stock",
+    },
+    cashier: {
+      icon: <CgMoreR size={40} />,
+      amount: ["0 Cajeros activos", "0 Cajeros inactivos"],
+      details: "/admin/cashier",
+    },
+  };
   return (
-    <Stack
-      direction={{ base: "row", lg: "column" }}
-      bgColor="teal.50"
-      w={{ base: "100%", lg: "20%" }}
-      minH={{ base: "10vh", lg: "100%" }}
-      maxH={{ base: "10vh", lg: "100%" }}
-      position={"fixed"}
-      left={0}
-      gap={{ base: 2, lg: 5 }}
-      py="20px"
-      px="50px"
-      alignItems={{ base: "center", lg: "start" }}
-    >
-      <Flex
-        width="100%"
-        pt={{ base: 0, lg: "5" }}
-        justifyContent="center"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
+    <Flex mr="10" h="100%" w="40%">
+      <Box
+        p="5"
+        boxSizing="content-box"
+        minH="-webkit-fit-content"
+        w="100%"
+        my="auto"
+        bgColor="white"
+        borderRadius={30}
+        boxShadow={"lg"}
       >
-        <Logo h={100} w={100} />
-      </Flex>
-
-      {isMediumScreen ? null : (
-        <Divider
-          borderColor="teal.900"
-          orientation="horizontal"
-          marginTop="20px"
-          w="400px"
-          maxW="100%"
-          mx="auto"
-        />
-      )}
-      <Link
-        href="/dashboard"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <HiOutlineHome size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Principal
-          </Text>
-        </HStack>
-      </Link>
-      <Link
-        href="/reports"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <TbReportSearch size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Reportes
-          </Text>
-        </HStack>
-      </Link>
-
-      <Link
-        href="/stock"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <BsBox size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Inventario
-          </Text>
-        </HStack>
-      </Link>
-      <Link
-        href="/cashier"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <IoPersonOutline size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Cajeros
-          </Text>
-        </HStack>
-      </Link>
-
-      <Link
-        href="/profile"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <FaRegCircleUser size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Perfil
-          </Text>
-        </HStack>
-      </Link>
-
-      {isMediumScreen ? null : (
-        <Divider
-          borderColor="teal.900"
-          orientation="horizontal"
-          marginTop="20px"
-          w="400px"
-          maxW="100%"
-          mx="auto"
-        />
-      )}
-
-      <Link
-        href="/settings"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <IoSettingsOutline size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Configuración
-          </Text>
-        </HStack>
-      </Link>
-      <Link
-        onClick={() => {
-          localStorage.removeItem("user");
-        }}
-        href="/api/logout"
-        _hover={{ transform: "scale(1.05)" }}
-        transition="transform 0.3s ease-in-out"
-      >
-        <HStack>
-          <CiLogout size={30} />
-          <Text
-            hidden={isMediumScreen ? true : false}
-            fontSize={{ base: "2xl", lg: "2xl" }}
-          >
-            Cerrar Sesión
-          </Text>
-        </HStack>
-      </Link>
-      <Spacer />
-
-      {isMediumScreen ? null : (
-        <VStack alignItems="center" w="100%">
-          <Text fontSize={{ base: "2xl", lg: "2xl" }} marginLeft="10px">
-            Made with
-          </Text>
-          <HStack>
-            <IoLogoReact size={30} />
-            <FaHeart size={30} />
-          </HStack>
-        </VStack>
-      )}
-    </Stack>
+        {Object.entries(CardInformation).map(
+          ([key, { icon, amount, details }]) => (
+            <VStack
+              _hover={{ transform: "scale(1.05)" }}
+              transition="transform 0.3s ease-in-out"
+              key={key}
+              alignItems={"start"}
+              p="5"
+              borderWidth="5"
+              borderColor={"black"}
+              bgColor="teal.50"
+              m="5"
+              borderRadius="20"
+              boxShadow={"md"}
+            >
+              <HStack>
+                {icon}
+                <Heading fontSize="3xl" fontWeight={"regular"}>
+                  {" "}
+                  Cuentas con :{" "}
+                </Heading>
+              </HStack>
+              <Text
+                fontWeight="regular"
+                fontSize="2xl"
+                style={{ whiteSpace: "pre-line" }}
+              >
+                {[amount[0]]} {"\n"} {[amount[1]]}
+              </Text>
+              <Button bg="transparent" onClick={() => {}}>
+                <HStack>
+                  <CgMoreR size={25} />
+                  <Text
+                    fontWeight="light"
+                    fontSize={{ base: "2xl", lg: "3xl" }}
+                  >
+                    Más detalles
+                  </Text>
+                </HStack>
+              </Button>
+            </VStack>
+          )
+        )}
+      </Box>
+    </Flex>
   );
 }
