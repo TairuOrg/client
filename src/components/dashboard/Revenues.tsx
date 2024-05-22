@@ -1,5 +1,4 @@
-import UnitedStatesFlag from "@/assets/USFlag";
-import VenezuelanFlag from "@/assets/VEFlag";
+import { UnitedStatesFlag, VenezuelanFlag, EuropeFlag } from "@/assets/country-flags";
 import { Spacer, Heading, HStack } from "@chakra-ui/react";
 
 export default function Revenue() {
@@ -18,12 +17,12 @@ export default function Revenue() {
     // need to finish
     EU: {
       currency: "EU",
-      amount: "825",
-      icon: <VenezuelanFlag size={100} />,
+      amount: "8255456456",
+      icon: <EuropeFlag size={100} />,
     },
   };
   return (
-    <HStack h="20%">
+    <HStack h="40" maxW='100%' spacing={'auto'} justify={'space-between'} my='5'mx='10' >
       {Object.entries(todayRevenue).map(([key, { currency, amount, icon }]) => (
         <HStack
           key={key}
@@ -31,7 +30,6 @@ export default function Revenue() {
           transition="transform 0.3s ease-in-out"
           boxSizing="content-box"
           spacing="2"
-          ml="5"
           display="flex"
           flexDirection="row"
           alignItems="center"

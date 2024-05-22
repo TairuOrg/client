@@ -1,15 +1,15 @@
 import { Flex } from "@chakra-ui/react";
 import MainPanelHeader from "./MainPanelHeader";
 import Revenue from "./Revenues";
-import RecentlyStats from "./Stats";
+import RevenueChart from "./RevenueChart";
 
 export default function MainPanel() {
 
   return (
-    <Flex direction="column" w="100%" h="100%">
+    <Flex direction="column" w="100%" h="100%" py={15}>
       <MainPanelHeader />
       <Revenue />
-      <RecentlyStats />
+      <RevenueChart />
     </Flex>
   );
 }

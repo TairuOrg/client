@@ -28,7 +28,7 @@ export default function TopBar() {
       <OpenNotification isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Flex
         dir="row"
-        mt='5'
+        mt='10'
         justifyContent={"center"}
         top={5}
         w="100%"

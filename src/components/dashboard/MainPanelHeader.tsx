@@ -3,7 +3,7 @@ import { Box, Heading } from "@chakra-ui/react";
 
 export default function MainPanelHeader() {
   return (
-    <Heading fontWeight="regular" display="flex" alignItems={"center"}>
+    <Heading fontWeight="regular" display="flex" alignItems={"center"} mt='10'>
       <Box w="125px">
         <Logo h={100} w={100} />
       </Box>
