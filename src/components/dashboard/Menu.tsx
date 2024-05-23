@@ -1,11 +1,15 @@
-import { Box, Flex, Link, Tooltip, VStack } from "@chakra-ui/react";
+'use client'
+import { Box, Link, Tooltip, VStack } from "@chakra-ui/react";
 import { RiHome2Line } from "react-icons/ri";
 import { HiOutlineDocument } from "react-icons/hi";
 import { FiBox } from "react-icons/fi";
 import { FiUser } from "react-icons/fi";
-
+import { usePathname } from "next/navigation";
 
 export default function Menu() {
+  const pathname = usePathname();
+  console.log(pathname)
+
   const paths = {
     "/admin/dashboard": { label: "Principal", icon: <RiHome2Line size={40} /> },
     "/admin/reports": {
@@ -42,7 +46,11 @@ export default function Menu() {
                 aria-label="A tooltip"
               >
                 <Link
+                  boxSizing="content-box"
+                  padding='2'
                   href={path}
+                  borderRadius='lg'
+                  bgColor= { pathname === path ? 'teal.100' : 'transparent'}
                   _hover={{ transform: "scale(1.10)" }}
                   transition="transform 0.3s ease-in-out"
                 >

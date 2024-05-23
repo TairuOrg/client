@@ -2,12 +2,13 @@ import TopBar from "@/components/dashboard/TopBar";
 import Menu from "@/components/dashboard/Menu";
 import { Flex } from "@chakra-ui/react";
 import type { Metadata } from "next";
+
 export const metadata: Metadata = {
   title: "Tairu - Administrator 💻",
   description: "Administra tu negocio con Tairu",
 };
 
-export default function RootLayout({
+export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
