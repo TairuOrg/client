@@ -31,7 +31,7 @@ export type ServerResponse<T> = {
   error: boolean;
   body: {
     message: string;
-    data: T;
+    payload: T;
   }
 }
 

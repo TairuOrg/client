@@ -1,32 +1,43 @@
 'use client'
 import { UnitedStatesFlag, VenezuelanFlag, EuropeFlag } from "@/assets/country-flags";
 import { Spacer, Heading, HStack } from "@chakra-ui/react";
-import { useEffect } from "react";
-import { retrieveRevenues } from "@/actions/revenues";
+
 import { useRevenue } from "@/store/useRevenue";
+import { useEffect } from "react";
+
 export default function Revenue() {
-  const {VE, US, EU} = useRevenue()
+  const { VE, US, EU, update } = useRevenue();
+  useEffect(() => {
+    update()
+  }, []);
+
   const todayRevenue = {
     US: {
       currency: "USD",
       amount: US.amount,
       icon: <UnitedStatesFlag size={100} />,
     },
-
     VE: {
-      currency: "VES",  
+      currency: "VES",
       amount: VE.amount,
       icon: <VenezuelanFlag size={100} />,
     },
-    // need to finish
     EU: {
       currency: "EU",
       amount: EU.amount,
       icon: <EuropeFlag size={100} />,
     },
   };
+
   return (
-    <HStack h="40" maxW='100%' spacing={'auto'} justify={'space-between'} my='5'mx='10' >
+    <HStack
+      h="40"
+      maxW="100%"
+      spacing={"auto"}
+      justify={"space-between"}
+      my="5"
+      mx="10"
+    >
       {Object.entries(todayRevenue).map(([key, { currency, amount, icon }]) => (
         <HStack
           key={key}

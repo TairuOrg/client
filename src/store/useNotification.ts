@@ -1,6 +1,5 @@
 import { create } from "zustand";
 import { NotificationStore } from "@/types";
-import { notifications as nt } from "@/dummy_data/notifications";
 
 export const useNotificationStore = create<NotificationStore>((set) => ({
   notifications: [],
@@ -12,7 +11,7 @@ export const useNotificationStore = create<NotificationStore>((set) => ({
       }, 7000);
     });
 
-    set({ notifications: nt });
+    //set({ notifications: nt });
   },
   MarkAsRead: async (id: number) => { // Make function async
     // Simulate asynchronous update
