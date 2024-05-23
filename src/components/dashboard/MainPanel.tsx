@@ -6,7 +6,7 @@ import RevenueChart from "./RevenueChart";
 export default function MainPanel() {
 
   return (
-    <Flex direction="column" w="100%" h="100%" py={15}>
+    <Flex direction="column" w="100%" minW='700px' h="100%" py={15}>
       <MainPanelHeader />
       <Revenue />
       <RevenueChart />

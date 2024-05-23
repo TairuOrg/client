@@ -21,7 +21,13 @@ export interface User {
   phone_number: string;
   residence_location: string;
 }
-type ServerResponse<T> = {
+
+export type Revenue = {
+  VE: { amount: number},
+  US: {amount: number},
+  EU: { amount: number},
+}
+export type ServerResponse<T> = {
   error: boolean;
   body: {
     message: string;

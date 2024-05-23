@@ -19,8 +19,6 @@ export default function Home() {
         <Menu />
         <MainPanel />
         <SideMenu />
-
-        
       </Flex>
     </Flex>
   );

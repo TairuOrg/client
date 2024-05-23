@@ -9,7 +9,7 @@ import {
   Button,
 } from "@chakra-ui/react";
 import { CgMoreR } from "react-icons/cg";
-import { FiTruck } from "react-icons/fi";
+import { FiTruck , FiUsers } from "react-icons/fi";
 
 export default function SideMenu() {
   const CardInformation = {
@@ -19,13 +19,13 @@ export default function SideMenu() {
       details: "/admn/stock",
     },
     cashier: {
-      icon: <CgMoreR size={40} />,
+      icon: <FiUsers size={40} />,
       amount: ["0 Cajeros activos", "0 Cajeros inactivos"],
       details: "/admin/cashier",
     },
   };
   return (
-    <Flex mr="10" h="100%" w="40%">
+    <Flex mr="10" h="100%" maxW="40%" minW="400px">
       <Box
         p="5"
         boxSizing="content-box"
@@ -65,7 +65,7 @@ export default function SideMenu() {
               >
                 {[amount[0]]} {"\n"} {[amount[1]]}
               </Text>
-              <Button bg="transparent" onClick={() => {}}>
+              <Button bg="transparent">
                 <HStack>
                   <CgMoreR size={25} />
                   <Text

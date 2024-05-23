@@ -1,12 +1,28 @@
 "use client";
-import { Flex, HStack, Tooltip, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Tooltip,
+  Text,
+  useDisclosure,
+  Kbd,
+} from "@chakra-ui/react";
 import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
+import { TbReload } from "react-icons/tb";
 import OpenNotification from "./NotificationPanel";
+import { useRevenue } from "@/store/useRevenue";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const store = useRevenue();
+  
+  console.log("store ", store);
   const buttons = {
+    update: {
+      icon: <TbReload size={30} />,
+      label: "Actualizar",
+      action: () => store.update(),
+    },
     notifications: {
       icon: <FiBell size={30} />,
       label: "Notificaciones",
@@ -26,13 +42,7 @@ export default function TopBar() {
   return (
     <>
       <OpenNotification isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
-      <Flex
-        dir="row"
-        mt='10'
-        justifyContent={"center"}
-        top={5}
-        w="100%"
-      >
+      <Flex dir="row" mt="10" justifyContent={"center"} top={5} w="100%">
         <HStack
           mx="auto"
           spacing="10"
@@ -47,6 +57,8 @@ export default function TopBar() {
         >
           {Object.entries(buttons).map(([key, { icon, label, action }]) => (
             <Tooltip
+              p={2}
+              boxSizing="content-box"
               my="5"
               key={key}
               fontSize={"lg"}
