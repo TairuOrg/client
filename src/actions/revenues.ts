@@ -1,5 +1,5 @@
 "use server";
-import { Revenue, ServerResponse } from "@/types";
+import { Revenue, RevenueStats, ServerResponse } from "@/types";
 import { BASE_URL } from "@/constants";
 import { cookies } from "next/headers";
 
@@ -13,8 +13,6 @@ export async function retrieveRevenues(): Promise<ServerResponse<Revenue>> {
   return await response.json()
 }
 
-export async function retrieveRevenueStats() {
-  return {
-    // something
-  };
-}
+// export async function retrieveRevenueStats(): Promise<ServerResponse<any> {
+  
+// }

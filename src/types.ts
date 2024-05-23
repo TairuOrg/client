@@ -23,10 +23,16 @@ export interface User {
 }
 
 export type Revenue = {
-  VE: { amount: number},
-  US: {amount: number},
-  EU: { amount: number},
+  VE: { amount: string},
+  US: {amount: string},
+  EU: { amount: string},
 }
+export type RevenueStats = {
+  name: string;
+  actual: number;
+  "semana previa": number;
+}
+
 export type ServerResponse<T> = {
   error: boolean;
   body: {

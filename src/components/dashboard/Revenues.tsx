@@ -1,30 +1,34 @@
 'use client'
 import { UnitedStatesFlag, VenezuelanFlag, EuropeFlag } from "@/assets/country-flags";
-import { Spacer, Heading, HStack } from "@chakra-ui/react";
+import { Spacer, Heading, HStack, Spinner } from "@chakra-ui/react";
 
 import { useRevenue } from "@/store/useRevenue";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Revenue() {
   const { VE, US, EU, update } = useRevenue();
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
-    update()
+    update().then(() => {
+      setIsLoading(false);
+    });
   }, []);
 
   const todayRevenue = {
     US: {
       currency: "USD",
-      amount: US.amount,
+      amount: isLoading ? <Spinner /> : US.amount,
       icon: <UnitedStatesFlag size={100} />,
     },
     VE: {
       currency: "VES",
-      amount: VE.amount,
+      amount: isLoading ? <Spinner /> : VE.amount,
       icon: <VenezuelanFlag size={100} />,
     },
     EU: {
       currency: "EU",
-      amount: EU.amount,
+      amount: isLoading ? <Spinner /> : EU.amount,
       icon: <EuropeFlag size={100} />,
     },
   };
@@ -57,7 +61,9 @@ export default function Revenue() {
         >
           {icon}
           <Spacer />
-          <Heading fontSize={"2xl"}>{`${amount} ${currency}`}</Heading>
+          <Heading fontSize={"2xl"}>
+            {amount} {`${currency}`}
+          </Heading>
         </HStack>
       ))}
     </HStack>

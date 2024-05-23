@@ -12,14 +12,15 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+
 const data = [
   { name: "Lunes", actual: 4000, "semana previa": 2400 },
   { name: "Martes", actual: 3000, "semana previa": 1398 },
   { name: "Miércoles", actual: 2000, "semana previa": 9800 },
   { name: "Jueves", actual: 2780, "semana previa": 3908 },
-  { name: "Viernes", actual: 1890, "semana previa": 4800 },
-  { name: "Sábado", actual: 2390, "semana previa": 3800 },
-  { name: "Domingo", actual: 0, "semana previa": 4300 },
+  { name: "Viernes", "semana previa": 4800 },
+  { name: "Sábado", "semana previa": 3800 },
+  { name: "Domingo", "semana previa": 4300 },
 ];
 
 const RevenueChart = () => {
