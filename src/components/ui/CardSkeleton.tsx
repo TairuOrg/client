@@ -12,7 +12,7 @@ export default function NotificationSkeleton() {
         height="80px"
         startColor="gray.200"
         endColor="gray.400"
-        w="400px"
+        w="300px"
       />
     </Card>
   );

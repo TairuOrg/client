@@ -11,17 +11,19 @@ const routes = {
     "/admin/stock",
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
-  public: ["/login", "/about-us", "/unauthorized", "/"],
+  public: ["/login", "/about-us", "/unauthorized", "/", '/testing'],
 };
 
 export default async function handler(req: NextRequest) {
   const cookie = cookies().get("SESSION_TOKEN")?.value;
   const path = req.nextUrl.pathname;
   // Decrypt the session
-
-  if (
-    (!cookie && routes.public.includes(path)) ||
+  /*
+  (!cookie && routes.public.includes(path)) ||
     (cookie && routes.public.includes(path))
+  */
+  if (
+    true
   ) {
     return NextResponse.next();
   }

@@ -1,23 +1,25 @@
-import { Flex } from "@chakra-ui/react";
-
+import Menu from "@/components/dashboard/Menu";
+import TopBar from "@/components/dashboard/TopBar";
+import {Flex } from "@chakra-ui/react";
+import MainPanel from "@/components/dashboard/MainPanel";
 import SideMenu from "@/components/dashboard/SideMenu";
-import SummaryPanel from "@/components/dashboard/SummaryPanel";
-import Notification from "@/components/dashboard/Notification";
+
 
 export default function Home() {
   return (
     <Flex
-      direction={{ base: "column", lg: "row" }}
+      direction={"column"}
       height="100vh"
       width="100vw"
       overflowY={"auto"}
+      bgColor="teal.50"
     >
-      {/*Left panel which is sidepanel and menu */}
-      <SideMenu />
-      {/* Middle panel*/}
-      <SummaryPanel />
-      {/*Right panel notification*/}
-      <Notification />
+      <TopBar />
+      <Flex direction="row" flex="1">
+        <Menu />
+        <MainPanel />
+        <SideMenu />
+      </Flex>
     </Flex>
   );
 }

@@ -28,75 +28,49 @@ export default function Notification() {
   }, [isReloaded]);
 
   return (
-    <VStack direction="column" w="30%">
-      <VStack
-        py={4}
-        gap={4}
-        minW="500px"
-        maxW="80%"
-        minH="600px"
-        maxH="80%"
-        borderWidth={"4px"}
-        borderColor={"gray.200"}
-        m="auto"
-        rounded="15"
-        alignItems="center"
-      >
-        <VStack overflow={"auto"} w="100%">
-          <HStack w="100%" justify={"center"} gap="10">
-            <Heading>Notificaciones</Heading>
-            <Button bg="transparent" onClick={() => setIsReloaded(!isReloaded)}>
-              <IoReload size={25} />
-            </Button>
-          </HStack>
+    <VStack spacing='4' w='100%'> 
+      <Suspense fallback={<CardSkeleton />}>
+      {isLoading
+        ? Array.from({ length: 3 }).map((_, index) => (
+            <CardSkeleton key={index} />
+          ))
+        : store.notifications.length > 0 &&
+          store.notifications.map((notification) =>
+            notification.isIgnored ? null : (
+              <Card
+                gap="1"
+                w="100%"
+                key={notification.id}
+                bg={notification.isRead ? "teal.50" : "transparent"}
+              >
+                <HStack alignItems="center" w="100%">
+                  <Text>
+                    <strong>Fecha:</strong> {formatDate(notification.date)}
+                  </Text>
+                  <Spacer />
+                  <Button
+                    bg="transparent"
+                    onClick={() => store.MarkAsRead(notification.id)}
+                  >
+                    {notification.isRead ? (
+                      <LuCopyCheck size={25} />
+                    ) : (
+                      <LuCopy size={25} />
+                    )}
+                  </Button>
+                </HStack>
+                <VStack>
+                  <Text whiteSpace={"pre-line"}>
+                    <strong>Mensaje:</strong> {"\n"}
+                    {notification.description}
+                  </Text>
+                </VStack>
+              </Card>
+            )
+          )}
+    </Suspense>
 
-          <Suspense fallback={<CardSkeleton />}>
-            {isLoading
-              ? Array.from({ length: 20 }).map((_, index) => (
-                  <CardSkeleton key={index} />
-                ))
-              : store.notifications.length > 0 &&
-                store.notifications.map((notification) =>
-                  notification.isIgnored ? null : (
-                    <Card
-                      gap="1"
-                      w="100%"
-                      key={notification.id}
-                      bg={notification.isRead ? "teal.50" : "transparent"}
-                    >
-                      <HStack alignItems="center" w='100%'>
-                        <Text>
-                          <strong>Fecha:</strong> {formatDate(notification.date)}
-                        </Text>
-                        <Spacer />
-                        <Button
-                          bg="transparent"
-                          onClick={() => store.MarkAsRead(notification.id)}
-                        >
-                          {notification.isRead ? (
-                            <LuCopyCheck size={25} />
-                          ) : (
-                            <LuCopy size={25} />
-                          )}
-                        </Button>
-                      </HStack>
-                      <VStack>
-                        <Text whiteSpace={'pre-line'}>
-                          <strong>Mensaje:</strong> {'\n'}{notification.description}
-                        </Text>
-                      </VStack>
-                    </Card>
-                  )
-                )}
-          </Suspense>
-        </VStack>
-        <Spacer />
-        <HStack alignItems="flex-start" mr="80" h={"40px"}>
-          <Button bg="transparent" onClick={() => store.MarkAsIgnored()}>
-            <MdOutlineDeleteOutline size={35} />
-          </Button>
-        </HStack>
-      </VStack>
     </VStack>
+
   );
 }
