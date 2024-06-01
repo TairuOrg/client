@@ -6,7 +6,12 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx}', // Si usas la nueva estructura de app
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        inter: ["Inter", "sans-serif"],
+
+      }
+    },
   },
   plugins: [],
 };

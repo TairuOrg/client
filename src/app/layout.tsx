@@ -1,13 +1,17 @@
 import type { Metadata } from "next";
-import { Abril_Fatface } from "next/font/google";
+import { Abril_Fatface, Inter } from "next/font/google";
 import "./globals.css";
 import { UIProvider } from "./providers";
 
 const abril = Abril_Fatface({
   subsets: ["latin"],
+  variable: '--font-abril',
   weight: "400"
 });
-
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"]
+});
 export const metadata: Metadata = {
   title: "Tairu",
   description: "Administra tu negocio con Tairu",
