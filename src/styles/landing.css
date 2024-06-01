@@ -1,6 +1,10 @@
 .navbar {
+    z-index: 5;
     position: fixed;
     top: 40px;
+    left: 0;
+    right: 0;
+    margin: auto;
     background-color: #B2F5EA;
     display: flex;
     flex-direction: row;
@@ -10,11 +14,13 @@
     border-radius: 20px;
     height: 70px;
     align-items: center;
+    justify-content: space-between;
+    padding-left: 385px;
+    padding-right: 385px;
     border-width: 2px;
     border-color: #1D4044;
-    padding-left: 380px;
-    padding-right: 380px;
 }
+
 
 .navbar ul {
     margin-right: auto;
@@ -48,7 +54,6 @@
     margin-left: auto;
     margin-right: auto;
     width: 1200px;
-    border-width: 2px;
     max-width: 100%;
     align-items: center;
     gap: 65px;
