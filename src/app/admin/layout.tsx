@@ -7,12 +7,10 @@ export const metadata: Metadata = {
   title: "Tairu - Administrator 💻",
   description: "Administra tu negocio con Tairu",
 };
-
+const inter = Inter({ subsets: ["latin"] });
 export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  const inter = Inter({subsets: ["latin"]})
-
   return (
     <>
       <Flex
