@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Abril_Fatface } from "next/font/google";
 import "./globals.css";
 import { UIProvider } from "./providers";
 
-const inter = Inter({ subsets: ["latin"] });
+const abril = Abril_Fatface({
+  subsets: ["latin"],
+  weight: "400"
+});
 
 export const metadata: Metadata = {
   title: "Tairu",
@@ -15,7 +18,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="es">
-      <body className={inter.className}>
+      <body className={`${abril.className}`}>
         <UIProvider>{children}</UIProvider>
       </body>
     </html>
