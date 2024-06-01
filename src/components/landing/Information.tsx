@@ -8,13 +8,15 @@ export default function Info() {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
+      
       ([entry]) => {
+        console.log("observer", entry)
         setIsInfoVisible(entry.isIntersecting);
       },
       {
         root: null, // viewport
         rootMargin: "50px",
-        threshold: 0.1, // trigger when 10% is visible
+        threshold: 0.5, // trigger when 10% is visible
       }
     );
 

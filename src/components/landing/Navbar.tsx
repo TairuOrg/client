@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Navbar() {
   return (
-    <nav className="navbar crystalize">
+    <nav className="navbar">
       <ul>
         <li>
           <Link href="/login">Inicia sesión</Link>
