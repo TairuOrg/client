@@ -1,0 +1,63 @@
+.navbar {
+    background-color: #B2F5EA;
+    display: flex;
+    flex-direction: row;
+    margin-right: auto;
+    margin-left: auto;
+    padding: 1rem;
+    width: 1200px;
+    max-width: 100%;
+    border-radius: 20px;
+    margin-top: 40px;
+    height: 70px;
+    align-items: center;
+    border-width: 2px;
+    border-color: #1D4044;
+    padding-left: 380px;
+    padding-right: 380px;
+}
+
+.navbar ul {
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    color: #1D4044;
+    font-size: 25px;
+}
+
+.navbar a {
+    text-decoration: none;
+    color: #1D4044;
+    position: relative;
+}
+
+.navbar a:hover {
+    color: #1D4044;
+    background-color: #E6FFFA;
+    border-radius: 5px;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 0 0 8px #E6FFFA;
+    transition: all 0.3s ease-in-out;
+}
+
+.hero {
+    margin-top: 70px;
+    width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+    gap: 57px;
+    justify-content: center;
+}
+
+.hero h1 {
+    color: #1D4044;
+    font-size: 60px;
+    white-space: pre-line;
+}

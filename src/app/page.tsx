@@ -1,32 +1,38 @@
 import Hero from "@/assets/Hero";
 import Title from "@/components/landing/Title";
 import Navbar from "@/components/ui/Navbar";
-
-import { Flex } from "@chakra-ui/react";
+import Link from "next/link";
+import "@/styles/landing.css";
+import { Flex, Heading } from "@chakra-ui/react";
+import LogoCircle from "@/assets/logo-circle";
 
 export default function Home() {
   return (
     <>
-    {/* Main container */}
-      <Flex
-        overflowY="hidden"
-        flexDirection="column"
-        backgroundColor="teal.50"
-        height="100vh"
-        width="100vw"
-      >
-        {/* Navbar goes on top of the page and takes approximately 10% of the whole horizontal viewport*/}
-        <Navbar />
-        <Flex paddingX="50" flexDirection="row" height="100%">
-          <Flex  direction="column" marginLeft='30' minW='300' width={{sm:"400px", md: '60%', lg: '60%'}} justifyContent="center">
-            <Title />
-          </Flex>
-
-        <Flex direction='column' justifyContent='center' minW='300' width={{sm:"400px", md: '40%', lg: '40%'}} >
-          <Hero />
-        </Flex>
-        </Flex>
-      </Flex>
+      <main className="main">
+        <nav className="navbar" >
+          <ul>
+            <li>
+              <Link href="/login">
+                Inicia sesión
+              </Link>
+            </li>
+            <li>
+              <Link href='/about-us'>
+                Sobre nosotros
+              </Link>
+            </li>
+          </ul>
+        </nav>
+        <section className="hero">
+          <LogoCircle />
+          <h1>
+            Crea, administra <br />
+            y haz crecer tu negocio <br />
+            con Tairu
+          </h1>
+        </section>
+      </main>
     </>
   );
 }
