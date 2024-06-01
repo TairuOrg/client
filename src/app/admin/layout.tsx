@@ -2,7 +2,7 @@ import TopBar from "@/components/dashboard/TopBar";
 import Menu from "@/components/dashboard/Menu";
 import { Flex } from "@chakra-ui/react";
 import type { Metadata } from "next";
-
+import { Inter } from "next/font/google";
 export const metadata: Metadata = {
   title: "Tairu - Administrator 💻",
   description: "Administra tu negocio con Tairu",
@@ -11,6 +11,8 @@ export const metadata: Metadata = {
 export default function AdminLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const inter = Inter({subsets: ["latin"]})
+
   return (
     <>
       <Flex
@@ -19,6 +21,7 @@ export default function AdminLayout({
         width="100vw"
         overflowY={"auto"}
         bgColor="teal.50"
+        className={inter.className}
       >
         <TopBar />
         <Flex dir="row" flex="1">

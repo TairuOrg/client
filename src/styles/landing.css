@@ -1,14 +1,13 @@
 .navbar {
+    position: fixed;
+    top: 40px;
     background-color: #B2F5EA;
     display: flex;
     flex-direction: row;
-    margin-right: auto;
-    margin-left: auto;
     padding: 1rem;
     width: 1200px;
     max-width: 100%;
     border-radius: 20px;
-    margin-top: 40px;
     height: 70px;
     align-items: center;
     border-width: 2px;
@@ -30,12 +29,10 @@
 
 .navbar a {
     text-decoration: none;
-    color: #1D4044;
     position: relative;
 }
 
 .navbar a:hover {
-    color: #1D4044;
     background-color: #E6FFFA;
     border-radius: 5px;
     text-decoration: none;
@@ -44,20 +41,16 @@
     transition: all 0.3s ease-in-out;
 }
 
-.hero {
-    margin-top: 70px;
-    width: 1200px;
-    margin-right: auto;
-    margin-left: auto;
+.info {
     display: flex;
-    flex-direction: row;
-    align-items: start;
-    gap: 57px;
-    justify-content: center;
-}
-
-.hero h1 {
-    color: #1D4044;
+    flex-direction: column;
+    margin-top: 185px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 1200px;
+    border-width: 2px;
+    max-width: 100%;
+    align-items: center;
+    gap: 65px;
     font-size: 60px;
-    white-space: pre-line;
 }
