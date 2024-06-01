@@ -36,6 +36,7 @@
 .navbar a {
     text-decoration: none;
     position: relative;
+    transition: all 0.3s ease-in-out;
 }
 
 .navbar a:hover {
@@ -44,9 +45,8 @@
     text-decoration: none;
     outline: none;
     box-shadow: 0 0 0 8px #E6FFFA;
-    transition: all 0.3s ease-in-out;
+    
 }
-
 .info {
     display: flex;
     flex-direction: column;
@@ -58,4 +58,60 @@
     align-items: center;
     gap: 65px;
     font-size: 60px;
+    
+}
+
+.hero-image {
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.hero-image.visible {
+    opacity: 1;
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+    .customers {
+        direction: flex;
+        flex-direction: column;
+        margin-top: 100px;
+    }
+
+    .customers h1 {
+        font-size: 60px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+}
+
+.customer-logos {
+    padding: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 50px;
+    margin-top: 50px;
+}
+.customer-logos div {
+    height: fit-content;
+    width: fit-content;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    border-width: 2px;
+    border-color: #1D4044;
+    border-radius: 100%;
 }
