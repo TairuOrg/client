@@ -1,9 +1,28 @@
 .customers {
-    direction: flex;
+    display: flex;
+    opacity: 0;
+    width: 1200px;
     flex-direction: column;
     margin-top: 100px;
 }
 
+.customers.visible {
+    opacity: 1;
+    animation: fadeIn 0.5s ease-in-out forwards;
+    
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 .customers h1 {
     font-size: 60px;
     display: flex;
