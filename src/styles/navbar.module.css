@@ -1,0 +1,68 @@
+.navbar {
+    z-index: 5;
+    position: fixed;
+    top: 40px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: #B2F5EA;
+    display: flex;
+    flex-direction: row;
+    padding: 1rem;
+    width: 1200px;
+    max-width: 60%;
+    border-radius: 20px;
+    height: 70px;
+    align-items: center;
+    justify-content: space-evenly;
+    padding-left: 385px;
+    padding-right: 385px;
+    border-width: 2px;
+    border-color: #1D4044;
+}
+
+
+.navbar ul {
+    margin-right: auto;
+    margin-left: auto;
+    width: 100%;
+    justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    color: #1D4044;
+    font-size: 25px;
+}
+
+.navbar ul li {
+    list-style: none;
+    width: auto;
+}
+.navbar a {
+    
+    text-decoration: none;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+}a
+
+.navbar a:hover {
+    background-color: #E6FFFA;
+    border-radius: 5px;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 0 0 0 8px #E6FFFA;
+    
+}
+
+/* Estilos para pantallas medianas */
+@media (max-width: 1200px) {
+    .navbar {
+        padding-left: 50px;
+        padding-right: 50px;
+        justify-content: space-evenly;
+        width: 90%;
+    }
+
+    .navbar ul {
+        font-size: 20px;
+    }
+}

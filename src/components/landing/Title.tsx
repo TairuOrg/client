@@ -1,10 +1,10 @@
 import Logo from "@/assets/Logo";
-import "@/styles/title.css"
+import styles from "@/styles/title.module.css"
 export default function Heading() {
   return (
     <>
-       <section className="hero">
-          <div className="background-circle">
+       <section className={styles.hero}>
+          <div className={styles.background_circle}>
           <Logo h={200} w={200} />
           </div>
           <h1>

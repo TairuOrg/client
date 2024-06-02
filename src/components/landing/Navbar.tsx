@@ -1,8 +1,9 @@
 import Link from "next/link";
+import styles from "@/styles/navbar.module.css";
 
 export default function Navbar() {
   return (
-    <nav className="navbar">
+    <nav className={styles.navbar}>
       <ul>
         <li>
           <Link href="/login">Inicia sesión</Link>

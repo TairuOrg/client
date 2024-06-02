@@ -1,6 +1,7 @@
 'use client'
 import Hero from "@/assets/Hero";
 import { useEffect, useRef, useState } from "react";
+import styles from '@/styles/info.module.css';
 
 export default function Info() {
   const [isInfoVisible, setIsInfoVisible] = useState(false);
@@ -32,12 +33,12 @@ export default function Info() {
   }, []);
 
   return (
-    <section className="info">
+    <section className={styles.info}>
       <h1>
         Interfaz amigable y fácil de usar <br />
       </h1>
       <div ref={infoRef}>
-        <Hero w={800} h={800} visible={isInfoVisible ? "visible" : ""} />
+        <Hero w={800} h={800} visible={isInfoVisible ? styles.visible : ""} />
       </div>
     </section>
   );
