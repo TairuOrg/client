@@ -11,7 +11,7 @@ const routes = {
     "/admin/stock",
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
-  public: ["/login", "/about-us", "/unauthorized", "/", '/testing'],
+  public: ["/login", "/about-us", "/unauthorized", "/", '/testing',"/sign-up"],
 };
 
 export default async function handler(req: NextRequest) {
