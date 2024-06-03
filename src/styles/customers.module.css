@@ -1,11 +1,16 @@
 .customers {
     display: flex;
     opacity: 0;
-    width: 1200px;
+    width: 100%;
     flex-direction: column;
     margin-top: 100px;
 }
-
+@media (max-width: 1200px) {
+    .customers {
+        width: 1200px;
+    
+    }
+}
 .customers.visible {
     opacity: 1;
     animation: fadeIn 0.5s ease-in-out forwards;

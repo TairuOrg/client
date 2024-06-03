@@ -44,9 +44,15 @@ export default function Footer() {
       </section>
       <section className={styles.policy}>
         <h1>Política de privacidad</h1>
-        <Link href="/sponsors">Aliados / Sponsors</Link>
-        <Link href="/policy#data-usage">Uso de datos</Link>
-        <Link href="/policy#cookies">Política de cookies</Link>
+        <Link href="/sponsors">
+          <h1>Aliados / Sponsors</h1>
+        </Link>
+        <Link href="/policy#data-usage">
+          <h1>Uso de datos</h1>
+        </Link>
+        <Link href="/policy#cookies">
+          <h1>Política de cookies</h1>
+        </Link>
       </section>
       <section className={styles.contact}>
         <h1>Contáctanos</h1>

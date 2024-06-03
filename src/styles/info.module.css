@@ -4,11 +4,20 @@
     margin-top: 185px;
     margin-left: auto;
     margin-right: auto;
-    width: 1200px;
+    width: 100%;
     align-items: center;
     gap: 65px;
     font-size: 60px;
     
+}
+@media (max-width: 1200px) {
+    .info {
+        width: 1200px;
+    
+    }
+    .info h1 {
+        font-size: 40px;
+    }
 }
 .hero_image {
     opacity: 0;
