@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
-import { useState } from "react";
-import Step1 from "./Step1";
+import VerificationCode from "./VerificationCode";
+import { useActiveStepsStore } from "@/hooks/useActiveSteps";
+import PersonalInformation from "./PersonalInformation";
 
 export default function AdminSignup() {
-  const [activeStep, setActiveStep] = useState([1]);
-  console.log(activeStep);
+  const { active, current } = useActiveStepsStore();
+  const activeStep = current();
+
   return (
     <div className="flex flex-col gap-[40px] items-center justify-center min-h-screen bg-teal-50">
       {/* Stepper */}
@@ -15,7 +17,7 @@ export default function AdminSignup() {
             <span
               key={step}
               className={`flex flex-row items-center justify-center w-[40px] h-[40px] rounded-full bg-teal-50 text-[20px] ${
-                activeStep.includes(step) && "text-teal-600"
+                active.includes(step) && "text-teal-600"
               }`}
             >
               {step}
@@ -28,11 +30,9 @@ export default function AdminSignup() {
       </div>
       {/* Main form */}
       <div className="flex flex-col flex-wrap w-[670px] h-[500px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
-        {(activeStep[activeStep.length - 1] === 1 && (
-          <Step1 activeStep={activeStep} setActiveStep={setActiveStep} />
-        )) ||
-          (activeStep[activeStep.length - 1] === 2 && <h1>hola</h1>) ||
-          (activeStep[activeStep.length - 1] === 3 && <h2>hola 2</h2>)}
+        {(activeStep === 1 && <VerificationCode />) ||
+          (activeStep === 2 && <PersonalInformation />) ||
+          (activeStep === 3 && <h2>hola 2</h2>)}
       </div>
     </div>
   );

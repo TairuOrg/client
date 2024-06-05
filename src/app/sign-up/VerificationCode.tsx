@@ -1,19 +1,15 @@
 import { FormLabel, FormControl, Button, Input } from "@chakra-ui/react";
 import { useState } from "react";
 import { AiOutlineUser } from "react-icons/ai";
+import { useActiveStepsStore } from "@/hooks/useActiveSteps";
 
-export default function Step1({
-  activeStep,
-  setActiveStep,
-}: {
-  activeStep: number[];
-  setActiveStep: (value: number[]) => void;
-}) {
+export default function VerificationCode() {
+  const { updateActiveSteps } = useActiveStepsStore();
   const [code, setCode] = useState("");
   const handleCode = (data: FormData) => {
     console.log(data.get("code"));
     if (code === "1234-56") {
-      setActiveStep([...activeStep, activeStep.push(activeStep[activeStep.length -1] + 1)]);
+      updateActiveSteps();
     }
   };
   return (
