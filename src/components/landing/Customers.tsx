@@ -8,7 +8,6 @@ export default function CustomersFeedback() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log("observer", entry);
         setIsCustomerVisible(entry.isIntersecting);
       },
       {
@@ -28,7 +27,6 @@ export default function CustomersFeedback() {
       }
     };
   }, []);
-  console.log(isCustomerVisible)
   return (
     <section
       className={`${styles.customers} ${

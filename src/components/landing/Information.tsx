@@ -11,7 +11,6 @@ export default function Info() {
     const observer = new IntersectionObserver(
       
       ([entry]) => {
-        console.log("observer", entry)
         setIsInfoVisible(entry.isIntersecting);
       },
       {
