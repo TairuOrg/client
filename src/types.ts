@@ -58,7 +58,7 @@ Sample response from the server
 export interface AuthResponse {
   error: boolean;
   body: {
-    userId: number;
+    userId?: number;
     message: {
       title: string;
       description: string;

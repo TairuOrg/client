@@ -1,6 +1,6 @@
 .hero {
     margin-top: 300px;
-    width: 1200px;
+    width: 100%;
     margin-right: auto;
     margin-left: auto;
     display: flex;
@@ -9,7 +9,16 @@
     gap: 57px;
     justify-content: center;
 }
-
+@media (max-width: 1200px) {
+    .hero {
+        width: 1200px;
+    
+    }
+    .hero h1 {
+        font-size: 40px;
+    
+    }
+}
 .hero h1 {
     color: #1D4044;
     font-size: 60px;

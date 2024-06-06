@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 
 export default function Menu() {
   const pathname = usePathname();
-  console.log(pathname)
+
 
   const paths = {
     "/admin/dashboard": { label: "Principal", icon: <RiHome2Line size={40} /> },

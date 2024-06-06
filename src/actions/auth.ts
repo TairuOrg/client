@@ -33,3 +33,32 @@ export async function login(formData: FormData, role: string): Promise<AuthRespo
   cookies().set('SESSION_TOKEN', session, { path: '/', secure: true })
 	return result;
 }
+export async function signUpCode(formData: FormData): Promise<AuthResponse> {
+  try {
+    const response = await fetch(`${BASE_URL}/auth/signup-access`, {
+      method: "POST",
+      body: JSON.stringify({ code: formData.get("code") }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      return result;
+    }
+
+    return result;
+  } catch (error) {
+    console.error("Error:", error);
+    return {
+      error: true,
+      body: {
+        message: {
+          title: "Error",
+          description: "Network error",
+          notificationStatus: "error",
+        },
+      },
+    };
+  }
+}
