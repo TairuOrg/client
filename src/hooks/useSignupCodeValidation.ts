@@ -11,7 +11,6 @@ export const useSignupCodeValidation = () => {
     async (data) => {
       const formData = new FormData();
       formData.append("code", data.code);
-
       try {
         const { error, body } = await signUpCode(formData);
 
@@ -36,7 +35,7 @@ export const useSignupCodeValidation = () => {
         });
       }
     },
-    [toast]
+    []
   );
 
   return handleSignUp;

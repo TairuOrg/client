@@ -20,7 +20,7 @@ export default function AdminSignup() {
               {step}
             </span>
             {step !== 3 && (
-              <span className="flex flex-row w-[50px] items-center border-[1px] bg-teal-50 rounded-full"></span>
+              <span key={index} className="flex flex-row w-[50px] items-center border-[1px] bg-teal-50 rounded-full"></span>
             )}
           </>
         ))}

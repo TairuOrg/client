@@ -43,9 +43,6 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
       },
     });
     const result = await response.json();
-    if (!response.ok) {
-      return result;
-    }
 
     return result;
   } catch (error) {
@@ -61,4 +58,7 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
       },
     };
   }
+}
+export async function signUp(formData: FormData) {
+  return 'unimplemented!!!!'
 }

@@ -1,5 +1,4 @@
 "use client";
-import { PrefixRoutes } from "@/types";
 import {
   Button,
   Flex,
@@ -13,10 +12,8 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ResetPassword from "./ResetPassword";
-import { login } from "@/actions/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLogin } from "@/hooks/useLogin";
 import { loginSchema, LoginSchema } from "@/schemas/loginSchema";

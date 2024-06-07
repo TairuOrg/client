@@ -14,7 +14,7 @@ type SignUpData = {
   updateResidenceLocation: (residence_location: string) => void;
   updatePersonalId: (personal_id: string) => void;
 };
-export const useSignupStore = create<SignUpData>((set, get) => ({
+export const useSignupStore = create<SignUpData>((set) => ({
   personal_id: "",
   name: "",
   email: "",
