@@ -29,7 +29,7 @@ export default function VerificationCode() {
       <div className="flex flex-row">
         <AiOutlineUser className="text-teal-50 text-9xl" />
         <span className="flex flex-col justify-center content-center">
-          <h1 className="text-[40px] text-teal-50">Registro</h1>
+          <h2 className="text-[40px] text-teal-50">Registro</h2>
           <h2 className="text-[15px] text-teal-50 mx-auto">De administrador</h2>
         </span>
       </div>
@@ -46,7 +46,7 @@ export default function VerificationCode() {
             size="lg"
             textColor={"teal.800"}
             placeholder="XXXX-XX"
-            type="text"
+            type="password"
             bg={"teal.50"}
           />
           {errors.code && (

@@ -1,7 +1,7 @@
 "use client";
-import VerificationCode from "./VerificationCode";
+import VerificationCode from "@/components/signup/VerificationCode";
 import { useActiveStepsStore } from "@/hooks/useActiveSteps";
-import PersonalInformation from "./PersonalInformation";
+import PersonalInformation from "@/components/signup/PersonalInformation";
 export default function AdminSignup() {
   const { active, current } = useActiveStepsStore();
   const currentStep = current();
@@ -26,7 +26,7 @@ export default function AdminSignup() {
         ))}
       </div>
       {/* Main form */}
-      <div className="flex flex-col flex-wrap w-[670px] h-[500px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
+      <div className="flex flex-col flex-wrap w-[800px] h-[500px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
         {(currentStep === 1 && <VerificationCode />) ||
           (currentStep === 2 && <PersonalInformation />) ||
           (currentStep === 3 && <h2>hola 2</h2>)}
