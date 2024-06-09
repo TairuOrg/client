@@ -30,7 +30,7 @@ export default function VerificationCode() {
         <AiOutlineUser className="text-teal-50 text-9xl" />
         <span className="flex flex-col justify-center content-center">
           <h2 className="text-[40px] text-teal-50">Registro</h2>
-          <h2 className="text-[15px] text-teal-50 mx-auto">De administrador</h2>
+          <h2 className="text-[15px] text-teal-50 mx-auto">DE ADMINISTRADOR</h2>
         </span>
       </div>
       <form onSubmit={handleSubmit(handleCode)} className="flex flex-col gap-2">

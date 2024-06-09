@@ -2,6 +2,7 @@
 import VerificationCode from "@/components/signup/VerificationCode";
 import { useActiveStepsStore } from "@/hooks/useActiveSteps";
 import PersonalInformation from "@/components/signup/PersonalInformation";
+import AccountInformation from "@/components/signup/AccountInformation";
 export default function AdminSignup() {
   const { active, current } = useActiveStepsStore();
   const currentStep = current();
@@ -20,16 +21,19 @@ export default function AdminSignup() {
               {step}
             </span>
             {step !== 3 && (
-              <span key={index} className="flex flex-row w-[50px] items-center border-[1px] bg-teal-50 rounded-full"></span>
+              <span
+                key={index}
+                className="flex flex-row w-[50px] items-center border-[1px] bg-teal-50 rounded-full"
+              ></span>
             )}
           </>
         ))}
       </div>
       {/* Main form */}
-      <div className="flex flex-col flex-wrap w-[800px] h-[500px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
+      <div className="flex flex-col flex-wrap w-[800px] h-[600px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
         {(currentStep === 1 && <VerificationCode />) ||
           (currentStep === 2 && <PersonalInformation />) ||
-          (currentStep === 3 && <h2>hola 2</h2>)}
+          (currentStep === 3 && <AccountInformation />)}
       </div>
     </div>
   );

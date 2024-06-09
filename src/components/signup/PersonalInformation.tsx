@@ -38,14 +38,14 @@ export default function PersonalInformation() {
         <AiOutlineUser className="text-teal-50 text-9xl" />
         <span className="flex flex-col justify-center content-center">
           <h2 className="text-[40px] text-teal-50">Información</h2>
-          <h2 className="text-[15px] text-teal-50 mx-auto">De administrador</h2>
+          <h2 className="text-[15px] text-teal-50 mx-auto">PERSONAL</h2>
         </span>
       </div>
       <form
         onSubmit={handleSubmit(handlePersonalInformation)}
         className="flex w-full"
       >
-        <FormControl className="flex flex-col flex-wrap justify-center items-center gap-4 w-full">
+        <FormControl className="flex flex-col justify-center items-center gap-4 w-full">
           <div className="flex flex-row justify-evenly w-full px-[40px]">
             <span>
               <div>
