@@ -23,7 +23,7 @@ export default function AccountInformation() {
         <AiOutlineUser className="text-teal-50 text-9xl" />
         <span className="flex flex-col justify-center content-center">
           <h2 className="text-[40px] text-teal-50">Información</h2>
-          <h2 className="text-[15px] text-teal-50 mx-auto">PERSONAL</h2>
+          <h2 className="text-[15px] text-teal-50 mx-auto">DE SU CUENTA</h2>
         </span>
       </div>
       <form onSubmit={handleSubmit(handleAccountInformation)}>
@@ -32,6 +32,7 @@ export default function AccountInformation() {
             Ingrese su correo electrónico
           </FormLabel>
           <Input
+            variant="filled"
             {...register("email")}
             type="email"
             placeholder="Correo electrónico"
@@ -41,6 +42,7 @@ export default function AccountInformation() {
           )}
           <FormLabel className="text-teal-50">Ingrese su contraseña</FormLabel>
           <Input
+            variant="filled"
             {...register("password")}
             type="password"
             placeholder="Contraseña"
@@ -50,6 +52,7 @@ export default function AccountInformation() {
           )}
           <FormLabel className="text-teal-50">Confirme su contraseña</FormLabel>
           <Input
+            variant="filled"
             {...register("confirmPassword")}
             type="password"
             placeholder="Confirme su contraseña"
@@ -59,7 +62,13 @@ export default function AccountInformation() {
               {errors.confirmPassword.message}
             </span>
           )}
-          <Button isDisabled={Boolean(Object.keys(errors).length)} type="submit">Siguiente</Button>
+          <Button
+            mt='5px'
+            isDisabled={Boolean(Object.keys(errors).length)}
+            type="submit"
+          >
+            Siguiente
+          </Button>
         </FormControl>
       </form>
     </>

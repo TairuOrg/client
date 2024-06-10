@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthResponse } from "@/types";
+import { AuthResponse, SignUpData } from "@/types";
 import SHA256 from "crypto-js/sha256";
 import { BASE_URL } from "@/constants";
 import { cookies } from 'next/headers';
@@ -58,6 +58,9 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
       },
     };
   }
+}
+export async function validateData(signUpData: SignUpData) {
+  return 'unimplemented!!!!'
 }
 export async function signUp(formData: FormData) {
   return 'unimplemented!!!!'
