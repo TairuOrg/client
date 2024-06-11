@@ -32,10 +32,14 @@ export default function AccountInformation() {
             Ingrese su correo electrónico
           </FormLabel>
           <Input
-            variant="filled"
             {...register("email")}
-            type="email"
-            placeholder="Correo electrónico"
+           
+            borderColor="teal.800"
+            size="lg"
+            textColor="teal.800"
+            placeholder="John Doe"
+            type="text"
+            bg="teal.50"
           />
           {errors.email && (
             <span className="text-red-500">{errors.email.message}</span>
@@ -63,7 +67,7 @@ export default function AccountInformation() {
             </span>
           )}
           <Button
-            mt='5px'
+            mt="5px"
             isDisabled={Boolean(Object.keys(errors).length)}
             type="submit"
           >

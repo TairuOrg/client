@@ -59,9 +59,41 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
     };
   }
 }
-export async function validateData(signUpData: SignUpData) {
-  return 'unimplemented!!!!'
+export async function validateData(signUpData: {
+  personal_id: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  residence_location: string;
+}): Promise<AuthResponse> {
+  const response = await fetch(`${BASE_URL}/auth/signup-validation`, {
+    method: "POST",
+    body: JSON.stringify(signUpData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+
+  return result;
 }
-export async function signUp(formData: FormData) {
-  return 'unimplemented!!!!'
+export async function signUp(signUpData: {
+  personal_id: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  residence_location: string;
+}): Promise<AuthResponse> {
+  const response = await fetch(`${BASE_URL}/auth/signup-insertion`, {
+    method: "POST",
+    body: JSON.stringify(signUpData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+
+  return result;
 }
