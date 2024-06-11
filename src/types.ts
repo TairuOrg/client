@@ -121,3 +121,18 @@ export const PrefixRoutes = {
   ADMIN: "/admin",
   CASHIER: "/cashier",
 } as const;
+
+export type SignUpData = {
+  personal_id: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  residence_location: string;
+  updateName: (name: string) => void;
+  updateEmail: (email: string) => void;
+  updatePassword: (password: string) => void;
+  updatePhoneNumber: (phone_number: string) => void;
+  updateResidenceLocation: (residence_location: string) => void;
+  updatePersonalId: (personal_id: string) => void;
+};

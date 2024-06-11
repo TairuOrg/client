@@ -1,6 +1,6 @@
 "use server";
 
-import { AuthResponse } from "@/types";
+import { AuthResponse, SignUpData } from "@/types";
 import SHA256 from "crypto-js/sha256";
 import { BASE_URL } from "@/constants";
 import { cookies } from 'next/headers';
@@ -43,9 +43,6 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
       },
     });
     const result = await response.json();
-    if (!response.ok) {
-      return result;
-    }
 
     return result;
   } catch (error) {
@@ -61,4 +58,42 @@ export async function signUpCode(formData: FormData): Promise<AuthResponse> {
       },
     };
   }
+}
+export async function validateData(signUpData: {
+  personal_id: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  residence_location: string;
+}): Promise<AuthResponse> {
+  const response = await fetch(`${BASE_URL}/auth/signup-validation`, {
+    method: "POST",
+    body: JSON.stringify(signUpData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+
+  return result;
+}
+export async function signUp(signUpData: {
+  personal_id: string;
+  password: string;
+  name: string;
+  phone_number: string;
+  email: string;
+  residence_location: string;
+}): Promise<AuthResponse> {
+  const response = await fetch(`${BASE_URL}/auth/signup-insertion`, {
+    method: "POST",
+    body: JSON.stringify(signUpData),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+  const result = await response.json();
+
+  return result;
 }

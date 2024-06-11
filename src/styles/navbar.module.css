@@ -8,15 +8,11 @@
     background-color: #B2F5EA;
     display: flex;
     flex-direction: row;
-    padding: 1rem;
     width: 1200px;
-    max-width: 60%;
+    gap: 10px;
     border-radius: 20px;
     height: 70px;
     align-items: center;
-    justify-content: space-evenly;
-    padding-left: 385px;
-    padding-right: 385px;
     border-width: 2px;
     border-color: #1D4044;
 }
@@ -26,7 +22,7 @@
     margin-right: auto;
     margin-left: auto;
     width: 100%;
-    justify-content: space-between;
+    justify-content: space-around;
     display: flex;
     flex-direction: row;
     color: #1D4044;
