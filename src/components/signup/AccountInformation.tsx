@@ -33,7 +33,6 @@ export default function AccountInformation() {
           </FormLabel>
           <Input
             {...register("email")}
-           
             borderColor="teal.800"
             size="lg"
             textColor="teal.800"
@@ -46,6 +45,7 @@ export default function AccountInformation() {
           )}
           <FormLabel className="text-teal-50">Ingrese su contraseña</FormLabel>
           <Input
+            className="bg-teal-50"
             variant="filled"
             {...register("password")}
             type="password"
@@ -56,6 +56,7 @@ export default function AccountInformation() {
           )}
           <FormLabel className="text-teal-50">Confirme su contraseña</FormLabel>
           <Input
+            className="bg-teal-50"
             variant="filled"
             {...register("confirmPassword")}
             type="password"

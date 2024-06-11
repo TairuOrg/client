@@ -30,7 +30,7 @@ export default function AdminSignup() {
         ))}
       </div>
       {/* Main form */}
-      <div className="flex flex-col flex-wrap w-[800px] h-[600px] bg-teal-800 rounded-[20px] justify-center content-center gap-4">
+      <div className="flex flex-col flex-wrap w-[800px] h-[600px] bg-teal-800 rounded-[20px] justify-center content-center gap-4 shadow-lg">
         {(currentStep === 1 && <VerificationCode />) ||
           (currentStep === 2 && <PersonalInformation />) ||
           (currentStep === 3 && <AccountInformation />)}

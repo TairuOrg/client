@@ -7,10 +7,6 @@ import { validateData, signUp } from "@/actions/auth";
 
 export function useAccountInformation() {
   const {
-    updateEmail,
-    updatePassword,
-    email,
-    password,
     name,
     personal_id,
     phone_number,
@@ -22,8 +18,6 @@ export function useAccountInformation() {
   const handleAccountInformation: SubmitHandler<FieldValues> = useCallback(
     async (data) => {
       try {
-        updateEmail(data.email);
-        updatePassword(data.password);
         // at this point, we have collected all the data we need
         // to create an account
         // we can now proceed to the next step
@@ -34,8 +28,8 @@ export function useAccountInformation() {
           status: "info",
         });
         const { body, error } = await validateData({
-          email,
-          password,
+          email: data.email,
+          password: data.password,
           name,
           personal_id,
           phone_number,
@@ -50,8 +44,8 @@ export function useAccountInformation() {
         });
         if (!error) {
           const { body, error } = await signUp({
-            email,
-            password,
+            email: data.email,
+            password: data.password,
             name,
             personal_id,
             phone_number,
