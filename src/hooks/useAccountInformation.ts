@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { FieldValues, SubmitHandler } from 'react-hook-form';
 import { useSignupStore } from "@/store/useSignup";
 import { validateData, signUp } from "@/actions/auth";
+import { SHA256 } from 'crypto-js';
 
 export function useAccountInformation() {
   const {
@@ -27,9 +28,10 @@ export function useAccountInformation() {
           description: "Estamos validando tus datos y creando tu cuenta",
           status: "info",
         });
+        const hashedPassword = SHA256(data.password).toString();
         const { body, error } = await validateData({
           email: data.email,
-          password: data.password,
+          password: hashedPassword,
           name,
           personal_id,
           phone_number,
@@ -45,7 +47,7 @@ export function useAccountInformation() {
         if (!error) {
           const { body, error } = await signUp({
             email: data.email,
-            password: data.password,
+            password: hashedPassword,
             name,
             personal_id,
             phone_number,
@@ -57,7 +59,9 @@ export function useAccountInformation() {
             status: body.message.notificationStatus,
             isClosable: true,
           });
+          router.push('/login')
         }
+        router.refresh();
       } catch (e) {
         toast({
           title: "Error",

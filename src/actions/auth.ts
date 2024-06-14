@@ -75,7 +75,7 @@ export async function validateData(signUpData: {
     },
   });
   const result = await response.json();
-
+  console.log(result)
   return result;
 }
 export async function signUp(signUpData: {
