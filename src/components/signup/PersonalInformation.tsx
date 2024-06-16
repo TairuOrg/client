@@ -35,10 +35,10 @@ export default function PersonalInformation() {
   return (
     <>
       <div className="flex flex-row justify-center">
-        <AiOutlineUser className="text-teal-50 text-9xl" />
+        <AiOutlineUser className="text-teal-900 text-9xl" />
         <span className="flex flex-col justify-center content-center">
-          <h2 className="text-[40px] text-teal-50">Información</h2>
-          <h2 className="text-[15px] text-teal-50 mx-auto">PERSONAL</h2>
+          <h2 className="text-[40px] text-teal-900">Información</h2>
+          <h2 className="text-[15px] text-teal-900 mx-auto">PERSONAL</h2>
         </span>
       </div>
       <form
@@ -49,7 +49,7 @@ export default function PersonalInformation() {
           <div className="flex flex-row justify-evenly w-full px-[40px]">
             <span>
               <div>
-                <FormLabel className="text-teal-50">Nombre completo</FormLabel>
+                <FormLabel className="text-teal-900">Nombre completo</FormLabel>
                 <Input
                   isInvalid={!!errors.fullname}
                   {...register("fullname")}
@@ -68,7 +68,7 @@ export default function PersonalInformation() {
             </span>
 
             <span>
-              <FormLabel className="text-teal-50">
+              <FormLabel className="text-teal-900">
                 Cédula de identidad
               </FormLabel>
               <InputGroup size="lg" display="flex">
@@ -100,7 +100,7 @@ export default function PersonalInformation() {
           <div className="flex flex-row justify-evenly w-full px-[40px]">
             <span>
               <div>
-              <FormLabel className="text-teal-50">Residencia</FormLabel>
+              <FormLabel className="text-teal-900">Residencia</FormLabel>
               <Select
                 isInvalid={!!errors.state}
                 {...register("state")}
@@ -115,7 +115,7 @@ export default function PersonalInformation() {
               {errors.state && <span className="text-red-500"> {errors.state.message}</span>}
             </span>
             <span>
-              <FormLabel className="text-teal-50">Número de teléfono</FormLabel>
+              <FormLabel className="text-teal-900">Número de teléfono</FormLabel>
               <InputGroup size="lg" display="flex">
                 <InputLeftAddon>
                   <Select {...register("phoneCode")} width="fit-content">

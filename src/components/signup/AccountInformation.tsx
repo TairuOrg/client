@@ -1,4 +1,4 @@
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineArrowLeft, AiOutlineUser } from "react-icons/ai";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormLabel, Input, FormControl, Button } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
@@ -17,18 +17,34 @@ export default function AccountInformation() {
     delayError: 5,
   });
   const handleAccountInformation = useAccountInformation();
+  const handleGoBack = () => {
+   
+  };
   return (
     <>
+      <Button
+          mt="2px"
+          mr="600px"
+          borderRadius="100%"
+          onClick={handleGoBack}
+          width="50px"
+          height="50px"
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+        <AiOutlineArrowLeft size={50}/>
+      </Button>
       <div className="flex flex-row justify-center">
-        <AiOutlineUser className="text-teal-50 text-9xl" />
+        <AiOutlineUser className="text-teal-900 text-9xl" />
         <span className="flex flex-col justify-center content-center">
-          <h2 className="text-[40px] text-teal-50">Información</h2>
-          <h2 className="text-[15px] text-teal-50 mx-auto">DE SU CUENTA</h2>
+          <h2 className="text-[40px] text-teal-900">Información</h2>
+          <h2 className="text-[15px] text-teal-900 mx-auto">DE SU CUENTA</h2>
         </span>
       </div>
       <form onSubmit={handleSubmit(handleAccountInformation)}>
         <FormControl className="flex flex-col gap-2 w-full">
-          <FormLabel className="text-teal-50">
+          <FormLabel className="text-teal-900">
             Ingrese su correo electrónico
           </FormLabel>
           <Input
@@ -36,14 +52,14 @@ export default function AccountInformation() {
             borderColor="teal.800"
             size="lg"
             textColor="teal.800"
-            placeholder="John Doe"
+            placeholder="johndoe@ejemplo.com"
             type="text"
             bg="teal.50"
           />
           {errors.email && (
             <span className="text-red-500">{errors.email.message}</span>
           )}
-          <FormLabel className="text-teal-50">Ingrese su contraseña</FormLabel>
+          <FormLabel className="text-teal-900">Ingrese su contraseña</FormLabel>
           <Input
             className="bg-teal-50"
             variant="filled"
@@ -54,7 +70,7 @@ export default function AccountInformation() {
           {errors.password && (
             <span className="text-red-500">{errors.password.message}</span>
           )}
-          <FormLabel className="text-teal-50">Confirme su contraseña</FormLabel>
+          <FormLabel className="text-teal-900">Confirme su contraseña</FormLabel>
           <Input
             className="bg-teal-50"
             variant="filled"
