@@ -75,17 +75,20 @@ export async function validateData(signUpData: {
     },
   });
   const result = await response.json();
-  console.log(result)
+
   return result;
 }
-export async function signUp(signUpData: {
-  personal_id: string;
+
+interface SignUpDataType {
+  email: string;
   password: string;
   name: string;
+  personal_id: string;
   phone_number: string;
-  email: string;
   residence_location: string;
-}): Promise<AuthResponse> {
+  role: 'admin' | 'cashier';
+}
+export async function signUp(signUpData: SignUpDataType): Promise<AuthResponse> {
   const response = await fetch(`${BASE_URL}/auth/signup-insertion`, {
     method: "POST",
     body: JSON.stringify(signUpData),

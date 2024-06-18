@@ -4,6 +4,7 @@ type ActiveSteps = {
   active: number[];
   current: () => number;
   updateActiveSteps: () => void;
+  backUpdateActiveSteps: () => void;
 };
 
 export const useActiveStepsStore = create<ActiveSteps>((set, get) => ({
@@ -17,8 +18,18 @@ export const useActiveStepsStore = create<ActiveSteps>((set, get) => ({
       };
     });
   },
+  backUpdateActiveSteps: () => {
+    set(state => {
+      const newActive = state.active[state.active.length - 1] - 1;
+      return {
+        active: [...state.active, newActive],
+      }
+    
+    })
+  },
   current: () => {
     const state = get();
     return state.active[state.active.length - 1];
   },
+
 }));

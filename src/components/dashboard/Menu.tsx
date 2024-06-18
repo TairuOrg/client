@@ -20,7 +20,7 @@ export default function Menu() {
     "/admin/cashier": { label: "Cajeros", icon: <FiUser size={40} /> },
   };
   return (
-    <VStack width={"92px"} ml='10' height={"100%"}left='5'>
+    <VStack width={"92px"} height={"100%"}left='5'>
       <VStack
         my='auto' 
         boxShadow={"lg"}
@@ -50,7 +50,7 @@ export default function Menu() {
                   padding='2'
                   href={path}
                   borderRadius='lg'
-                  bgColor= { pathname === path ? 'teal.100' : 'transparent'}
+                  bgColor= { pathname.includes(path) ? 'teal.100' : 'transparent'}
                   _hover={{ transform: "scale(1.10)" }}
                   transition="transform 0.3s ease-in-out"
                 >

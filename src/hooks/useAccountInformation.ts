@@ -6,7 +6,7 @@ import { useSignupStore } from "@/store/useSignup";
 import { validateData, signUp } from "@/actions/auth";
 import { SHA256 } from 'crypto-js';
 
-export function useAccountInformation() {
+export function useAccountInformation(role: 'admin' | 'cashier') {
   const {
     name,
     personal_id,
@@ -15,7 +15,7 @@ export function useAccountInformation() {
   } = useSignupStore();
   const toast = useToast();
   const router = useRouter();
-
+  
   const handleAccountInformation: SubmitHandler<FieldValues> = useCallback(
     async (data) => {
       try {
@@ -23,6 +23,7 @@ export function useAccountInformation() {
         // to create an account
         // we can now proceed to the next step
         // toast que avise que se validarán sus datos y se creará la cuenta
+        console.log(role)
         toast({
           title: "Validación en progreso",
           description: "Estamos validando tus datos y creando tu cuenta",
@@ -52,6 +53,7 @@ export function useAccountInformation() {
             personal_id,
             phone_number,
             residence_location,
+            role
           });
           toast({
             title: body.message.title,

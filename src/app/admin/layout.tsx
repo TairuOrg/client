@@ -22,7 +22,7 @@ export default function AdminLayout({
         className={inter.className}
       >
         <TopBar />
-        <Flex dir="row" flex="1">
+        <Flex dir="row" flex="1" mx='10'>
           <Menu />
           {children}
         </Flex>
