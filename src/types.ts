@@ -136,3 +136,11 @@ export type SignUpData = {
   updateResidenceLocation: (residence_location: string) => void;
   updatePersonalId: (personal_id: string) => void;
 };
+export type Items ={
+  barcode_id: string;
+  category: string;
+  manufacturer: string;
+  name: string;
+  price:string;
+  quantity: number;
+}

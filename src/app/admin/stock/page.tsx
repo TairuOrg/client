@@ -1,4 +1,5 @@
 "use client";
+import { useEffect} from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -9,7 +10,7 @@ import {
 import { CiFilter } from "react-icons/ci";
 import { MdOutlineSearch } from "react-icons/md";
 import { FaSort } from "react-icons/fa";
-
+import { stockItems } from "@/actions/stock";
 import {
   Table,
   Thead,
@@ -38,6 +39,18 @@ type Item = {
 export default function Page() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await stockItems();
+        console.log("Payload.....", result.body.payload);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, []);
+  
   const data: Item[] = [
     {
       name: "Harina pan",
