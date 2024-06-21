@@ -129,6 +129,7 @@ export type SignUpData = {
   phone_number: string;
   email: string;
   residence_location: string;
+  role: string;
   updateName: (name: string) => void;
   updateEmail: (email: string) => void;
   updatePassword: (password: string) => void;

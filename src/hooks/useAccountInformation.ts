@@ -37,6 +37,7 @@ export function useAccountInformation(role: 'admin' | 'cashier') {
           personal_id,
           phone_number,
           residence_location,
+          role
         });
 
         toast({

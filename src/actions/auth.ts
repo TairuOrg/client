@@ -66,6 +66,7 @@ export async function validateData(signUpData: {
   phone_number: string;
   email: string;
   residence_location: string;
+  role: string;
 }): Promise<AuthResponse> {
   const response = await fetch(`${BASE_URL}/auth/signup-validation`, {
     method: "POST",
