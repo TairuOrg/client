@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decryptSessionCookie } from "./actions/lib/session";
+
 const routes = {
   admin: [
     "/admin",
@@ -11,20 +12,15 @@ const routes = {
     "/admin/stock",
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
-  public: ["/login", "/about-us", "/unauthorized","/sign-up2", "/", '/testing',"/sign-up"],
+  public: ["/login", "/about-us", "/unauthorized", "/", "/testing", "/sign-up"],
 };
 
 export default async function handler(req: NextRequest) {
   const cookie = cookies().get("SESSION_TOKEN")?.value;
   const path = req.nextUrl.pathname;
+
   // Decrypt the session
-  /*
-  (!cookie && routes.public.includes(path)) ||
-    (cookie && routes.public.includes(path))
-  */
-  if (
-    true
-  ) {
+  if (routes.public.includes(path)) {
     return NextResponse.next();
   }
 
@@ -47,10 +43,9 @@ export default async function handler(req: NextRequest) {
 
   return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
 }
+
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|.*\\.png$).*)",
-    "/favicon.ico",
-    "/api/login",
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$|.*\\.jpg$|.*\\.jpeg$|.*\\.gif$|.*\\.svg$|.*\\.webp$|.*\\.ico$).*)",
   ],
 };

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect} from "react";
+import { useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -27,86 +27,116 @@ import {
   ModalFooter,
   ModalBody,
   Badge,
+  Select,
+  useToast,
 } from "@chakra-ui/react";
-type Item = {
-  name: string;
-  barcode: string;
-  quantity: any;
-  price: number;
-  onClickAction: () => any;
-};
+import { Item } from "@/types";
+
+enum FilterOptions {
+  NAME = "name",
+  BARCODE = "barcode",
+}
 
 export default function Page() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const toast = useToast();
+  const {
+    isOpen: isOpenModalDetails,
+    onOpen: onOpenModalDetails,
+    onClose: onCloseModalDetails,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenModalFilter,
+    onOpen: onOpenModalFilter,
+    onClose: onCloseModalFilter,
+  } = useDisclosure();
+
+  const handleFilterPreferences = () => {
+    onCloseModalFilter();
+    toast({
+      title: "Preferencia guardada",
+      description: "Se ha guardado su preferencia de filtro",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+    });
+  };
+  const [data, setData] = useState<Item[]>([]); // data is an array of items
+  const [filterOption, setFilterOption] = useState<string>(FilterOptions.NAME);
+  const [filterValue, setFilterValue] = useState<string>("");
+  const [reloadFromServer, setReloadFromServer] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const result = await stockItems();
-        console.log("Payload.....", result.body.payload);
+        const {
+          body: { payload },
+        } = await stockItems();
+
+        const newPayload = payload.map((item: Item) => {
+          return {
+            ...item,
+            price: `$ ${item.price}`,
+            renderedStatus: (
+              <Badge
+                size="lg"
+                colorScheme={item.quantity > 50 ? "green" : "red"}
+              >
+                {item.quantity > 50 ? "Disponible" : "Últimas unidades"}
+              </Badge>
+            ),
+            btnAction: (
+              <Button
+                colorScheme="teal"
+                onClick={onOpenModalDetails}
+                variant={"outline"}
+              >
+                Ver detalles
+              </Button>
+            ),
+          };
+        });
+        setData(newPayload);
       } catch (error) {
         console.error("Error fetching data:", error);
+        throw new Error("Error when fetching data from server");
       }
     };
     fetchData();
-  }, []);
-  
-  const data: Item[] = [
-    {
-      name: "Harina pan",
-      barcode: "123456789",
-      quantity: <Badge size='lg' variant='solid' colorScheme='green'> DISPONIBLE </Badge>,
-      price: 10,
-      onClickAction: () => (
-        <Button onClick={onOpen} colorScheme="teal">
-          Ver detalles
-        </Button>
-      ),
-    },
-    {
-      name: "Arroz",
-      barcode: "987654321",
-      quantity: <Badge size='lg' variant='solid' colorScheme='green'> DISPONIBLE </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
-    {
-      name: "Pasta",
-      barcode: "1234999789",
-      quantity: <Badge size='lg' variant='solid' colorScheme='green'> DISPONIBLE </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
-    {
-      name: "Azucar",
-      barcode: "9876554321",
-      quantity: <Badge size='lg' variant='solid' colorScheme='red'> AGOTADO </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
-    {
-      name: "Cafe",
-      barcode: "123456789",
-      quantity: <Badge size='lg' variant='solid' colorScheme='yellow'> CERCA DEL LÍMITE </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
-    {
-      name: "Leche",
-      barcode: "987654321",
-      quantity:  <Badge size='lg' variant='solid' colorScheme='yellow'> CERCA DEL LÍMITE </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
-    {
-      name: "Huevos",
-      barcode: "1234999789",
-      quantity:  <Badge size='lg' variant='solid' colorScheme='red'> AGOTADO </Badge>,
-      price: 10,
-      onClickAction: () => <Button colorScheme="teal"> Ver detalles </Button>,
-    },
+    setReloadFromServer(false);
+  }, [reloadFromServer]);
 
-  ];
+  useEffect(() => {
+    if (filterValue === "") {
+      setReloadFromServer(true);
+      return setData(data);
+    }
+
+    switch (filterOption) {
+      case FilterOptions.NAME:
+        setData(
+          data.filter((item) => item.name.toLowerCase().includes(filterValue))
+        );
+        break;
+
+      case FilterOptions.BARCODE:
+        setData(data.filter((item) => item.barcode_id.includes(filterValue)));
+        break;
+
+      default:
+        throw new Error("Malformed filter option");
+    }
+
+    if (filterValue !== "" && data.length === 0) {
+      toast({
+        title: "No se encontraron resultados",
+        description: "No se encontraron resultados para su búsqueda",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  }, [filterValue]);
 
   const cols: ColumnDef<Item>[] = [
     {
@@ -117,7 +147,7 @@ export default function Page() {
     },
     {
       id: "price",
-      header: "Precio del producto",
+      header: "Precio del producto (USD) ",
       accessorKey: "price",
       cell: (info) => info.getValue(),
     },
@@ -129,7 +159,7 @@ export default function Page() {
     },
     {
       id: "barcode",
-      header: "Codigo de barras",
+      header: "Código de barras",
       accessorKey: "barcode",
       cell: (info) => info.getValue(),
     },
@@ -152,18 +182,27 @@ export default function Page() {
   return (
     <div className="flex flex-col w-full items-center p-[100px] gap-4">
       <div className="flex gap-4 w-[800px] ">
-        <form action="" className="flex flex-row gap-4">
+        <form className="flex flex-row gap-4">
           <input
+            onChange={(e) => setFilterValue(e.target.value)}
             type="text"
             className="w-[600px] px-2 rounded-lg"
-            placeholder="NOMBRE DEL PRODUCTO"
+            placeholder={
+              filterOption === FilterOptions.NAME
+                ? "Buscar por nombre"
+                : "Buscar por código"
+            }
           />
 
           <button className="rounded-[20px] h-[50px] w-[50px] flex items-center justify-center text-center bg-white">
             <MdOutlineSearch size="30" />
           </button>
         </form>
-        <button className="rounded-[20px] h-[50px] w-[50px]  flex items-center justify-center  text-center bg-white">
+
+        <button
+          onClick={onOpenModalFilter}
+          className="rounded-[20px] h-[50px] w-[50px]  flex items-center justify-center  text-center bg-white"
+        >
           {" "}
           <CiFilter size="30" />{" "}
         </button>
@@ -173,19 +212,65 @@ export default function Page() {
         </button>
       </div>
       <section className=" flex flex-col w-full justify-start items-center h-fit rounded-lg border-teal-700 border-[2px] p-4">
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>Tipo de búsqueda</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <p>Modal body text goes here.</p>
+              <p>Elija el tipo de dada</p>
+              <Select
+                placeholder="Seleccionar tipo de filtro"
+                onChange={(e) => setFilterOption(e.target.value)}
+              >
+                <option value={FilterOptions.NAME}>Filtrar por Nombre</option>
+                <option value={FilterOptions.BARCODE}>
+                  Filtrar por Código
+                </option>
+              </Select>
+
+              <ModalFooter>
+                <Button onClick={handleFilterPreferences} variant="ghost">
+                  Guardar preferencia
+                </Button>
+              </ModalFooter>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isOpenModalDetails} onClose={onCloseModalDetails}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Producto: {selectedItem?.name}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <ul>
+                <li>
+                  <strong>Código:</strong> {selectedItem?.barcode_id}
+                </li>
+                <li>
+                  <strong> Categoría:</strong> {selectedItem?.category}
+                </li>
+                <li>
+                  <strong> Fabricante:</strong> {selectedItem?.manufacturer}
+                </li>
+                <li>
+                  <strong>Precio unitario:</strong> {selectedItem?.price}
+                </li>
+                <li>
+                  <strong> Cantidad: </strong> {selectedItem?.quantity}
+                </li>
+                <li>
+                  <strong>Estado:</strong> {selectedItem?.renderedStatus}
+                </li>
+              </ul>
             </ModalBody>
             <ModalFooter>
-              <Button variant="ghost">Secondary Action</Button>
+              <Button onClick={onCloseModalDetails}variant="ghost">Cerrar</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
+
         <Table variant="striped" size="lg">
           <Thead>
             {getHeaderGroups().map((headerGroup) => {
@@ -217,13 +302,13 @@ export default function Page() {
                   <div className="text-center">{item.price}</div>
                 </Td>
                 <Td>
-                  <div className="text-center">{item.quantity}</div>
+                  <div className="text-center">{item.renderedStatus}</div>
                 </Td>
                 <Td>
-                  <div className="text-center">{item.barcode}</div>
+                  <div className="text-center">{item.barcode_id}</div>
                 </Td>
-                <Td>
-                  <div className="text-center">{item.onClickAction()}</div>
+                <Td onClick={() => setSelectedItem(item)}>
+                  <div className="text-center">{item.btnAction}</div>
                 </Td>
               </Tr>
             ))}
