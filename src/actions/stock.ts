@@ -3,7 +3,7 @@ import { Item, ServerResponse } from "@/types";
 import { BASE_URL } from "@/constants";
 import { cookies } from "next/headers";
 
-export async function stockItems(): Promise<ServerResponse<Item>> {
+export async function stockItems(): Promise<ServerResponse<Item[]>> {
   try {
     const session = cookies().get("SESSION_TOKEN")?.value;
     const response = await fetch(`${BASE_URL}/admin/items`, {
