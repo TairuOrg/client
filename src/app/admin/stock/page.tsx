@@ -29,6 +29,12 @@ import {
   Badge,
   Select,
   useToast,
+  FormControl,
+  FormLabel,
+  Input,
+  Checkbox,
+  Radio,
+  RadioGroup,
 } from "@chakra-ui/react";
 import { Item } from "@/types";
 
@@ -64,7 +70,8 @@ export default function Page() {
   const [filterOption, setFilterOption] = useState<string>(FilterOptions.NAME);
   const [filterValue, setFilterValue] = useState<string>("");
   const [reloadFromServer, setReloadFromServer] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
+  const [actionsMode, setActionsMode] = useState<string>("decrease");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -99,7 +106,13 @@ export default function Page() {
         setData(newPayload);
       } catch (error) {
         console.error("Error fetching data:", error);
-        throw new Error("Error when fetching data from server");
+        toast({
+          title: "Error en la conexión",
+          description: "No se pudo conectar al servidor",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
       }
     };
     fetchData();
@@ -206,10 +219,6 @@ export default function Page() {
           {" "}
           <CiFilter size="30" />{" "}
         </button>
-        <button className="rounded-[20px] h-[50px] w-[50px]  flex items-center justify-center text-center bg-white">
-          {" "}
-          <FaSort size="30" />{" "}
-        </button>
       </div>
       <section className=" flex flex-col w-full justify-start items-center h-fit rounded-lg border-teal-700 border-[2px] p-4">
         <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
@@ -241,32 +250,63 @@ export default function Page() {
         <Modal isOpen={isOpenModalDetails} onClose={onCloseModalDetails}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Producto: {selectedItem?.name}</ModalHeader>
+            <ModalHeader>Producto: {selectedItem?.[0].name}</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <ul>
-                <li>
-                  <strong>Código:</strong> {selectedItem?.barcode_id}
-                </li>
-                <li>
-                  <strong> Categoría:</strong> {selectedItem?.category}
-                </li>
-                <li>
-                  <strong> Fabricante:</strong> {selectedItem?.manufacturer}
-                </li>
-                <li>
-                  <strong>Precio unitario:</strong> {selectedItem?.price}
-                </li>
-                <li>
-                  <strong> Cantidad: </strong> {selectedItem?.quantity}
-                </li>
-                <li>
-                  <strong>Estado:</strong> {selectedItem?.renderedStatus}
-                </li>
-              </ul>
+              <div className="flex flex-col gap-4">
+                <ul>
+                  <li>
+                    <strong>Código:</strong> {selectedItem?.[0].barcode_id}
+                  </li>
+                  <li>
+                    <strong>Categoría:</strong> {selectedItem?.[0].category}
+                  </li>
+                  <li>
+                    <strong>Fabricante:</strong>{" "}
+                    {selectedItem?.[0].manufacturer}
+                  </li>
+                  <li>
+                    <strong>Precio unitario:</strong> {selectedItem?.[0].price}
+                  </li>
+                  <li>
+                    <strong>Cantidad: </strong> {selectedItem?.[0].quantity}
+                  </li>
+                  <li>
+                    <strong>Estado:</strong> {selectedItem?.[0].renderedStatus}
+                  </li>
+                </ul>
+
+                <hr />
+                <h1>Acciones: {selectedItem?.[0].name}</h1>
+                <form>
+                  <FormControl>
+                    <RadioGroup name="actions" defaultValue="decrease" onChange={(e) => setActionsMode(e)}>
+                      <Radio value="decrease">
+                        Disminuir artículos del inventario
+                      </Radio>
+                      <Radio value="increase">
+                        Aumentar artículos del inventario
+                      </Radio>
+                    </RadioGroup>
+
+                    <FormLabel>
+                      Cantidad a disminuir
+                      <Input type="number" isDisabled={actionsMode === 'increase'}/>
+                    </FormLabel>
+                    
+                    <FormLabel>
+                      Cantidad a aumentar
+                      <Input type="number" isDisabled={actionsMode === 'decrease'} />
+                    </FormLabel>
+                    <Button>Actualizar</Button>
+                  </FormControl>
+                </form>
+              </div>
             </ModalBody>
             <ModalFooter>
-              <Button onClick={onCloseModalDetails}variant="ghost">Cerrar</Button>
+              <Button onClick={onCloseModalDetails} variant="ghost">
+                Cerrar
+              </Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -307,7 +347,7 @@ export default function Page() {
                 <Td>
                   <div className="text-center">{item.barcode_id}</div>
                 </Td>
-                <Td onClick={() => setSelectedItem(item)}>
+                <Td onClick={() => setSelectedItem([item, index])}>
                   <div className="text-center">{item.btnAction}</div>
                 </Td>
               </Tr>
