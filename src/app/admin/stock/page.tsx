@@ -51,6 +51,7 @@ export default function Page() {
   const [reloadFromServer, setReloadFromServer] = useState(false);
   const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsEditing(event.target.checked);
   };
@@ -80,7 +81,7 @@ export default function Page() {
     handleSubmit,
     formState: { errors },
   } = useForm<ModifyItemSchema>({
-    resolver: zodResolver(modifyItemSchema),
+    resolver: zodResolver(modifyItemSchema(selectedItem?.[0].quantity as number)),
     mode: "onChange",
     shouldFocusError: true,
     delayError: 5,
@@ -97,27 +98,6 @@ export default function Page() {
     });
   };
 
-  // const handleUpdateClick = () => {
-  //   if (!checkFormValidity()) {
-  //     toast({
-  //       title: "Formulario incompleto",
-  //       description: "Por favor completa todos los campos antes de actualizar.",
-  //       status: "error",
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-  //     return;
-  //   }  else {
-  //     toast({
-  //       title: "Formulario completo",
-  //       description: "Todos los campos se actualizaron correctamente.",
-  //       status: "success",
-  //       duration: 3000,
-  //       isClosable: true,
-  //     });
-  //   }
-  //   console.log('boton de actualizar:', itemName, price, barcode, manufacturer, quantity);
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -230,6 +210,7 @@ export default function Page() {
       },
     },
   ];
+
   const { getHeaderGroups } = useReactTable({
     columns: cols,
     data,
@@ -265,7 +246,7 @@ export default function Page() {
           <CiFilter size="30" />{" "}
         </button>
       </div>
-      <section className=" flex flex-col w-full justify-start items-center h-fit rounded-lg border-teal-700 border-[2px] p-4">
+      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4">
         <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
           <ModalOverlay />
           <ModalContent>
