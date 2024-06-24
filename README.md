@@ -2,15 +2,15 @@
 
 ### Administrator 
 
-- [ ] Signup view 
-  - [ ] Admin signup view (WIP)
-  - [ ] Cashier signup view (pending)
-- [ ] Stock view
-  - [ ] Filter by criteria
-    - [ ] Date of entry
-    - [ ] Product's name
-    - [ ] Categories
-    - [ ] Barcode
+- [x] Signup view 
+  - [x] Admin signup view (WIP)
+  - [x] Cashier signup view (pending)
+- [x] Stock view
+  - [x] Filter by criteria
+    - [ ] Date of entry (doesn't apply)
+    - [x] Product's name
+    - [ ] Categories (doesn't apply)
+    - [x] Barcode
 - [ ] Cashiers view
   - [ ] Filter by
     - [ ] Name
