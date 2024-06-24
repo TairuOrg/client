@@ -4,15 +4,23 @@ import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
 import { TbReload } from "react-icons/tb";
 import OpenNotification from "./NotificationPanel";
 import { useRevenue } from "@/store/useRevenue";
+import { useCashierStatus, useItemsAndCategories } from "@/store/useSideMenuReload";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { update } = useRevenue();
+  const { update: updateRevenue } = useRevenue();
+  const { update: updateCashier } = useCashierStatus();
+  const { update: updateItemsAndCategories } = useItemsAndCategories();
   const buttons = {
     update: {
       icon: <TbReload size={30} />,
       label: "Actualizar",
-      action: () => update(),
+      action: () => {
+        updateRevenue();
+        updateCashier();
+        updateItemsAndCategories();
+        console.log("axctualizoo");
+      },
     },
     notifications: {
       icon: <FiBell size={30} />,

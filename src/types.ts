@@ -33,6 +33,16 @@ export type RevenueStats = {
   "semana previa": number;
 }
 
+export type ItemsAndCategoriesCount = {
+  items: number;
+  categories: number;
+};
+
+export type CashiersStatusCount = {
+  active_cashiers: number;
+  inactive_cashiers: number;
+
+}
 export type ServerResponse<T> = {
   error: boolean;
   body: {

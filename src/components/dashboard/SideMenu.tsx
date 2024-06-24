@@ -10,17 +10,45 @@ import {
 } from "@chakra-ui/react";
 import { CgMoreR } from "react-icons/cg";
 import { FiTruck , FiUsers } from "react-icons/fi";
+import { useState, useEffect } from "react";
+
+import { ItemsAndCategoriesCount } from "@/types";
+import Link from "next/link";
+import {
+  useCashierStatus,
+  useItemsAndCategories,
+} from "@/store/useSideMenuReload";
 
 export default function SideMenu() {
+  const {
+    active_cashiers,
+    inactive_cashiers,
+    update: updateCashier,
+  } = useCashierStatus();
+  const {
+    categories,
+    items,
+    update: updateItemsAndCategories,
+  } = useItemsAndCategories();
+
+  useEffect(() => {
+    (async () => {
+      await updateCashier();
+      await updateItemsAndCategories();
+    })();
+  }, []);
   const CardInformation = {
     stock: {
       icon: <FiTruck size={40} />,
-      amount: ["45 Artículos", "1 Categorías"],
-      details: "/admn/stock",
+      amount: [`${items} Artículos`, `${categories} Categorías`],
+      details: "/admin/stock",
     },
     cashier: {
       icon: <FiUsers size={40} />,
-      amount: ["0 Cajeros activos", "0 Cajeros inactivos"],
+      amount: [
+        `${active_cashiers} Cajeros activos`,
+        `${inactive_cashiers} Cajeros inactivos`,
+      ],
       details: "/admin/cashier",
     },
   };
@@ -68,12 +96,14 @@ export default function SideMenu() {
               <Button bg="transparent">
                 <HStack>
                   <CgMoreR size={25} />
-                  <Text
-                    fontWeight="light"
-                    fontSize={{ base: "2xl", lg: "3xl" }}
-                  >
-                    Más detalles
-                  </Text>
+                  <Link href={details}>
+                    <Text
+                      fontWeight="light"
+                      fontSize={{ base: "2xl", lg: "3xl" }}
+                    >
+                      Más detalles
+                    </Text>
+                  </Link>
                 </HStack>
               </Button>
             </VStack>
@@ -82,4 +112,8 @@ export default function SideMenu() {
       </Box>
     </Flex>
   );
+}
+
+function fetchInformation() {
+  throw new Error("Function not implemented.");
 }
