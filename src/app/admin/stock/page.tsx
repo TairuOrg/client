@@ -9,7 +9,7 @@ import {
 } from "@tanstack/react-table";
 import { CiFilter } from "react-icons/ci";
 import { MdOutlineSearch } from "react-icons/md";
-import { FaSort } from "react-icons/fa";
+
 import { stockItems } from "@/actions/stock";
 import {
   Table,
@@ -33,10 +33,11 @@ import {
   FormLabel,
   Input,
   Checkbox,
-  Radio,
-  RadioGroup,
 } from "@chakra-ui/react";
 import { Item } from "@/types";
+import { useForm } from "react-hook-form";
+import { ModifyItemSchema, modifyItemSchema } from "@/schemas/modifyItemSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 enum FilterOptions {
   NAME = "name",
@@ -44,7 +45,26 @@ enum FilterOptions {
 }
 
 export default function Page() {
+  const [data, setData] = useState<Item[]>([]); // data is an array of items
+  const [filterOption, setFilterOption] = useState<string>(FilterOptions.NAME);
+  const [filterValue, setFilterValue] = useState<string>("");
+  const [reloadFromServer, setReloadFromServer] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsEditing(event.target.checked);
+  };
+  const [itemName, setItemName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [barcode, setBarcode] = useState<string>("");
+  const [manufacturer, setManufacturer] = useState<string>("");
+  const [quantity, setQuantity] = useState<string>("");
+  const [isFormValid, setIsFormValid] = useState(false);
   const toast = useToast();
+
+  const handleModifyItemSubmit = (d: any) => {
+    console.log("lol", d);
+  };
   const {
     isOpen: isOpenModalDetails,
     onOpen: onOpenModalDetails,
@@ -55,6 +75,16 @@ export default function Page() {
     onOpen: onOpenModalFilter,
     onClose: onCloseModalFilter,
   } = useDisclosure();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ModifyItemSchema>({
+    resolver: zodResolver(modifyItemSchema),
+    mode: "onChange",
+    shouldFocusError: true,
+    delayError: 5,
+  });
 
   const handleFilterPreferences = () => {
     onCloseModalFilter();
@@ -66,55 +96,28 @@ export default function Page() {
       isClosable: true,
     });
   };
-  const [data, setData] = useState<Item[]>([]); // data is an array of items
-  const [filterOption, setFilterOption] = useState<string>(FilterOptions.NAME);
-  const [filterValue, setFilterValue] = useState<string>("");
-  const [reloadFromServer, setReloadFromServer] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
-  const [actionsMode, setActionsMode] = useState<string>("decrease");
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {setIsEditing(event.target.checked);};
-  const [itemName, setItemName] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
-  const [barcode, setBarcode] = useState<string>("");
-  const [manufacturer, setManufacturer] = useState<string>("");
-  const [quantity, setQuantity] = useState<string>("");
-  const [isFormValid, setIsFormValid] = useState(false);
 
-  const handleUpdateClick = () => {
-    if (!checkFormValidity()) {
-      toast({
-        title: "Formulario incompleto",
-        description: "Por favor completa todos los campos antes de actualizar.",
-        status: "error",
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }  else {
-      toast({
-        title: "Formulario completo",
-        description: "Todos los campos se actualizaron correctamente.",
-        status: "success",
-        duration: 3000,
-        isClosable: true,
-      });
-    }
-    console.log('boton de actualizar:', itemName, price, barcode, manufacturer, quantity);
-  };
-
-  
-  const checkFormValidity = () => {
-    if (itemName.trim() !== '' && barcode.trim() !== '' && quantity.trim() !== '' && manufacturer.trim() !== '' && price.trim() !== '') {
-      setIsFormValid(true);
-      return true;
-    } else {
-      setIsFormValid(false);
-      console.log("no valido")
-      return false;
-    }
-  };
-  
+  // const handleUpdateClick = () => {
+  //   if (!checkFormValidity()) {
+  //     toast({
+  //       title: "Formulario incompleto",
+  //       description: "Por favor completa todos los campos antes de actualizar.",
+  //       status: "error",
+  //       duration: 3000,
+  //       isClosable: true,
+  //     });
+  //     return;
+  //   }  else {
+  //     toast({
+  //       title: "Formulario completo",
+  //       description: "Todos los campos se actualizaron correctamente.",
+  //       status: "success",
+  //       duration: 3000,
+  //       isClosable: true,
+  //     });
+  //   }
+  //   console.log('boton de actualizar:', itemName, price, barcode, manufacturer, quantity);
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -126,7 +129,6 @@ export default function Page() {
         const newPayload = payload.map((item: Item) => {
           return {
             ...item,
-            price: `$ ${item.price}`,
             renderedStatus: (
               <Badge
                 size="lg"
@@ -270,7 +272,7 @@ export default function Page() {
             <ModalHeader>Tipo de búsqueda</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <p>Elija el tipo de dada</p>
+              <p>Elija el tipo de búsqueda</p>
               <Select
                 placeholder="Seleccionar tipo de filtro"
                 onChange={(e) => setFilterOption(e.target.value)}
@@ -321,47 +323,87 @@ export default function Page() {
 
                 <hr />
                 <h1>Opciones de Edición: {selectedItem?.[0].name}</h1>
-                <form>
-                  <FormControl>
-                    {/*<RadioGroup name="actions" defaultValue="decrease" onChange={(e) => setActionsMode(e)}>
-                      <Radio value="decrease">
-                        Disminuir artículos del inventario
-                      </Radio>
-                      {<Radio value="increase">
-                        Aumentar artículos del inventario
-                      </Radio>}
-                    </RadioGroup>
-
-                    <FormLabel>
-                      Cantidad a disminuir
-                      <Input type="number" isDisabled={actionsMode === 'increase'}/>
-                    </FormLabel>*/}
-
-                    <Checkbox name="actions" onChange={handleCheckboxChange} checked={isEditing}>
+                <form onSubmit={handleSubmit(handleModifyItemSubmit)}>
+                  <FormControl className="flex flex-col">
+                    <Checkbox
+                      name="actions"
+                      onChange={handleCheckboxChange}
+                      checked={isEditing}
+                    >
                       ¿Deseas editar algún artículo?
                     </Checkbox>
 
-                    <FormLabel htmlFor="nombre-artículo">Nombre del Artículo:
-                      <Input type="text" placeholder = "Ingrese el nombre del artículo" isDisabled={!isEditing} value={itemName} onChange={(e) => setItemName(e.target.value)} />
+                    <FormLabel htmlFor="nombre-artículo">
+                      Nombre del Artículo:
                     </FormLabel>
+                    <Input
+                      type="text"
+                      isDisabled={!isEditing}
+                      {...register("name")}
+                    />
+                    {errors.name && (
+                      <span className="text-red-500">
+                        {errors.name.message}
+                      </span>
+                    )}
 
-                    <FormLabel htmlFor="código-artículo">Código del Artículo:
-                      <Input placeholder = "Ingrese el código del artículo" type="number" isDisabled={!isEditing} value={barcode} onChange={(e) => setBarcode(e.target.value)}/>
+                    <FormLabel htmlFor="código-artículo">
+                      Código del Artículo:
                     </FormLabel>
-                    
-                    <FormLabel htmlFor="cantidad-artículo">Cantidad del Artículo:
-                      <Input placeholder = "Ingrese la cantidad del artículo" type="number"isDisabled={!isEditing} value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
-                    </FormLabel>
-                    
-                    <FormLabel htmlFor="fabricante">Fabricante:
-                      <Input placeholder = "Ingrese el fabricante"type="text" isDisabled={!isEditing} value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}/>
-                    </FormLabel>
+                    <Input
+                      type="number"
+                      isDisabled={!isEditing}
+                      {...register("barcode")}
+                    />
+                    {errors.barcode && (
+                      <span className="text-red-500">
+                        {errors.barcode.message}
+                      </span>
+                    )}
 
-                    <FormLabel htmlFor="precio-Unitario">Precio Unitario:
-                      <Input placeholder = "Ingrese el precio unitario" type="number" isDisabled={!isEditing} value={price} onChange={(e) => setPrice(e.target.value)}/>
+                    <FormLabel htmlFor="cantidad-artículo">
+                      Cantidad del Artículo:
                     </FormLabel>
+                    <Input
+                      type="number"
+                      isDisabled={!isEditing}
+                      {...register("stock")}
+                    />
+                    {errors.stock && (
+                      <span className="text-red-500">
+                        {errors.stock.message}
+                      </span>
+                    )}
 
-                    <Button onClick={handleUpdateClick} isDisabled={!isEditing} >Actualizar</Button>
+                    <FormLabel htmlFor="fabricante">Fabricante:</FormLabel>
+                    <Input
+                      type="text"
+                      isDisabled={!isEditing}
+                      {...register("manufacturer")}
+                    />
+                    {errors.manufacturer && (
+                      <span className="text-red-500">
+                        {errors.manufacturer.message}
+                      </span>
+                    )}
+
+                    <FormLabel htmlFor="precio-Unitario">
+                      Precio Unitario:
+                    </FormLabel>
+                    <Input
+                      type="number"
+                      isDisabled={!isEditing}
+                      {...register("price")}
+                    />
+                    {errors.price && (
+                      <span className="text-red-500">
+                        {errors.price.message}
+                      </span>
+                    )}
+
+                    <Button type="submit" isDisabled={!isEditing}>
+                      Actualizar
+                    </Button>
                   </FormControl>
                 </form>
               </div>
