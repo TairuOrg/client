@@ -157,3 +157,14 @@ export type Item ={
   renderedStatus?: JSX.Element;
   btnAction?: JSX.Element;
 }
+
+export type Cashiers ={
+  is_online: boolean;
+  User: {
+    personal_id: string;
+    name: string;
+    phone_number: string;
+    email: string;
+    residence_location: string;
+  };
+}
