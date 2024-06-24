@@ -93,7 +93,7 @@ export interface AuthMessage {
   isError: boolean;
 }
 
-export type Cashier = {
+export type CashierStatus = {
   active: number;
   inactive: number;
   updateCashierStatus: () => Promise<void>;
@@ -108,7 +108,7 @@ export type SummaryType = "cashier_stats" | "stock_stats";
 
 export interface SummaryProps {
   type: SummaryType;
-  data: Cashier | Stock;
+  data: CashierStatus | Stock;
   reloadContent: () => void;
 }
 
@@ -158,8 +158,10 @@ export type Item ={
   btnAction?: JSX.Element;
 }
 
-export type Cashiers ={
+export type Cashier ={
   is_online: boolean;
+  rendered_is_online?: JSX.Element;
+  btnAction?: JSX.Element;
   User: {
     personal_id: string;
     name: string;

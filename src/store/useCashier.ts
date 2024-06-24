@@ -1,8 +1,8 @@
 import { create } from "zustand";
-import { Cashier } from "@/types";
+import { CashierStatus } from "@/types";
 import { BASE_URL } from "@/constants";
 
-export const useCashierStore = create<Cashier>((set) => ({
+export const useCashierStore = create<CashierStatus>((set) => ({
   active: 0,
   inactive: 0,
   updateCashierStatus: async () => {

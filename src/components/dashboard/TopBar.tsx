@@ -19,7 +19,6 @@ export default function TopBar() {
         updateRevenue();
         updateCashier();
         updateItemsAndCategories();
-        console.log("axctualizoo");
       },
     },
     notifications: {
