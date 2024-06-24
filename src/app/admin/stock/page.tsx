@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import {Suspense, useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -72,6 +72,49 @@ export default function Page() {
   const [reloadFromServer, setReloadFromServer] = useState(false);
   const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
   const [actionsMode, setActionsMode] = useState<string>("decrease");
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {setIsEditing(event.target.checked);};
+  const [itemName, setItemName] = useState<string>("");
+  const [price, setPrice] = useState<string>("");
+  const [barcode, setBarcode] = useState<string>("");
+  const [manufacturer, setManufacturer] = useState<string>("");
+  const [quantity, setQuantity] = useState<string>("");
+  const [isFormValid, setIsFormValid] = useState(false);
+
+  const handleUpdateClick = () => {
+    if (!checkFormValidity()) {
+      toast({
+        title: "Formulario incompleto",
+        description: "Por favor completa todos los campos antes de actualizar.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      return;
+    }  else {
+      toast({
+        title: "Formulario completo",
+        description: "Todos los campos se actualizaron correctamente.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+    console.log('boton de actualizar:', itemName, price, barcode, manufacturer, quantity);
+  };
+
+  
+  const checkFormValidity = () => {
+    if (itemName.trim() !== '' && barcode.trim() !== '' && quantity.trim() !== '' && manufacturer.trim() !== '' && price.trim() !== '') {
+      setIsFormValid(true);
+      return true;
+    } else {
+      setIsFormValid(false);
+      console.log("no valido")
+      return false;
+    }
+  };
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -277,28 +320,48 @@ export default function Page() {
                 </ul>
 
                 <hr />
-                <h1>Acciones: {selectedItem?.[0].name}</h1>
+                <h1>Opciones de Edición: {selectedItem?.[0].name}</h1>
                 <form>
                   <FormControl>
-                    <RadioGroup name="actions" defaultValue="decrease" onChange={(e) => setActionsMode(e)}>
+                    {/*<RadioGroup name="actions" defaultValue="decrease" onChange={(e) => setActionsMode(e)}>
                       <Radio value="decrease">
                         Disminuir artículos del inventario
                       </Radio>
-                      <Radio value="increase">
+                      {<Radio value="increase">
                         Aumentar artículos del inventario
-                      </Radio>
+                      </Radio>}
                     </RadioGroup>
 
                     <FormLabel>
                       Cantidad a disminuir
                       <Input type="number" isDisabled={actionsMode === 'increase'}/>
+                    </FormLabel>*/}
+
+                    <Checkbox name="actions" onChange={handleCheckboxChange} checked={isEditing}>
+                      ¿Deseas editar algún artículo?
+                    </Checkbox>
+
+                    <FormLabel htmlFor="nombre-artículo">Nombre del Artículo:
+                      <Input type="text" placeholder = "Ingrese el nombre del artículo" isDisabled={!isEditing} value={itemName} onChange={(e) => setItemName(e.target.value)} />
+                    </FormLabel>
+
+                    <FormLabel htmlFor="código-artículo">Código del Artículo:
+                      <Input placeholder = "Ingrese el código del artículo" type="number" isDisabled={!isEditing} value={barcode} onChange={(e) => setBarcode(e.target.value)}/>
                     </FormLabel>
                     
-                    <FormLabel>
-                      Cantidad a aumentar
-                      <Input type="number" isDisabled={actionsMode === 'decrease'} />
+                    <FormLabel htmlFor="cantidad-artículo">Cantidad del Artículo:
+                      <Input placeholder = "Ingrese la cantidad del artículo" type="number"isDisabled={!isEditing} value={quantity} onChange={(e) => setQuantity(e.target.value)}/>
                     </FormLabel>
-                    <Button>Actualizar</Button>
+                    
+                    <FormLabel htmlFor="fabricante">Fabricante:
+                      <Input placeholder = "Ingrese el fabricante"type="text" isDisabled={!isEditing} value={manufacturer} onChange={(e) => setManufacturer(e.target.value)}/>
+                    </FormLabel>
+
+                    <FormLabel htmlFor="precio-Unitario">Precio Unitario:
+                      <Input placeholder = "Ingrese el precio unitario" type="number" isDisabled={!isEditing} value={price} onChange={(e) => setPrice(e.target.value)}/>
+                    </FormLabel>
+
+                    <Button onClick={handleUpdateClick} isDisabled={!isEditing} >Actualizar</Button>
                   </FormControl>
                 </form>
               </div>
@@ -310,7 +373,6 @@ export default function Page() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-
         <Table variant="striped" size="lg">
           <Thead>
             {getHeaderGroups().map((headerGroup) => {
