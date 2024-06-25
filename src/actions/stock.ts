@@ -12,7 +12,6 @@ export async function stockItems(): Promise<ServerResponse<Item[]>> {
       },
       
     });
-
     const result = await response.json();
     console.log("Resultadooo:", result);
     return result;
@@ -23,3 +22,22 @@ export async function stockItems(): Promise<ServerResponse<Item[]>> {
   }
 }
 
+export async function updateStockItem(item: FormData): Promise<ServerResponse<any>> {
+  try {
+    console.log('Item:', item)
+    const session = cookies().get("SESSION_TOKEN")?.value;
+    const response = await fetch(`${BASE_URL}/admin/update-item`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `SESSION_TOKEN=${session}`,
+      },
+      body: JSON.stringify(item),
+    });
+
+    return await response.json();
+
+  } catch(e) {
+    throw new Error("Error updating item");
+  }
+}

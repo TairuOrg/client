@@ -12,10 +12,10 @@
     - [ ] Categories (doesn't apply)
     - [x] Barcode
 - [ ] Cashiers view
-  - [ ] Filter by
-    - [ ] Name
-    - [ ] Email
-    - [ ] personal_Identification
+  - [X] Filter by
+    - [X] Name
+    - [ ] Email (doesn't apply)
+    - [X] personal_Identification
   - [ ] Modify basic information
 - [ ] Stadistics
   - [ ] Generate reports

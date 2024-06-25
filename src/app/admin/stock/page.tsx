@@ -38,7 +38,7 @@ import { Item } from "@/types";
 import { useForm } from "react-hook-form";
 import { ModifyItemSchema, modifyItemSchema } from "@/schemas/modifyItemSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { updateStockItem } from "@/actions/stock";
 enum FilterOptions {
   NAME = "name",
   BARCODE = "barcode",
@@ -51,20 +51,25 @@ export default function Page() {
   const [reloadFromServer, setReloadFromServer] = useState(false);
   const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
+  
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsEditing(event.target.checked);
   };
-  const [itemName, setItemName] = useState<string>("");
-  const [price, setPrice] = useState<string>("");
-  const [barcode, setBarcode] = useState<string>("");
-  const [manufacturer, setManufacturer] = useState<string>("");
-  const [quantity, setQuantity] = useState<string>("");
-  const [isFormValid, setIsFormValid] = useState(false);
+
   const toast = useToast();
 
-  const handleModifyItemSubmit = (d: any) => {
-    console.log("lol", d);
+  const handleModifyItemSubmit = (d: ModifyItemSchema) => {
+    const dataToSend = {
+      ...d,
+      category: selectedItem?.[0].category as string,
+      old_barcode_id: selectedItem?.[0].barcode_id as string,
+    };
+    const newFormData = new FormData();
+    Object.entries(dataToSend).forEach(([key, value]) => {
+      newFormData.append(key, value);
+    });
+    
+    updateStockItem(newFormData);
   };
   const {
     isOpen: isOpenModalDetails,
@@ -81,7 +86,9 @@ export default function Page() {
     handleSubmit,
     formState: { errors },
   } = useForm<ModifyItemSchema>({
-    resolver: zodResolver(modifyItemSchema(selectedItem?.[0].quantity as number)),
+    resolver: zodResolver(
+      modifyItemSchema(selectedItem?.[0].quantity as number)
+    ),
     mode: "onChange",
     shouldFocusError: true,
     delayError: 5,
@@ -97,7 +104,6 @@ export default function Page() {
       isClosable: true,
     });
   };
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,11 +151,10 @@ export default function Page() {
   }, [reloadFromServer]);
 
   useEffect(() => {
-    if (filterValue === "") {
+    if (filterValue === '') {
       setReloadFromServer(true);
       return setData(data);
     }
-
     switch (filterOption) {
       case FilterOptions.NAME:
         setData(
@@ -175,6 +180,7 @@ export default function Page() {
       });
     }
   }, [filterValue]);
+
 
   const cols: ColumnDef<Item>[] = [
     {
@@ -315,7 +321,7 @@ export default function Page() {
                     </Checkbox>
 
                     <FormLabel htmlFor="nombre-artículo">
-                      Nombre del Artículo:
+                      Nombre del Artículo :
                     </FormLabel>
                     <Input
                       type="text"
@@ -334,11 +340,11 @@ export default function Page() {
                     <Input
                       type="number"
                       isDisabled={!isEditing}
-                      {...register("barcode")}
+                      {...register("barcode_id")}
                     />
-                    {errors.barcode && (
+                    {errors.barcode_id && (
                       <span className="text-red-500">
-                        {errors.barcode.message}
+                        {errors.barcode_id.message}
                       </span>
                     )}
 
@@ -348,11 +354,11 @@ export default function Page() {
                     <Input
                       type="number"
                       isDisabled={!isEditing}
-                      {...register("stock")}
+                      {...register("quantity")}
                     />
-                    {errors.stock && (
+                    {errors.quantity && (
                       <span className="text-red-500">
-                        {errors.stock.message}
+                        {errors.quantity.message}
                       </span>
                     )}
 

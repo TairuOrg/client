@@ -12,7 +12,7 @@ export const modifyItemSchema = (maxStock: number) =>
         /^\d{1,4}(\.\d{1,2})?$/,
         "El precio no cumple con el formato deseado de hasta 4 dígitos enteros y 2 decimales"
       ),
-    barcode: z
+    barcode_id: z
       .string()
       .min(4, "El código de barras debe tener al menos 4 dígitos")
       .max(14, "El código de barras debe tener como máximo 14 dígitos")
@@ -20,7 +20,7 @@ export const modifyItemSchema = (maxStock: number) =>
         /^\d{4,14}$/,
         "El código de barras debe tener entre 4 y 14 dígitos"
       ),
-    stock: z
+    quantity: z
       .string()
       .min(1, "El stock del artículo no puede estar vacío")
       .refine((currentStock: string) => parseInt(currentStock) <= maxStock, {
