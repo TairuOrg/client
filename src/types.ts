@@ -23,15 +23,15 @@ export interface User {
 }
 
 export type Revenue = {
-  VE: { amount: string},
-  US: {amount: string},
-  EU: { amount: string},
-}
+  VE: { amount: string };
+  US: { amount: string };
+  EU: { amount: string };
+};
 export type RevenueStats = {
   name: string;
   actual: number;
   "semana previa": number;
-}
+};
 
 export type ItemsAndCategoriesCount = {
   items: number;
@@ -41,15 +41,14 @@ export type ItemsAndCategoriesCount = {
 export type CashiersStatusCount = {
   active_cashiers: number;
   inactive_cashiers: number;
-
-}
+};
 export type ServerResponse<T> = {
   error: boolean;
   body: {
     message: string;
     payload: T;
-  }
-}
+  };
+};
 
 /*
 Sample response from the server
@@ -121,7 +120,7 @@ export interface Notification {
 }
 export interface NotificationStore {
   notifications: Notification[];
-  updateNotifications:  () => Promise<void>;
+  updateNotifications: () => Promise<void>;
   MarkAsRead: (id: number) => Promise<void>;
   MarkAsIgnored: () => Promise<void>;
 }
@@ -147,18 +146,18 @@ export type SignUpData = {
   updateResidenceLocation: (residence_location: string) => void;
   updatePersonalId: (personal_id: string) => void;
 };
-export type Item ={
+export type Item = {
   barcode_id: string;
   category: string;
   manufacturer: string;
   name: string;
-  price:string;
+  price: string;
   quantity: number;
   renderedStatus?: JSX.Element;
   btnAction?: JSX.Element;
-}
+};
 
-export type Cashier ={
+export type Cashier = {
   is_online: boolean;
   rendered_is_online?: JSX.Element;
   btnAction?: JSX.Element;
@@ -168,5 +167,6 @@ export type Cashier ={
     phone_number: string;
     email: string;
     residence_location: string;
+    is_deleted: boolean;
   };
-}
+};
