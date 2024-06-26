@@ -22,10 +22,10 @@ export async function stockItems(): Promise<ServerResponse<Item[]>> {
   }
 }
 
-export async function updateStockItem(item: FormData): Promise<ServerResponse<any>> {
+export async function updateStockItem(item: {}): Promise<ServerResponse<string>> {
   try {
-    console.log('Item:', item)
     const session = cookies().get("SESSION_TOKEN")?.value;
+
     const response = await fetch(`${BASE_URL}/admin/update-item`, {
       method: "POST",
       headers: {
@@ -35,9 +35,12 @@ export async function updateStockItem(item: FormData): Promise<ServerResponse<an
       body: JSON.stringify(item),
     });
 
-    return await response.json();
+    const result = (await response.json());
+    return result
+
 
   } catch(e) {
+    console.error(e)
     throw new Error("Error updating item");
   }
 }

@@ -57,20 +57,6 @@ export default function Page() {
   };
 
   const toast = useToast();
-
-  const handleModifyItemSubmit = (d: ModifyItemSchema) => {
-    const dataToSend = {
-      ...d,
-      category: selectedItem?.[0].category as string,
-      old_barcode_id: selectedItem?.[0].barcode_id as string,
-    };
-    const newFormData = new FormData();
-    Object.entries(dataToSend).forEach(([key, value]) => {
-      newFormData.append(key, value);
-    });
-    
-    updateStockItem(newFormData);
-  };
   const {
     isOpen: isOpenModalDetails,
     onOpen: onOpenModalDetails,
@@ -81,6 +67,28 @@ export default function Page() {
     onOpen: onOpenModalFilter,
     onClose: onCloseModalFilter,
   } = useDisclosure();
+  const handleModifyItemSubmit = (d: ModifyItemSchema) => {
+    const dataToSend = {
+      ...d,
+      category: selectedItem?.[0].category as string,
+      old_barcode_id: selectedItem?.[0].barcode_id as string,
+    };
+    try {
+      updateStockItem(dataToSend);
+      toast({
+        title: 'Artículo actualizado correctamente',
+        status: 'success'
+      })
+      setReloadFromServer(true)
+      onCloseModalDetails()
+    } catch (error) {
+      toast({
+        title: 'No se ha podido actualizar el artículo',
+        status: 'error',
+      });
+    }
+  };
+
   const {
     register,
     handleSubmit,
@@ -158,7 +166,7 @@ export default function Page() {
     switch (filterOption) {
       case FilterOptions.NAME:
         setData(
-          data.filter((item) => item.name.toLowerCase().includes(filterValue))
+          data.filter((item) => item.name.toLowerCase().includes(filterValue.toLowerCase()))
         );
         break;
 
