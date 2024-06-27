@@ -10,14 +10,14 @@ const routes = {
     "/admin/cashier",
     "/admin/reports"
   ],
-  cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings"],
+  cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings", '/cashier/sales'],
   public: ["/login", "/about-us", "/unauthorized", "/", "/testing", "/sign-up", "/admin/stock",],
 };
 
 export default async function handler(req: NextRequest) {
   const cookie = cookies().get("SESSION_TOKEN")?.value;
   const path = req.nextUrl.pathname;
-
+  console.log("path", path)
   // Decrypt the session
   if (routes.public.includes(path)) {
     return NextResponse.next();
@@ -28,6 +28,7 @@ export default async function handler(req: NextRequest) {
   }
 
   const [error, session] = await decryptSessionCookie(cookie as string);
+  console.log("sessiones:", session)
   if (error) {
     return NextResponse.redirect(new URL("/login", req.nextUrl.origin));
   }

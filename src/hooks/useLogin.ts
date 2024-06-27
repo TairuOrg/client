@@ -15,7 +15,7 @@ type useLoginProps = {
 export const useLogin = ({isAdmin, setIsInvalid, isInvalid}: useLoginProps) => {
   const toast = useToast();
   const router = useRouter();
-
+  console.log('soy o no admin', isAdmin)
   const handleLogin: SubmitHandler<FieldValues> = useCallback(async (data) => {
     const formData = new FormData();
     formData.append('email', data.email);
@@ -28,7 +28,9 @@ export const useLogin = ({isAdmin, setIsInvalid, isInvalid}: useLoginProps) => {
       status: notificationStatus,
       isClosable: true,
     });
+    console.log('paso algo?:', error, body)
     if (!error) {
+      console.log('HOLAAAAAA')
       router.push(isAdmin ? `${PrefixRoutes.ADMIN}/dashboard` : `${PrefixRoutes.CASHIER}/dashboard`);
     }
     setIsInvalid(!isInvalid);

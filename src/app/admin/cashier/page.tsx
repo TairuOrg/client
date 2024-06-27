@@ -34,12 +34,13 @@ import {
 import { MdOutlineSearch } from "react-icons/md";
 import { FaUserPlus } from "react-icons/fa";
 import { CiFilter } from "react-icons/ci";
-import { cashiersInfo } from "@/actions/cashier";
+import { cashiersInfo, createCashier } from "@/actions/cashier";
 import { Cashier } from "@/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { cashierSchema, CashierSchema } from "@/schemas/cashierSchema";
 import { deleteCashier } from "@/actions/manageCashier";
+import { create } from "domain";
 
 enum FilterOptions {
   NAME = "name",
@@ -86,8 +87,28 @@ export default function CashierPage() {
     delayError: 5,
   });
 
-  const handleSubmitValid = (cashier: any) => {
-    console.log(cashier);
+  const handleSubmitValid = (cashier: {
+    name: string;
+    id_type: string;
+    personal_id: string;
+    phone_code: string;
+    phone_number: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    state: string;
+  }) => {
+    console.log("sdadsadsadasdsadaddsddiosmio", cashier);
+    const cashier_to_insert = {
+      name: cashier.name,
+      personal_id: `${cashier.id_type}${cashier.personal_id}`,
+      phone_number: `${cashier.phone_code}${cashier.phone_number}`,
+      email: cashier.email,
+      password: cashier.password,
+      residence_location: cashier.state,
+      role: 'cashier'
+    }
+    createCashier(cashier_to_insert); 
     toast({
       title: "Cajero registrado",
       description: "El cajero ha sido registrado con éxito",
@@ -96,20 +117,12 @@ export default function CashierPage() {
       isClosable: true,
     });
   };
-  const handleSubmitInvalid = (cashier: any) => {
-    console.log(cashier);
-    toast({
-      title: "Error al registrar cajero",
-      description: "No se ha podido registrar el cajero",
-      status: "error",
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmitFn = (e: FormEvent<HTMLFormElement>) => {
+    console.log("se ejecutaaa");
     e.preventDefault();
-    handleSubmit(handleSubmitValid, handleSubmitInvalid);
+    handleSubmit(handleSubmitValid)();
   };
+
   const handleFilterPreferences = () => {
     onCloseModalFilter();
     toast({
@@ -120,9 +133,7 @@ export default function CashierPage() {
       isClosable: true,
     });
   };
-  const handleDeleteCashierBtn = async (
-    _e: any
-  ) => {
+  const handleDeleteCashierBtn = async (_e: any) => {
     try {
       await deleteCashier(selectedCashier?.[0].User.personal_id as string);
       onCloseDeleteCashier();
@@ -163,7 +174,7 @@ export default function CashierPage() {
                 onClick={onOpenDeleteCashier}
                 isDisabled={cashier.User.is_deleted}
               >
-                {cashier.User.is_deleted ? 'Eliminado' : 'Eliminar'}
+                {cashier.User.is_deleted ? "Eliminado" : "Eliminar"}
               </Button>
             ),
           };
@@ -297,7 +308,7 @@ export default function CashierPage() {
                 </Button>
                 <Button
                   colorScheme="red"
-                  onClick={e => handleDeleteCashierBtn(e)}
+                  onClick={(e) => handleDeleteCashierBtn(e)}
                   ml={3}
                 >
                   Eliminar
@@ -338,7 +349,7 @@ export default function CashierPage() {
             <ModalCloseButton />
             <ModalBody>
               <div>
-                <form onSubmit={onSubmit}>
+                <form onSubmit={onSubmitFn}>
                   <FormControl className="flex flex-col">
                     <FormLabel htmlFor="nombre-artículo">
                       Nombre del Cajero:
@@ -504,9 +515,19 @@ export default function CashierPage() {
           </Thead>
           <Tbody>
             {data.map((cashier, index) => (
-              <Tr key={index} textAlign="center"  className={`${cashier.User.is_deleted ? 'text-gray-300' : 'text-black'}`}p={4} fontSize="lg">
+              <Tr
+                key={index}
+                textAlign="center"
+                className={`${
+                  cashier.User.is_deleted ? "text-gray-300" : "text-black"
+                }`}
+                p={4}
+                fontSize="lg"
+              >
                 <Td>
-                  <div className={"text-center"}>{cashier.User.personal_id}</div>
+                  <div className={"text-center"}>
+                    {cashier.User.personal_id}
+                  </div>
                 </Td>
                 <Td>
                   <div className="text-center">{cashier.User.name}</div>
@@ -517,7 +538,11 @@ export default function CashierPage() {
                   </div>
                 </Td>
                 <Td>
-                  <div className="text-center">{cashier.User.phone_number.length === 0 ? "Número no asignado" : cashier.User.phone_number}</div>
+                  <div className="text-center">
+                    {cashier.User.phone_number.length === 0
+                      ? "Número no asignado"
+                      : cashier.User.phone_number}
+                  </div>
                 </Td>
                 <Td onClick={() => setSelectedCashier([cashier, index])}>
                   <div className="text-center">{cashier.btnAction}</div>

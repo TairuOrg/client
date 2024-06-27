@@ -26,10 +26,10 @@ export async function login(formData: FormData, role: string): Promise<AuthRespo
     body: JSON.stringify(creds),
   });
   const result = await response.json()
-  if (response.status !== 200) return result
-
+  console.log('resultao', result)
   // Set the session token only if the login was successful 
   const session = extract(response.headers.getSetCookie());
+
   cookies().set('SESSION_TOKEN', session, { path: '/', secure: true })
 	return result;
 }

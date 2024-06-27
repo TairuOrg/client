@@ -190,3 +190,15 @@ export type Entry = {
   date: Date,
   entry_items: EntryItem[],
 }
+
+export type Customer = {
+  
+    name: string;
+    id_type: string;
+    personal_id: string;
+    phone_code: string;
+    phone_number: string;
+    residence_location: string;
+    id?: number;
+    is_deleted?: boolean;
+}
