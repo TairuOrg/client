@@ -12,11 +12,34 @@ export async function loadEntries(): Promise<ServerResponse<Entry[]>> {
       },
     });
 
-    const result = await response.json()
-    console.log(result.body.payload)
+    const result: ServerResponse<Entry[]> = await response.json()
+    console.log('lol', result.body.payload)
+    result.body.payload.forEach(e => {
+      console.log(e.entries_items)
+    })
     return result
   } catch (error) {
 
+    throw new Error(`error: ${error}`)
+  }
+}
+
+export async function createEntry(entry_to_add: Entry) {
+  try {
+    console.log('entry_to_add', entry_to_add)
+    const session = cookies().get("SESSION_TOKEN")?.value;
+    const response = await fetch(`${BASE_URL}/admin/insert-entry`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `SESSION_TOKEN=${session}`,
+      },
+      body: JSON.stringify(entry_to_add),
+    });
+
+    const result = await response.json()
+    return result
+  } catch (error) {
     throw new Error(`error: ${error}`)
   }
 }

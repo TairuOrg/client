@@ -147,6 +147,7 @@ export type SignUpData = {
   updatePersonalId: (personal_id: string) => void;
 };
 export type Item = {
+  id? : number | null
   barcode_id: string;
   category: string;
   manufacturer: string;
@@ -170,10 +171,22 @@ export type Cashier = {
     is_deleted: boolean;
   };
 };
+
+export type EntryItem = {
+  item_id: number | null;
+  barcode_id: string;
+  add_quantity: number;
+  name: string;
+  category: string;
+  price: number;
+  manufacturer: string;
+};
+
+
 export type Entry = {
-  id: number,
+  id?: number,
   admin_id: number,
   description: string,
   date: Date,
-  entries_items: Item[],
+  entry_items: EntryItem[],
 }

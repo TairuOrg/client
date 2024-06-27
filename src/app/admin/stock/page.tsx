@@ -1,5 +1,5 @@
 "use client";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -34,12 +34,15 @@ import {
   Input,
   Checkbox,
 } from "@chakra-ui/react";
-import { Entry, Item } from "@/types";
+import { Entry, Item, EntryItem } from "@/types";
 import { useForm } from "react-hook-form";
 import { ModifyItemSchema, modifyItemSchema } from "@/schemas/modifyItemSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateStockItem } from "@/actions/stock";
-import { loadEntries } from "@/actions/entries";
+import { loadEntries, createEntry as createEntryFn } from "@/actions/entries";
+import { addItemSchema, AddItemSchemaType } from "@/schemas/AddItemSchema";
+import { retrieveUserInfo } from "@/actions/retrieveUserInfo";
+
 enum FilterOptions {
   NAME = "name",
   BARCODE = "barcode",
@@ -53,8 +56,13 @@ export default function Page() {
   const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [entries, setEntries] = useState<Entry[] | null>(null);
-  const [showEntries, setShowEntries] = useState<Boolean>(false);
+  // Defines the state of the entries modal: how the user can interact with the entries
+  const [showEntries, setShowEntries] = useState<boolean>(false);
+  const [createEntry, setCreateEntry] = useState<boolean>(false);
+
   const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
+  const [addedEntry, setAddedEntry] = useState<Entry | null>(null);
+  const [admin_logged_in, set_admin_logged_in] = useState<number>(-1);
 
   const toast = useToast();
   const {
@@ -97,13 +105,25 @@ export default function Page() {
   };
 
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register: registerItem,
+    handleSubmit: handleSubmitItem,
+    formState: { errors: errorsItem },
   } = useForm<ModifyItemSchema>({
     resolver: zodResolver(
       modifyItemSchema(selectedItem?.[0].quantity as number)
     ),
+    mode: "onChange",
+    shouldFocusError: true,
+    delayError: 5,
+  });
+
+  const {
+    register: registerEntry,
+    handleSubmit: handleSubmitEntry,
+    formState: { errors: errorsEntry },
+    reset: resetEntry,
+  } = useForm<AddItemSchemaType>({
+    resolver: zodResolver(addItemSchema),
     mode: "onChange",
     shouldFocusError: true,
     delayError: 5,
@@ -131,6 +151,14 @@ export default function Page() {
     setIsEditing(event.target.checked);
   };
 
+  const handleCreateEntry = () => {
+    setCreateEntry(!createEntry);
+  };
+
+  const handleSaveEntries = () => {
+    const entry_to_add = addedEntry as Entry;
+    createEntryFn(entry_to_add);
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -175,6 +203,13 @@ export default function Page() {
     fetchData();
     setReloadFromServer(false);
   }, [reloadFromServer]);
+
+  useEffect(() => {
+    (async () => {
+      const { id } = await retrieveUserInfo();
+      set_admin_logged_in(id);
+    })();
+  }, []);
 
   useEffect(() => {
     if (filterValue === "") {
@@ -282,7 +317,7 @@ export default function Page() {
           className="rounded-xl h-fit w-fit p-4 text-center bg-white"
           onClick={onOpenMOdalEntries}
         >
-          Crear entrada
+          Entradas en inventario
         </button>
       </div>
       <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4">
@@ -315,16 +350,22 @@ export default function Page() {
         <Modal isOpen={isOpenModalEntries} onClose={onCloseModalEntries}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Crear entrada en inventario</ModalHeader>
+            <ModalHeader>Entradas en inventario</ModalHeader>
             <ModalCloseButton />
             <ModalBody className="flex flex-col gap-4">
-              <Button onClick={(e) => handleShowEntries()}>
+              <Button
+                onClick={(e) => handleShowEntries()}
+                isDisabled={createEntry}
+              >
                 {" "}
                 {showEntries ? "Cerrar el" : "Visualizar el"} historial de
                 entradas{" "}
               </Button>
+              <Button onClick={handleCreateEntry} isDisabled={showEntries}>
+                Crear entrada
+              </Button>
 
-              {showEntries && (
+              {showEntries && !createEntry && (
                 <Select
                   placeholder="Seleccione una entrada para ver detalles"
                   onChange={(e) =>
@@ -339,20 +380,182 @@ export default function Page() {
                   ))}
                 </Select>
               )}
-              {selectedEntry && (
+
+              {selectedEntry && !createEntry && (
                 <section>
                   <p>Código de la entrada: {selectedEntry.id}</p>
                   <p>Nombre: {selectedEntry.description}</p>
-                  {
-                    selectedEntry.entries_items.map(item => <p key={item.barcode_id}> {item.name}</p>)
-                  }
+
+                  <ul>
+                    {selectedEntry.entry_items &&
+                    selectedEntry.entry_items.length > 0 ? (
+                      selectedEntry.entry_items.map((i: any) => (
+                        <>
+                          <li key={i.items.name}> {i.items.name}</li>
+                          <li key={i.items.barcode_id}>
+                            {" "}
+                            <strong>Código: </strong>
+                            {i.items.barcode_id}
+                          </li>
+                          <li key={i.quantity}>
+                            {" "}
+                            <strong>Cantidad ingresada: </strong>
+                            {i.quantity}
+                          </li>
+                          <li key={i.items.price}>
+                            {" "}
+                            <strong> Precio unitario: $</strong>
+                            {i.items.price}
+                          </li>
+                          <li key={i.items.manufacturer}>
+                            {" "}
+                            <strong>Fabricante:</strong>
+                            {i.items.manufacturer}
+                          </li>
+                        </>
+                      ))
+                    ) : (
+                      <li>No hay elementos</li>
+                    )}
+                  </ul>
                 </section>
               )}
+              {createEntry && (
+                <form
+                  onSubmit={handleSubmitEntry((d) => {
+                    const item = {
+                      ...d,
+                      add_quantity: parseInt(d.add_quantity),
+                      item_id: null,
+                      price: parseFloat(d.price),
+                    };
+                    console.log(admin_logged_in);
+                    setAddedEntry({
+                      admin_id: admin_logged_in,
+                      description: item.description,
+                      date: new Date(),
+                      entry_items: [
+                        ...((addedEntry?.entry_items as EntryItem[]) || []),
+                        item,
+                      ],
+                    });
+
+                    resetEntry();
+                  })}
+                >
+                  <FormControl className="flex flex-col gap-2">
+                    <FormLabel htmlFor="nombre-entrada">
+                      Descripción de la entrada:
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      {...registerEntry("description")}
+                      placeholder={addedEntry?.description}
+                      isDisabled={Boolean(addedEntry)}
+                    />
+                    {errorsEntry.description && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.description.message}
+                      </span>
+                    )}
+
+                    <FormLabel htmlFor="artículo">
+                      Nombre del artículo:
+                    </FormLabel>
+                    <Input type="text" {...registerEntry("name")} />
+                    {errorsEntry.name && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.name.message}
+                      </span>
+                    )}
+
+                    <FormLabel> Código de barras</FormLabel>
+                    <Input type="text" {...registerEntry("barcode_id")} />
+                    {errorsEntry.barcode_id && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.barcode_id.message}
+                      </span>
+                    )}
+
+                    <FormLabel htmlFor="fabricante">Fabricante:</FormLabel>
+                    <Input type="text" {...registerEntry("manufacturer")} />
+                    {errorsEntry.manufacturer && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.manufacturer.message}
+                      </span>
+                    )}
+
+                    <FormLabel>Categoría del artículo</FormLabel>
+                    <Select
+                      placeholder="Seleccione una categoría"
+                      {...registerEntry("category")}
+                    >
+                      <option value="higiene">Higiene</option>
+                      <option value="confitería">Confitería</option>
+                      <option value="charcutería">Charcutería</option>
+                      <option value="víveres"> Víveres</option>
+                    </Select>
+                    {errorsEntry.category && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.category.message}
+                      </span>
+                    )}
+
+                    <FormLabel htmlFor="cantidad">Cantidad:</FormLabel>
+                    <Input type="text" {...registerEntry("add_quantity")} />
+                    {errorsEntry.add_quantity && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.add_quantity.message}
+                      </span>
+                    )}
+
+                    <FormLabel htmlFor="precio">Precio unitario:</FormLabel>
+                    <Input type="string" {...registerEntry("price")} />
+                    {errorsEntry.price && (
+                      <span className="text-red-500">
+                        {" "}
+                        {errorsEntry.price.message}
+                      </span>
+                    )}
+
+                    <Button
+                      type="submit"
+                      isDisabled={Boolean(
+                        Object.entries(errorsEntry).length > 0
+                      )}
+                    >
+                      Agregar artículo
+                    </Button>
+                  </FormControl>
+                </form>
+              )}
+              {addedEntry &&
+                !showEntries &&
+                addedEntry.entry_items.length > 0 && (
+                  <>
+                    <p>Artículos agregados: </p>
+                    <ul>
+                      {addedEntry.entry_items.map((i) => (
+                        <li key={i.name}>
+                          Nombre: {i.name} | Cantidad: {i.add_quantity}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
             </ModalBody>
             <ModalFooter>
-              <Button onClick={handleFilterPreferences} variant="ghost">
-                Guardar entrada
-              </Button>
+              {createEntry && (
+                <Button onClick={handleSaveEntries} variant="ghost">
+                  Guardar entrada
+                </Button>
+              )}
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -388,7 +591,7 @@ export default function Page() {
 
                 <hr />
                 <h1>Opciones de Edición: {selectedItem?.[0].name}</h1>
-                <form onSubmit={handleSubmit(handleModifyItemSubmit)}>
+                <form onSubmit={handleSubmitItem(handleModifyItemSubmit)}>
                   <FormControl className="flex flex-col">
                     <Checkbox
                       name="actions"
@@ -404,11 +607,11 @@ export default function Page() {
                     <Input
                       type="text"
                       isDisabled={!isEditing}
-                      {...register("name")}
+                      {...registerItem("name")}
                     />
-                    {errors.name && (
+                    {errorsItem.name && (
                       <span className="text-red-500">
-                        {errors.name.message}
+                        {errorsItem.name.message}
                       </span>
                     )}
 
@@ -418,11 +621,11 @@ export default function Page() {
                     <Input
                       type="number"
                       isDisabled={!isEditing}
-                      {...register("barcode_id")}
+                      {...registerItem("barcode_id")}
                     />
-                    {errors.barcode_id && (
+                    {errorsItem.barcode_id && (
                       <span className="text-red-500">
-                        {errors.barcode_id.message}
+                        {errorsItem.barcode_id.message}
                       </span>
                     )}
 
@@ -432,11 +635,11 @@ export default function Page() {
                     <Input
                       type="number"
                       isDisabled={!isEditing}
-                      {...register("quantity")}
+                      {...registerItem("quantity")}
                     />
-                    {errors.quantity && (
+                    {errorsItem.quantity && (
                       <span className="text-red-500">
-                        {errors.quantity.message}
+                        {errorsItem.quantity.message}
                       </span>
                     )}
 
@@ -444,11 +647,11 @@ export default function Page() {
                     <Input
                       type="text"
                       isDisabled={!isEditing}
-                      {...register("manufacturer")}
+                      {...registerItem("manufacturer")}
                     />
-                    {errors.manufacturer && (
+                    {errorsItem.manufacturer && (
                       <span className="text-red-500">
-                        {errors.manufacturer.message}
+                        {errorsItem.manufacturer.message}
                       </span>
                     )}
 
@@ -458,11 +661,11 @@ export default function Page() {
                     <Input
                       type="number"
                       isDisabled={!isEditing}
-                      {...register("price")}
+                      {...registerItem("price")}
                     />
-                    {errors.price && (
+                    {errorsItem.price && (
                       <span className="text-red-500">
-                        {errors.price.message}
+                        {errorsItem.price.message}
                       </span>
                     )}
 
