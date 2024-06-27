@@ -1,5 +1,5 @@
 "use client";
-import {Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import {
   getCoreRowModel,
   useReactTable,
@@ -34,11 +34,12 @@ import {
   Input,
   Checkbox,
 } from "@chakra-ui/react";
-import { Item } from "@/types";
+import { Entry, Item } from "@/types";
 import { useForm } from "react-hook-form";
 import { ModifyItemSchema, modifyItemSchema } from "@/schemas/modifyItemSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateStockItem } from "@/actions/stock";
+import { loadEntries } from "@/actions/entries";
 enum FilterOptions {
   NAME = "name",
   BARCODE = "barcode",
@@ -51,10 +52,9 @@ export default function Page() {
   const [reloadFromServer, setReloadFromServer] = useState(false);
   const [selectedItem, setSelectedItem] = useState<[Item, number] | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsEditing(event.target.checked);
-  };
+  const [entries, setEntries] = useState<Entry[] | null>(null);
+  const [showEntries, setShowEntries] = useState<Boolean>(false);
+  const [selectedEntry, setSelectedEntry] = useState<Entry | null>(null);
 
   const toast = useToast();
   const {
@@ -67,6 +67,13 @@ export default function Page() {
     onOpen: onOpenModalFilter,
     onClose: onCloseModalFilter,
   } = useDisclosure();
+
+  const {
+    isOpen: isOpenModalEntries,
+    onOpen: onOpenMOdalEntries,
+    onClose: onCloseModalEntries,
+  } = useDisclosure();
+
   const handleModifyItemSubmit = (d: ModifyItemSchema) => {
     const dataToSend = {
       ...d,
@@ -76,15 +83,15 @@ export default function Page() {
     try {
       updateStockItem(dataToSend);
       toast({
-        title: 'Artículo actualizado correctamente',
-        status: 'success'
-      })
-      setReloadFromServer(true)
-      onCloseModalDetails()
+        title: "Artículo actualizado correctamente",
+        status: "success",
+      });
+      setReloadFromServer(true);
+      onCloseModalDetails();
     } catch (error) {
       toast({
-        title: 'No se ha podido actualizar el artículo',
-        status: 'error',
+        title: "No se ha podido actualizar el artículo",
+        status: "error",
       });
     }
   };
@@ -111,6 +118,17 @@ export default function Page() {
       duration: 3000,
       isClosable: true,
     });
+  };
+
+  const handleShowEntries = async () => {
+    const {
+      body: { payload },
+    } = await loadEntries();
+    setEntries(payload);
+    setShowEntries(!showEntries);
+  };
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsEditing(event.target.checked);
   };
 
   useEffect(() => {
@@ -159,14 +177,16 @@ export default function Page() {
   }, [reloadFromServer]);
 
   useEffect(() => {
-    if (filterValue === '') {
+    if (filterValue === "") {
       setReloadFromServer(true);
       return setData(data);
     }
     switch (filterOption) {
       case FilterOptions.NAME:
         setData(
-          data.filter((item) => item.name.toLowerCase().includes(filterValue.toLowerCase()))
+          data.filter((item) =>
+            item.name.toLowerCase().includes(filterValue.toLowerCase())
+          )
         );
         break;
 
@@ -188,7 +208,6 @@ export default function Page() {
       });
     }
   }, [filterValue]);
-
 
   const cols: ColumnDef<Item>[] = [
     {
@@ -234,7 +253,7 @@ export default function Page() {
 
   return (
     <div className="flex flex-col w-full items-center p-[100px] gap-4">
-      <div className="flex gap-4 w-[800px] ">
+      <div className="flex gap-4 w-fit ">
         <form className="flex flex-row gap-4">
           <input
             onChange={(e) => setFilterValue(e.target.value)}
@@ -258,6 +277,12 @@ export default function Page() {
         >
           {" "}
           <CiFilter size="30" />{" "}
+        </button>
+        <button
+          className="rounded-xl h-fit w-fit p-4 text-center bg-white"
+          onClick={onOpenMOdalEntries}
+        >
+          Crear entrada
         </button>
       </div>
       <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4">
@@ -284,6 +309,51 @@ export default function Page() {
                 </Button>
               </ModalFooter>
             </ModalBody>
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isOpenModalEntries} onClose={onCloseModalEntries}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Crear entrada en inventario</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody className="flex flex-col gap-4">
+              <Button onClick={(e) => handleShowEntries()}>
+                {" "}
+                {showEntries ? "Cerrar el" : "Visualizar el"} historial de
+                entradas{" "}
+              </Button>
+
+              {showEntries && (
+                <Select
+                  placeholder="Seleccione una entrada para ver detalles"
+                  onChange={(e) =>
+                    setSelectedEntry(entries![parseInt(e.target.value)])
+                  }
+                >
+                  {entries?.map((entry, idx) => (
+                    <option key={entry.id} value={idx}>
+                      {" "}
+                      {entry.description}
+                    </option>
+                  ))}
+                </Select>
+              )}
+              {selectedEntry && (
+                <section>
+                  <p>Código de la entrada: {selectedEntry.id}</p>
+                  <p>Nombre: {selectedEntry.description}</p>
+                  {
+                    selectedEntry.entries_items.map(item => <p key={item.barcode_id}> {item.name}</p>)
+                  }
+                </section>
+              )}
+            </ModalBody>
+            <ModalFooter>
+              <Button onClick={handleFilterPreferences} variant="ghost">
+                Guardar entrada
+              </Button>
+            </ModalFooter>
           </ModalContent>
         </Modal>
 

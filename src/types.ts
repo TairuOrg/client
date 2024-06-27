@@ -170,3 +170,10 @@ export type Cashier = {
     is_deleted: boolean;
   };
 };
+export type Entry = {
+  id: number,
+  admin_id: number,
+  description: string,
+  date: Date,
+  entries_items: Item[],
+}
