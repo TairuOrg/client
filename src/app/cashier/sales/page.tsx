@@ -11,11 +11,10 @@ export default function Page() {
     customer_personal_id: "",
   });
   const [salesID, setSalesID] = useState<number | null>(null);
+  const [createSalePressed, setCreateSalePressed] = useState(false);
 
   const path = useSearchParams();
   useEffect(() => {
-    console.log(path.get("cashier_id"));
-    console.log(path.get("customer_personal_id"));
     setParams({
       cashier_id: parseInt(path.get("cashier_id") as string),
       customer_personal_id: path.get("customer_personal_id") as string,
@@ -24,6 +23,7 @@ export default function Page() {
 
   const handleCreateSale = () => {
     beginSale(params).then((res) => {
+      setCreateSalePressed(true);
       const {
         body: { payload },
       } = res;
@@ -32,22 +32,46 @@ export default function Page() {
     });
   };
   return (
-    <main className="flex flex-col w-screen h-screen justify-center items-center">
-      <section className="flex flex-col justify-center items-center text-center text-teal-800 gap-5">
-        {salesID
-          ? "Escanea el código QR para continuar con la venta"
-          : "Crea una venta para continuar"}
-        {salesID ? (
-          <div className=" flex flex-col gap-5 bg-white border-2 border-teal-500 p-5 ">
-            <QRCode value={salesID.toString()} size={256} />
-            El código de la venta es: {salesID}
+    <main className="relative w-screen h-screen p-5">
+      <section className="flex w-full p-5 items-center justify-around text-center text-teal-50 gap-10 bg-teal-700 rounded-xl">
+        <section className="flex gap-10 items-center">
+          <span
+            className={`h-[210px] w-[210px] ${
+              createSalePressed ? "" : "border-4"
+            } border-teal-800`}
+          >
+            {salesID ? <QRCode value={salesID.toString()} size={200} /> : null}
+          </span>
+          <div className="flex flex-col gap-2">
+            {salesID
+              ? "Escanea el código QR para continuar con la venta"
+              : "Crea una venta para continuar"}
+
+            <Button
+              onClick={handleCreateSale}
+              isDisabled={createSalePressed}
+              size={"lg"}
+            >
+              {" "}
+              Crear venta
+            </Button>
           </div>
-        ) : null}
-        <Button onClick={handleCreateSale} size={"lg"}>
-          {" "}
-          Crear venta
-        </Button>
-        
+        </section>
+
+        <div className="text-start text-2xl">
+          <h2>Detalles de la venta:</h2>
+          <p>Cajero: {params.cashier_id}</p>
+          <p>Cliente: {params.customer_personal_id}</p>
+          <p>Venta: {salesID ? salesID : "No se ha creado la venta"}</p>
+        </div>
+
+        <div className="flex gap-4 text-2xl items-center ">
+          <h2>Opciones:</h2>
+          <span className="flex flex-col gap-4">
+            <Button colorScheme="red">Cancelar venta</Button>
+            <Button colorScheme="green">Finalizar venta</Button>
+          </span>
+        </div>
       </section>
     </main>
   );

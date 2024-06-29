@@ -43,13 +43,11 @@ import {
 export default function Page() {
   const [cashier, setCashier] = useState<User>();
   const [isCashierLoaded, setIsCashierLoaded] = useState(false);
-
   const [isCustomerNotFound, setIsCustomerNotFound] = useState(false);
   const [CustomerPersonalID, setCustomerPersonalID] = useState<string>("");
-  const [SalesCustomer, setSalesCustomer] = useState<Customer>(); // should remove this later
-
-  const router = useRouter(); // Not being used yet
+  const router = useRouter(); 
   const toast = useToast();
+
   const {
     register: registerCustomer,
     formState: { errors: errorsCustomer },
@@ -71,28 +69,25 @@ export default function Page() {
   });
 
   useEffect(() => {
-    console.log("holaa");
     retrieveUserInfo("cashier").then((d) => {
-      console.log("mi data es:", d);
-
       setCashier(d);
     });
     setIsCashierLoaded(true);
   }, []);
+
   const {
-    isOpen: isOpenModalSale,
-    onOpen: onOpenModalSale,
-    onClose: onCloseModalSale,
+    isOpen: isOpenModalCustomer,
+    onOpen: onOpenModalCustomer,
+    onClose: onCloseModalCustomer,
   } = useDisclosure();
 
-  const closeModalSales = () => {
+  const closeModalCustomer = () => {
     resetCustomer();
-    onCloseModalSale();
+    onCloseModalCustomer();
   };
 
-  const handleCreateSale = () => {
-    onOpenModalSale();
-    console.log("crear venta");
+  const handleCreateModal = () => {
+    onOpenModalCustomer();
   };
 
   const handleCreateCustomer = (customer: Customer) => {
@@ -111,6 +106,7 @@ export default function Page() {
         title: "Cliente creado",
         status: "success",
       });
+      // Once the user is created, redirect to a view where the cashier can see the sales
       router.push(
         `/cashier/sales?cashier_id=${encodeURIComponent(
           (cashier?.id as number).toString()
@@ -122,11 +118,8 @@ export default function Page() {
     id_type: string;
     personal_id: string;
   }) => {
-    console.log("buscando cliente");
-    const id_to_search = `${customer_id.id_type}${customer_id.personal_id}`
-    searchCustomerByPersonalID(
-      id_to_search
-    ).then((d) => {
+    const id_to_search = `${customer_id.id_type}${customer_id.personal_id}`;
+    searchCustomerByPersonalID(id_to_search).then((d) => {
       const {
         error,
         body: { message },
@@ -152,10 +145,9 @@ export default function Page() {
     });
   };
 
-
   return (
     <>
-      <Modal isOpen={isOpenModalSale} onClose={closeModalSales}>
+      <Modal isOpen={isOpenModalCustomer} onClose={closeModalCustomer}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Cliente</ModalHeader>
@@ -297,36 +289,30 @@ export default function Page() {
               ""
             )}
 
-            <ModalFooter className="flex w-full justify-between">
+            <ModalFooter>
               <div className="w-full flex justify-start">
-                <Button colorScheme="red">Cancelar venta</Button>
+                <Button colorScheme="red" onClick={closeModalCustomer}>Cerrar ventana</Button>
               </div>
-              <div className="w-full flex justify-end">
-                <Button colorScheme="teal">Guardar venta</Button>
-              </div>
+              
             </ModalFooter>
           </ModalBody>
         </ModalContent>
       </Modal>
-      <main className="w-screen h-screen flex flex-col gap-4">
-        <section className="flex flex-col gap-10 justify-center items-center w-full h-fit mb-[20px] mt-10">
-          <h1 className="text-3xl font-semibold text-teal-50 text-center">
-            <span className="w-fit py-2 px-5 rounded-3xl bg-teal-500">
-              Buenas tardes {isCashierLoaded ? cashier?.name : ""}
-            </span>
-          </h1>
-        </section>
+      <main className="relative w-screen h-screen flex flex-col gap-4">
+        <span className="mx-auto mt-5 w-fit text-center text-teal-800 text-4xl">
+          Buenas tardes {isCashierLoaded ? cashier?.name : ""}
+        </span>
+
         <section className="flex flex-col gap-4 w-full h-full justify-center items-center">
-          <span className="flex text-teal-800 text-3xl justify-center items-center gap-4">
-            <span className="w-fit py-2 px-5 rounded-2xl bg-teal-300 text-teal-800">
+            <span className="fixed top-20 w-fit py-2 px-5 text-4xl text-teal-800">
               {" "}
               Panel de administración
             </span>
-          </span>
+
           <section className="flex gap-4 w-full justify-center">
             <div
               className=" bg-teal-300 h-[250px] w-[500px] rounded-xl shadow-lg border-2 text-center transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
-              onClick={(e) => handleCreateSale()}
+              onClick={(e) => handleCreateModal()}
             >
               <span className="flex w-full  h-full items-center justify-center text-3xl text-teal-800 gap-2">
                 <FaCartPlus size={100} />
