@@ -63,7 +63,7 @@ export default function Page() {
     formState: { errors: errorsSearchCustomer },
     handleSubmit: handleSubmitSearchCustomer,
   } = useForm<SearchCustomer>({
-    resolver: zodResolver(searchCustomerSchema),
+    resolver: zodResolver(searchCustomerSchema), 
     mode: "onChange",
     delayError: 3000,
   });
@@ -154,6 +154,7 @@ export default function Page() {
           <ModalCloseButton />
           <ModalBody className="flex flex-col gap-4">
             <form onSubmit={handleSubmitSearchCustomer(handleSearchCustomer)}>
+              
               <FormControl className="flex flex-col gap-4">
                 <FormLabel>
                   Ingrese la cédula del cliente para su búsqueda:{" "}
@@ -170,6 +171,7 @@ export default function Page() {
                   </InputLeftAddon>
                   <Input
                     type="text"
+                    
                     placeholder="Ingrese la cédula del cajero"
                     {...registerSearchCustomer("personal_id")}
                   />
@@ -199,7 +201,7 @@ export default function Page() {
                     </InputLeftAddon>
                     <Input
                       type="text"
-                      placeholder="Ingrese la cédula del cajero"
+                      placeholder="Ingrese la cédula del cliente"
                       {...registerCustomer("personal_id")}
                       defaultValue={CustomerPersonalID}
                     />

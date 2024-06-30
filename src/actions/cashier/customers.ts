@@ -4,7 +4,7 @@ import { BASE_URL } from "@/constants";
 import { Customer, ServerResponse } from "@/types";
 import { cookies } from "next/headers";
 
-export async function searchCustomerByPersonalID(id: any) {
+export async function searchCustomerByPersonalID(id: string) {
   try {
     const session = cookies().get("SESSION_TOKEN")?.value;
     const response = await fetch(`${BASE_URL}/cashier/verify-customer`, {
