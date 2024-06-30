@@ -16,6 +16,14 @@ import {
   ModalContent,
   ModalHeader,
   useDisclosure,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  FormControl,
+  FormLabel,
+  Checkbox,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -33,6 +41,7 @@ export default function Page() {
   const [products, setProducts] = useState<SaleItems[]>([] as any[]);
   const [reloadDataFromServer, setReloadDataFromServer] = useState(false);
   const path = useSearchParams();
+  const [isNumberInputEnabled, setIsNumberInputEnabled] = useState(false);
   const {
     isOpen: isOpenItemModal,
     onOpen: onOpenItemModal,
@@ -106,10 +115,41 @@ export default function Page() {
         <ModalContent>
           <ModalHeader>Detalles del producto</ModalHeader>
           <ModalBody>
+          <form>
             <p>Nombre: </p>
             <p>Precio: </p>
             <p>Cantidad: </p>
             <p>Código de barras: </p>
+          </form>
+            <hr />
+            <form>
+              <FormControl>
+              <Checkbox 
+                  isChecked={isNumberInputEnabled}
+                  onChange={(e) => setIsNumberInputEnabled(e.target.checked)}
+                  mt={4}
+                >
+                  Habilitar modificación de cantidad del artículo
+                </Checkbox>
+                <FormLabel>
+                  Ingrese la cantidad del Artículo:
+                </FormLabel>
+                <NumberInput defaultValue={1000} min={0} max={10000} isDisabled={!isNumberInputEnabled}>
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              
+              <div className="flex space-x-2 mt-4">
+                <Button colorScheme="green" onClick={onOpenItemModal}>
+                  Guardar Cantidad
+                </Button>
+                <Button colorScheme="red">Eliminar producto de la venta</Button>
+              </div>
+              </FormControl>
+            </form>
           </ModalBody>
           <ModalFooter>
             <Button colorScheme="blue" mr={3} onClick={onCloseItemModal}>
@@ -117,7 +157,6 @@ export default function Page() {
             </Button>
           </ModalFooter>
         </ModalContent>
-
       </Modal>
     <main className="relative w-screen h-screen p-5">
       
