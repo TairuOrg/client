@@ -1,10 +1,28 @@
 "use client";
 
 import { beginSale } from "@/actions/cashier/sales";
-import { Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Button,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalFooter,
+  ModalContent,
+  ModalHeader,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { getProductsFromSale } from "@/actions/cashier/sales";
 import QRCode from "react-qr-code";
+import { SaleItems } from "@/types";
+
 export default function Page() {
   const [params, setParams] = useState({
     cashier_id: 0,
@@ -12,8 +30,15 @@ export default function Page() {
   });
   const [salesID, setSalesID] = useState<number | null>(null);
   const [createSalePressed, setCreateSalePressed] = useState(false);
-
+  const [products, setProducts] = useState<SaleItems[]>([] as any[]);
+  const [reloadDataFromServer, setReloadDataFromServer] = useState(false);
   const path = useSearchParams();
+  const {
+    isOpen: isOpenItemModal,
+    onOpen: onOpenItemModal,
+    onClose: onCloseItemModal,
+  } = useDisclosure();
+
   useEffect(() => {
     setParams({
       cashier_id: parseInt(path.get("cashier_id") as string),
@@ -21,77 +46,81 @@ export default function Page() {
     });
   }, []);
 
+  useEffect(() => {
+    (async () => {
+      if (salesID) {
+        const {
+          body: { payload },
+        } = await getProductsFromSale({
+          sale_id: salesID.toString(),
+        });
+        const payload_to_insert = payload.map((i) => ({
+          ...i,
+          items: {
+            ...i.items,
+            btnAction: <Button onClick={(e) => onOpenItemModal()}>Detalles</Button>,
+          },
+        }));
+
+        setProducts(payload_to_insert);
+      }
+    })();
+  }, [salesID, reloadDataFromServer]);
+
   const handleCreateSale = () => {
     beginSale(params).then((res) => {
       setCreateSalePressed(true);
       const {
         body: { payload },
       } = res;
-      console.log(payload);
       setSalesID(payload);
     });
   };
-
-
-  interface ProductData {
-    name: string;
-    price: number;
-    quantity: string;
-    barcode: string;
-    
-  }
-
   const cols = [
     {
       id: "name",
       header: "Producto",
-      accessorKey: "name",
-    },  
+    },
     {
       id: "price",
       header: "Precio del producto (USD) ",
-      accessorKey: "price",
-    
     },
     {
       id: "quantity",
       header: "Cantidad Agregada",
-      accessorKey: "quantity",
-      
     },
     {
       id: "barcode",
       header: "Código de barras",
-      accessorKey: "barcode",
-    
     },
     {
       id: "actions",
       header: "Acciones",
-      accessorKey: "onClickAction",
-      
-    },
-  ];
-
-  const data = [
-    {
-      name: "Producto A",
-      price: 10,
-      quantity: "1",
-      barcode: "123456789",
-   
-    },
-    {
-      name: "Producto B",
-      price: 20,
-      quantity: "5",
-      barcode: "987654321",
-     
     },
   ];
 
   return (
+    <>
+    <Modal isOpen={isOpenItemModal} onClose={onCloseItemModal}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Detalles del producto</ModalHeader>
+          <ModalBody>
+            <p>Nombre: </p>
+            <p>Precio: </p>
+            <p>Cantidad: </p>
+            <p>Código de barras: </p>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onCloseItemModal}>
+              Cerrar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+
+      </Modal>
     <main className="relative w-screen h-screen p-5">
+      
       <section className="flex w-full p-5 items-center justify-around text-center text-teal-50 gap-10 bg-teal-700 rounded-xl">
         <section className="flex gap-10 items-center">
           <span
@@ -112,51 +141,82 @@ export default function Page() {
               size={"lg"}
             >
               {" "}
-              Crear venta
+              Generar código QR
             </Button>
           </div>
         </section>
 
         <div className="text-start text-2xl">
           <h2>Detalles de la venta:</h2>
-          <p>Cajero: {params.cashier_id}</p>
-          <p>Cliente: {params.customer_personal_id}</p>
-          <p>Venta: {salesID ? salesID : "No se ha creado la venta"}</p>
+          <p>Fecha de la venta:</p>
+          <p>Código de la venta: {salesID ? salesID : "No creado"}</p>
+        </div>
+        <div className="text-start text-2xl">
+          <h2>Detalles del cliente</h2>
+          <p>Nombre:</p>
+          <p>Cédula: {params.customer_personal_id}</p>
+
+        </div>
+        <div  className="text-start text-2xl">
+          <h2>Total:</h2>
+          <p>$0.00</p>
         </div>
 
-        <div className="flex gap-4 text-2xl items-center ">
-          <h2>Opciones:</h2>
-          <span className="flex flex-col gap-4">
-            <Button colorScheme="red">Cancelar venta</Button>
-            <Button colorScheme="green">Finalizar venta</Button>
-          </span>
+        <div className="flex flex-col gap-4 text-2xl">
+        <h2>Opciones:</h2>
+          <Button
+            colorScheme="red"
+            onClick={(e) => {
+              setReloadDataFromServer(!reloadDataFromServer);
+            }}
+          >
+            Cancelar venta
+          </Button>
+          <Button colorScheme="green">Concretar venta</Button>
         </div>
+
       </section>
 
-      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4 mt-10 text-center" >
-      <Table variant="striped" size="lg" borderColor="teal.700">
+      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4 mt-10 text-center">
+        <Table variant="striped" size="lg" borderColor="teal.700">
           <Thead>
             <Tr>
               {cols.map((col) => (
-                <Th textAlign="center" key={col.id}>{col.header}</Th>
+                <Th textAlign="center" key={col.id}>
+                  {col.header}
+                </Th>
               ))}
             </Tr>
           </Thead>
           <Tbody>
-            {data.map((row, rowIndex) => (
-              <Tr key={rowIndex} textAlign="center" p={4} fontSize="lg">
-                {cols.map((col) => (
-                  <Td key={col.id}>
-                    <div className="text-center">
-                      {row[col.accessorKey as keyof ProductData]}
-                    </div>
+            {products.map(
+              (
+                { items: { name, price, barcode_id, quantity, btnAction } },
+                index
+              ) => (
+                <Tr key={index}>
+                  <Td>
+                    <div className="text-center">{name}</div>
                   </Td>
-                ))}
-              </Tr>
-            ))}
+                  <Td>
+                    <div className="text-center">{price}</div>
+                  </Td>
+                  <Td>
+                    <div className="text-center">{quantity}</div>
+                  </Td>
+                  <Td>
+                    <div className="text-center">{barcode_id}</div>
+                  </Td>
+                  <Td>
+                    <div className="text-center">{btnAction}</div>
+                  </Td>
+                </Tr>
+              )
+            )}
           </Tbody>
         </Table>
       </section>
     </main>
+    </>
   );
 }

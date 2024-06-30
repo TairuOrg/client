@@ -158,6 +158,10 @@ export type Item = {
   btnAction?: JSX.Element;
 };
 
+export type SaleItems =  {
+  item_id: number;
+  items: Item
+}
 export type Cashier = {
   is_online: boolean;
   rendered_is_online?: JSX.Element;

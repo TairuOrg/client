@@ -98,7 +98,6 @@ export default function CashierPage() {
     confirmPassword: string;
     state: string;
   }) => {
-    console.log("sdadsadsadasdsadaddsddiosmio", cashier);
     const cashier_to_insert = {
       name: cashier.name,
       personal_id: `${cashier.id_type}${cashier.personal_id}`,
