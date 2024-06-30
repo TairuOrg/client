@@ -1,7 +1,7 @@
 "use client";
 
 import { beginSale } from "@/actions/cashier/sales";
-import { Button } from "@chakra-ui/react";
+import { Button, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import QRCode from "react-qr-code";
@@ -31,6 +31,65 @@ export default function Page() {
       setSalesID(payload);
     });
   };
+
+
+  interface ProductData {
+    name: string;
+    price: number;
+    quantity: string;
+    barcode: string;
+    
+  }
+
+  const cols = [
+    {
+      id: "name",
+      header: "Producto",
+      accessorKey: "name",
+    },  
+    {
+      id: "price",
+      header: "Precio del producto (USD) ",
+      accessorKey: "price",
+    
+    },
+    {
+      id: "quantity",
+      header: "Cantidad Agregada",
+      accessorKey: "quantity",
+      
+    },
+    {
+      id: "barcode",
+      header: "Código de barras",
+      accessorKey: "barcode",
+    
+    },
+    {
+      id: "actions",
+      header: "Acciones",
+      accessorKey: "onClickAction",
+      
+    },
+  ];
+
+  const data = [
+    {
+      name: "Producto A",
+      price: 10,
+      quantity: "1",
+      barcode: "123456789",
+   
+    },
+    {
+      name: "Producto B",
+      price: 20,
+      quantity: "5",
+      barcode: "987654321",
+     
+    },
+  ];
+
   return (
     <main className="relative w-screen h-screen p-5">
       <section className="flex w-full p-5 items-center justify-around text-center text-teal-50 gap-10 bg-teal-700 rounded-xl">
@@ -72,6 +131,31 @@ export default function Page() {
             <Button colorScheme="green">Finalizar venta</Button>
           </span>
         </div>
+      </section>
+
+      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4 mt-10 text-center" >
+      <Table variant="striped" size="lg" borderColor="teal.700">
+          <Thead>
+            <Tr>
+              {cols.map((col) => (
+                <Th textAlign="center" key={col.id}>{col.header}</Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {data.map((row, rowIndex) => (
+              <Tr key={rowIndex} textAlign="center" p={4} fontSize="lg">
+                {cols.map((col) => (
+                  <Td key={col.id}>
+                    <div className="text-center">
+                      {row[col.accessorKey as keyof ProductData]}
+                    </div>
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
       </section>
     </main>
   );
