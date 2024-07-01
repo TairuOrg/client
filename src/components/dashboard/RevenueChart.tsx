@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { Box, Flex, Heading, Switch } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Box, Button, Flex, Heading, Switch } from "@chakra-ui/react";
 import {
   LineChart,
   Line,
@@ -11,21 +11,38 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-
-
-const data = [
-  { name: "Lunes", actual: 4000, "semana previa": 2400 },
-  { name: "Martes", actual: 3000, "semana previa": 1398 },
-  { name: "Miércoles", actual: 2000, "semana previa": 9800 },
-  { name: "Jueves", actual: 2780, "semana previa": 3908 },
-  { name: "Viernes", "semana previa": 4800 },
-  { name: "Sábado", "semana previa": 3800 },
-  { name: "Domingo", "semana previa": 4300 },
-];
+import { retrieveDashboardChartData } from "@/actions/revenues";
+import { ChartDataPerDay, DashboardChartData } from "@/types";
 
 const RevenueChart = () => {
-  const [showPreviusWeek, setShowPreviusWeek] = useState(false);
-  const handleToggle = () => setShowPreviusWeek(!showPreviusWeek);
+  const [showPreviousWeek, setShowPreviusWeek] = useState(false);
+  const handleToggle = () => setShowPreviusWeek(!showPreviousWeek);
+  const [data, setData] = useState<ChartDataPerDay[]>();
+  const [loadChartDataFromServer, setloadChartDataFromServer] = useState(true);
+  useEffect(() => {
+    (async () => {
+      const {
+        body: { payload },
+      } = await retrieveDashboardChartData();
+      const data_to_display = [
+        "Domingo",
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes",
+        "Sábado",
+      ].map((day, index) => {
+        return {
+          name: day,
+          actual: payload.thisWeekSales[index],
+          "semana previa": payload.pastWeekSales[index],
+        };
+      });
+      setData(data_to_display);
+    })();
+  }, [loadChartDataFromServer]);
+
   return (
     <Box
       mx="10"
@@ -34,18 +51,24 @@ const RevenueChart = () => {
       maxW="100%"
       minW="fit-content"
       minH="fit-content"
-      maxH="50%"
+      maxH="60%"
       px={4}
       py={2}
       boxShadow="lg"
     >
-      <Flex dir="row" justifyContent={"center"} alignItems={"center"}>
-        <Heading fontSize={"xl"}>
+      <Flex dir="row" justifyContent={"center"} alignItems={"center"} gap={4}>
           Mostrar semana previa{" "}
           <Switch size="md" onChange={() => handleToggle()} />
-        </Heading>
+          <Button
+            onClick={(e) => {
+              setloadChartDataFromServer(!loadChartDataFromServer);
+            }}
+          >
+            Recargar datos
+          </Button>
+        
       </Flex>
-      <ResponsiveContainer width={"100%"} height={"95%"}>
+      <ResponsiveContainer width={"95%"} height={"95%"}>
         <LineChart data={data} margin={{ top: 5, right: 20, left: 20 }}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />
@@ -53,7 +76,7 @@ const RevenueChart = () => {
           <Tooltip />
           <Legend />
           <Line type="monotone" dataKey="actual" stroke="#8884d8" />
-          {showPreviusWeek && (
+          {showPreviousWeek && (
             <Line type="monotone" dataKey="semana previa" stroke="#82ca9d" />
           )}
         </LineChart>

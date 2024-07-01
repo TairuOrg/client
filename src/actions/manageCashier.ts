@@ -6,7 +6,7 @@ export async function deleteCashier(personal_id: string) {
   const payload = {
     personal_id: personal_id,
   };
-  console.log(JSON.stringify(payload));
+
   try {
     const session = cookies().get("SESSION_TOKEN")?.value;
     const response = await fetch(`${BASE_URL}/admin/delete-cashier`, {
@@ -19,7 +19,7 @@ export async function deleteCashier(personal_id: string) {
     });
 
     const result = await response.json();
-    console.log(result);
+
     return result;
   } catch (e) {
     console.error(e);

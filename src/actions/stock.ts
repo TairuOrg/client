@@ -13,7 +13,7 @@ export async function stockItems(): Promise<ServerResponse<Item[]>> {
       
     });
     const result = await response.json();
-    console.log("Resultadooo:", result);
+
     return result;
     
   } catch (error) {

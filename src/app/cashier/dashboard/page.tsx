@@ -172,7 +172,7 @@ export default function Page() {
                   <Input
                     type="text"
                     
-                    placeholder="Ingrese la cédula del cajero"
+                    placeholder="Ingrese la cédula del cliente"
                     {...registerSearchCustomer("personal_id")}
                   />
                   {errorsSearchCustomer.personal_id && (
@@ -308,7 +308,7 @@ export default function Page() {
         <section className="flex flex-col gap-4 w-full h-full justify-center items-center">
             <span className="fixed top-20 w-fit py-2 px-5 text-4xl text-teal-800">
               {" "}
-              Panel de administración
+              Panel de cajero
             </span>
 
           <section className="flex gap-4 w-full justify-center">

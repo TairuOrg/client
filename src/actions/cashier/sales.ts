@@ -41,7 +41,7 @@ export async function getProductsFromSale(payload: {sale_id: string}) {
     });
 
     const result: ServerResponse<SaleItems[]> = await response.json();
-    console.log(result.body.payload)
+
     return result;
   } catch (error) {
     throw new Error(`error: ${error}`);
@@ -62,7 +62,7 @@ export async function modifyProductsQuantity(payload: ModifyItemQuantity) {
     });
 
     const result: ServerResponse<string> = await response.json();
-    console.log(result.body.payload)
+
     return result;
   } catch (error) {
     throw new Error(`error: ${error}`);
@@ -83,7 +83,7 @@ export async function removeItemFromSale(payload: RemoveItemData) {
     });
 
     const result: ServerResponse<string> = await response.json();
-    console.log(result.body.payload)
+
     return result;
   } catch (error) {
     throw new Error(`error: ${error}`);
@@ -104,7 +104,7 @@ export async function cancelSale(payload: FinishSaleData) {
     });
 
     const result: ServerResponse<string> = await response.json();
-    console.log(result.body.payload)
+
     return result;
   } catch (error) {
     throw new Error(`error: ${error}`);
@@ -125,7 +125,7 @@ export async function commitSale(payload: FinishSaleData) {
     });
 
     const result: ServerResponse<string> = await response.json();
-    console.log(result.body.payload)
+
     return result;
   } catch (error) {
     throw new Error(`error: ${error}`);

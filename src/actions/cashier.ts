@@ -15,8 +15,7 @@ export async function cashiersInfo(): Promise<ServerResponse<Cashier[]>> {
     });
 
     const result = await response.json();
-    console.log("Resultadooo:", result);
-    console.log("AKIII ESTOYYYY",result.body.payload)
+
     return result;
     
   } catch (error) {
@@ -28,7 +27,7 @@ export async function cashiersInfo(): Promise<ServerResponse<Cashier[]>> {
 export async function createCashier(cashier: any) {
 
   try {
-    console.log('antes de enviarlo:', cashier)
+
     const session = cookies().get("SESSION_TOKEN")?.value;
     const response = await fetch(`${BASE_URL}/auth/signup-insertion`, {
       method: "POST",

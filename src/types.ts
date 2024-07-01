@@ -222,3 +222,14 @@ export type RemoveItemData = {
 export type FinishSaleData = {
   sale_id: string;
 }
+
+export type DashboardChartData = {
+  thisWeekSales: number[];
+  pastWeekSales: number[];
+}
+
+export type ChartDataPerDay =  {
+  name: string;
+  actual: number;
+  "semana previa": number;
+}
