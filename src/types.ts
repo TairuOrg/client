@@ -233,3 +233,28 @@ export type ChartDataPerDay =  {
   actual: number;
   "semana previa": number;
 }
+
+export type getStatisticsData = {
+  frequency: string;
+  statistics: string[];
+};
+export type Statistics = {
+  salesAmount: number | null;
+  salesTotal: number | null;
+  salesAverage: number | null;
+  topTenItems: {
+    name: string;
+    category: string;
+    item_count: number;
+    total_sold: number;
+    price: string;
+    total_income: string;
+  }[];
+
+  topTenCategories: {
+    category: string;
+    count: number | null;
+    total_sold: number;
+    total_income: string;
+  }[];
+};
