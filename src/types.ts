@@ -160,7 +160,8 @@ export type Item = {
 
 export type SaleItems =  {
   item_id: number;
-  items: Item
+  quantity: number;
+  items: Item;
 }
 export type Cashier = {
   is_online: boolean;
@@ -205,4 +206,19 @@ export type Customer = {
     residence_location: string;
     id?: number;
     is_deleted?: boolean;
+}
+
+export type ModifyItemQuantity = {
+  sale_id: string;
+  item_barcode_id: string;
+  quantity: string;
+}
+
+export type RemoveItemData = {
+  sale_id: string;
+  item_barcode_id: string;
+}
+
+export type FinishSaleData = {
+  sale_id: string;
 }
