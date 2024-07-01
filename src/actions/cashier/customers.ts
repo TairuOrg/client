@@ -47,3 +47,25 @@ export async function createCustomer(new_customer: any): Promise<ServerResponse<
     throw new Error(`error: ${error}`);
   }
 }
+
+
+export async function getCustomerInformation(payload: {personal_id: string}): Promise<ServerResponse<Customer>> {
+  try {
+    const session = cookies().get("SESSION_TOKEN")?.value;
+    const response = await fetch(`${BASE_URL}/cashier/get-customer-data`, {
+        method: 'POST',
+
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `SESSION_TOKEN=${session}`,
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result: ServerResponse<Customer> = await response.json();
+
+    return result;
+  } catch (error) {
+    throw new Error(`error: ${error}`);
+  }
+}

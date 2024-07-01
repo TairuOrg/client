@@ -25,6 +25,6 @@ export async function retrieveDashboardChartData(): Promise<ServerResponse<Dashb
     },
   });
   const result = await response.json()
-
+  console.log('iiomsioosoosos', result.body.payload)
   return result;
 }

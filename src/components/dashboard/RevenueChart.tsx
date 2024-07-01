@@ -25,13 +25,13 @@ const RevenueChart = () => {
         body: { payload },
       } = await retrieveDashboardChartData();
       const data_to_display = [
-        "Domingo",
         "Lunes",
         "Martes",
         "Miércoles",
         "Jueves",
         "Viernes",
         "Sábado",
+        "Domingo"
       ].map((day, index) => {
         return {
           name: day,
@@ -39,6 +39,7 @@ const RevenueChart = () => {
           "semana previa": payload.pastWeekSales[index],
         };
       });
+      console.log('lo que se va a renderizar', data_to_display)
       setData(data_to_display);
     })();
   }, [loadChartDataFromServer]);

@@ -19,6 +19,7 @@ export default function ReportsPage() {
           "Top 10 categorias mas vendidas",
         ],
       });
+      
       setTopTenArticles(payload);
     })();
   }, []);

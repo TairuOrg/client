@@ -37,6 +37,7 @@ import { useEffect,  useState } from "react";
 import { getProductsFromSale } from "@/actions/cashier/sales";
 import QRCode from "react-qr-code";
 import { Item, SaleItems } from "@/types";
+import { getCustomerInformation } from "@/actions/cashier/customers";
 
 export default function Page() {
   const toast = useToast();
@@ -53,7 +54,7 @@ export default function Page() {
   const [isNumberInputEnabled, setIsNumberInputEnabled] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<[Item, number]>(); // Item, index in products
   const [quantityToModify, setQuantityToModify] = useState(0);
-
+  const [customerName, setCustomerName] = useState('')
   // Modify the quantity of the selected product
   const handleModifyQuantity = (newQuantity: number) => {
     if (products && selectedProduct && salesID) {
@@ -82,6 +83,9 @@ export default function Page() {
       cashier_id: parseInt(path.get("cashier_id") as string),
       customer_personal_id: path.get("customer_personal_id") as string,
     });
+    getCustomerInformation({personal_id: params.customer_personal_id}).then(data => {
+        setCustomerName(data.body.payload.name)
+    })
   }, []);
 
   useEffect(() => {
@@ -291,7 +295,7 @@ export default function Page() {
           </div>
           <div className="text-start text-2xl">
             <h2>Detalles del cliente</h2>
-            <p>Nombre:</p>
+            {/* <p>Nombre {customerName}:</p> */}
             <p>Cédula: {params.customer_personal_id}</p>
           </div>
           <div className="text-start text-2xl">

@@ -9,7 +9,6 @@ export async function getTopTenArticles(
 ): Promise<ServerResponse<Statistics>> {
   try {
     const session = cookies().get("SESSION_TOKEN")?.value;
-
     const response = await fetch(`${BASE_URL}/admin/get-statistics`, {
       method: "POST",
       headers: {
@@ -20,7 +19,7 @@ export async function getTopTenArticles(
     });
 
     const result: ServerResponse<Statistics> = await response.json();
-    console.log(result.body.payload);
+    console.log('etoy arrecho con est mierdaaaa',result.body.payload);
     return result;
   } catch (e) {
     console.error(e);
