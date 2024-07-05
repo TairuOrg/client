@@ -4,7 +4,7 @@ import { BASE_URL } from "@/constants";
 import { getStatisticsData, ServerResponse, Statistics } from "@/types";
 import { cookies } from "next/headers";
 
-export async function getTopTenArticles(
+export async function getStatistics(
   payload: getStatisticsData
 ): Promise<ServerResponse<Statistics>> {
   try {

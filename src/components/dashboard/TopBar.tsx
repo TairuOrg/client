@@ -1,17 +1,44 @@
 "use client";
-import { Flex, HStack, Tooltip, Text, useDisclosure } from "@chakra-ui/react";
+import {
+  Flex,
+  HStack,
+  Tooltip,
+  Text,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalBody,
+  ModalHeader,
+  ModalFooter,
+  ModalCloseButton,
+  FormControl,
+  FormLabel,
+  InputGroup,
+  InputLeftAddon,
+  Select,
+  Input,
+  ModalContent,
+} from "@chakra-ui/react";
 import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
 import { MdOutlineBackup } from "react-icons/md";
 import { TbReload } from "react-icons/tb";
 import OpenNotification from "./NotificationPanel";
 import { useRevenue } from "@/store/useRevenue";
-import { useCashierStatus, useItemsAndCategories } from "@/store/useSideMenuReload";
+import {
+  useCashierStatus,
+  useItemsAndCategories,
+} from "@/store/useSideMenuReload";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { update: updateRevenue } = useRevenue();
   const { update: updateCashier } = useCashierStatus();
   const { update: updateItemsAndCategories } = useItemsAndCategories();
+  const {
+    isOpen: isOpenSettings,
+    onOpen: onOpenSettings,
+    onClose: onCloseSettings,
+  } = useDisclosure();
   const buttons = {
     update: {
       icon: <TbReload size={30} />,
@@ -23,14 +50,17 @@ export default function TopBar() {
       },
     },
     backup: {
-      icon: < MdOutlineBackup size={30} />,
+      icon: <MdOutlineBackup size={30} />,
       label: "Respaldo",
       action: () => onOpen(),
     },
     settings: {
       icon: <FiSettings size={30} />,
       label: "Configuración",
-      action: () => {},
+      action: () => {
+        console.log("sdasdsaasd");
+        onOpenSettings();
+      },
     },
     logout: {
       icon: <FiLogOut size={30} />,
@@ -40,6 +70,36 @@ export default function TopBar() {
   };
   return (
     <>
+      <Modal isOpen={isOpenSettings} onClose={onCloseSettings}>
+        
+        <ModalContent>
+           
+           <ModalCloseButton />
+          <ModalHeader>Editar Perfil</ModalHeader>
+          <ModalBody>
+            <div>
+              <form>
+                <FormControl>
+                  <FormLabel>Nombre:</FormLabel>
+                  <input type="text"></input>
+                  <FormLabel>Cédula</FormLabel>
+                  <input type="text"></input>
+                  <InputGroup>
+                    <InputLeftAddon>
+                      <Select width="fit content">
+                        <option value="V">V</option>
+                        <option value="E">E</option>
+                      </Select>
+                    </InputLeftAddon>
+                    <Input type="number" isDisabled={true}></Input>
+                  </InputGroup>
+                </FormControl>
+              </form>
+            </div>
+          </ModalBody>
+          <ModalFooter></ModalFooter>
+        </ModalContent>
+      </Modal>
       <OpenNotification isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Flex dir="row" mt="10" justifyContent={"center"} top={5} w="100%">
         <HStack
