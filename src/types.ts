@@ -193,7 +193,7 @@ export type Entry = {
   admin_id: number,
   description: string,
   date: Date,
-  entry_items: EntryItem[],
+  entries_items: EntryItem[],
 }
 
 export type Customer = {

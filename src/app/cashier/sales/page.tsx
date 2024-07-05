@@ -204,7 +204,6 @@ export default function Page() {
                     onClick={(e) => {
                       try {
                         // Update the quantity of the selected product
-
                         handleModifyQuantity(quantityToModify);
                         toast({
                           title: "Cantidad modificada",

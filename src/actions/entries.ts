@@ -15,7 +15,7 @@ export async function loadEntries(): Promise<ServerResponse<Entry[]>> {
     const result: ServerResponse<Entry[]> = await response.json()
 
     result.body.payload.forEach(e => {
-
+      console.log(e)
     })
     return result
   } catch (error) {

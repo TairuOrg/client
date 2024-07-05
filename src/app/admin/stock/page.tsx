@@ -158,7 +158,10 @@ export default function Page() {
   const handleSaveEntries = () => {
     const entry_to_add = addedEntry as Entry;
     createEntryFn(entry_to_add);
+    setReloadFromServer(!reloadFromServer);
+    onCloseModalEntries()
   };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -387,9 +390,9 @@ export default function Page() {
                   <p>Nombre: {selectedEntry.description}</p>
 
                   <ul>
-                    {selectedEntry.entry_items &&
-                    selectedEntry.entry_items.length > 0 ? (
-                      selectedEntry.entry_items.map((i: any) => (
+                    {selectedEntry.entries_items &&
+                    selectedEntry.entries_items.length > 0 ? (
+                      selectedEntry.entries_items.map((i: any) => (
                         <>
                           <li key={i.items.name}> {i.items.name}</li>
                           <li key={i.items.barcode_id}>
@@ -422,35 +425,54 @@ export default function Page() {
               )}
               {createEntry && (
                 <form
-                  onSubmit={handleSubmitEntry((d) => {
-                    const item = {
-                      ...d,
-                      add_quantity: parseInt(d.add_quantity),
+                  onSubmit={handleSubmitEntry((payload) => {
+                    /*
+                    Data is composed of the folowing fields:
+                    - description: string => description of the entry
+                    - name: string => name of the item
+                    - barcode_id: string => barcode of the item 
+                    - manufacturer: string => manufacturer of the item
+                    - category: string  => category of the item
+                    - add_quantity: string  => quantity of the item
+                    - price: string => price of the item
+
+                    */
+                    const data = {
+                      ...payload,
+                      add_quantity: parseInt(payload.add_quantity),
                       item_id: null,
-                      price: parseFloat(d.price),
+                      price: parseFloat(payload.price),
                     };
-                    console.log(admin_logged_in);
+                    
                     setAddedEntry({
                       admin_id: admin_logged_in,
-                      description: item.description,
+                      description: data.description,
                       date: new Date(),
-                      entry_items: [
-                        ...((addedEntry?.entry_items as EntryItem[]) || []),
-                        item,
+                      entries_items: [
+                        ...((addedEntry?.entries_items as EntryItem[]) || []),
+                        data,
                       ],
                     });
 
-                    resetEntry();
+                    resetEntry({
+                      add_quantity: "",
+                      barcode_id: "",
+                      category: "",
+                      description: data.description,
+                      manufacturer: "",
+                      name: "",
+                      price: "",
+
+                    });
                   })}
                 >
                   <FormControl className="flex flex-col gap-2">
-                    <FormLabel htmlFor="nombre-entrada">
+                    <FormLabel>
                       Descripción de la entrada:
                     </FormLabel>
                     <Input
                       type="text"
                       {...registerEntry("description")}
-                      placeholder={addedEntry?.description}
                       isDisabled={Boolean(addedEntry)}
                     />
                     {errorsEntry.description && (
@@ -460,7 +482,7 @@ export default function Page() {
                       </span>
                     )}
 
-                    <FormLabel htmlFor="artículo">
+                    <FormLabel>
                       Nombre del artículo:
                     </FormLabel>
                     <Input type="text" {...registerEntry("name")} />
@@ -480,7 +502,7 @@ export default function Page() {
                       </span>
                     )}
 
-                    <FormLabel htmlFor="fabricante">Fabricante:</FormLabel>
+                    <FormLabel>Fabricante:</FormLabel>
                     <Input type="text" {...registerEntry("manufacturer")} />
                     {errorsEntry.manufacturer && (
                       <span className="text-red-500">
@@ -506,7 +528,7 @@ export default function Page() {
                       </span>
                     )}
 
-                    <FormLabel htmlFor="cantidad">Cantidad:</FormLabel>
+                    <FormLabel>Cantidad:</FormLabel>
                     <Input type="text" {...registerEntry("add_quantity")} />
                     {errorsEntry.add_quantity && (
                       <span className="text-red-500">
@@ -515,7 +537,7 @@ export default function Page() {
                       </span>
                     )}
 
-                    <FormLabel htmlFor="precio">Precio unitario:</FormLabel>
+                    <FormLabel>Precio unitario:</FormLabel>
                     <Input type="string" {...registerEntry("price")} />
                     {errorsEntry.price && (
                       <span className="text-red-500">
@@ -537,11 +559,11 @@ export default function Page() {
               )}
               {addedEntry &&
                 !showEntries &&
-                addedEntry.entry_items.length > 0 && (
+                addedEntry.entries_items.length > 0 && (
                   <>
                     <p>Artículos agregados: </p>
                     <ul>
-                      {addedEntry.entry_items.map((i) => (
+                      {addedEntry.entries_items.map((i) => (
                         <li key={i.name}>
                           Nombre: {i.name} | Cantidad: {i.add_quantity}
                         </li>

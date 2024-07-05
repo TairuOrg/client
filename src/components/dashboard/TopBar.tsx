@@ -1,6 +1,7 @@
 "use client";
 import { Flex, HStack, Tooltip, Text, useDisclosure } from "@chakra-ui/react";
 import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
+import { MdOutlineBackup } from "react-icons/md";
 import { TbReload } from "react-icons/tb";
 import OpenNotification from "./NotificationPanel";
 import { useRevenue } from "@/store/useRevenue";
@@ -21,9 +22,9 @@ export default function TopBar() {
         updateItemsAndCategories();
       },
     },
-    notifications: {
-      icon: <FiBell size={30} />,
-      label: "Notificaciones",
+    backup: {
+      icon: < MdOutlineBackup size={30} />,
+      label: "Respaldo",
       action: () => onOpen(),
     },
     settings: {
