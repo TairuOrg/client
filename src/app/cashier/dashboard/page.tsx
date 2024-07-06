@@ -45,9 +45,43 @@ export default function Page() {
   const [isCashierLoaded, setIsCashierLoaded] = useState(false);
   const [isCustomerNotFound, setIsCustomerNotFound] = useState(false);
   const [CustomerPersonalID, setCustomerPersonalID] = useState<string>("");
+
+  interface EditProfileFormData {
+    name: string;
+    id_type: string;
+    personal_id: string;
+    email: string;
+    phone_code: string;
+    phone_number: string;
+    residence_location: string;
+  }
+  
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm<EditProfileFormData>();
+  
+    useEffect(() => {
+      retrieveUserInfo("cashier").then((user) => {
+        setValue("name", user.name);
+        setValue("personal_id", user.personal_id);
+        setValue("email", user.email);
+        setValue("phone_number",user.phone_number)
+        setValue("residence_location", user.residence_location);
+      });
+    }, [setValue]);
+
+
   const router = useRouter(); 
   const toast = useToast();
 
+  const {
+    isOpen: isOpenSettings,
+    onOpen: onOpenSettings,
+    onClose: onCloseSettings,
+  } = useDisclosure();
+
+  const handleSettingsClick = () => {
+    onOpenSettings();
+  
+  };
   const {
     register: registerCustomer,
     formState: { errors: errorsCustomer },
@@ -144,9 +178,83 @@ export default function Page() {
       }
     });
   };
-
+  
+  
   return (
     <>
+      <Modal isOpen={isOpenSettings} onClose={onCloseSettings}>
+        <ModalOverlay/>
+        <ModalContent>
+           <ModalCloseButton />
+          <ModalHeader>Editar Perfil</ModalHeader>
+          <ModalBody>
+            <div>
+              <form>
+                <FormControl className="flex flex-col">
+                  <FormLabel>Nombre:</FormLabel>
+                  <Input type="text" {...register("name", { required: true })}/>
+                  <FormLabel>Cédula</FormLabel>
+                    <Input type="text" isDisabled={true}{...register("personal_id", { required: true })} />
+                  <FormLabel>Correo Electrónico:</FormLabel>
+                  <Input type="text" {...register("email", { required: true })}/>
+                  <FormLabel htmlFor="numero-telefonico">
+                      Número Telefónico:
+                    </FormLabel>
+                    <InputGroup>
+                      <InputLeftAddon>
+                        <Select>
+                          <option value="412">412</option>
+                          <option value="416">416</option>
+                          <option value="426">426</option>
+                          <option value="414">414</option>
+                          <option value="424">424</option>
+                        </Select>
+                      </InputLeftAddon>
+                      <Input type="number" {...register("phone_number", { required: true })}/>
+                    </InputGroup>
+                    <FormLabel>Residencia:</FormLabel>
+                  <InputGroup>
+                      <Select {...register("residence_location", { required: true })}>
+                      <option value="amazonas">Amazonas</option>
+                        <option value="anzoategui">Anzoátegui</option>
+                        <option value="apure">Apure</option>
+                        <option value="aragua">Aragua</option>
+                        <option value="barinas">Barinas</option>
+                        <option value="bolivar">Bolívar</option>
+                        <option value="carabobo">Carabobo</option>
+                        <option value="cojedes">Cojedes</option>
+                        <option value="delta_amacuro">Delta Amacuro</option>
+                        <option value="distrito_capital">
+                          Distrito Capital
+                        </option>
+                        <option value="falcon">Falcón</option>
+                        <option value="guarico">Guárico</option>
+                        <option value="lara">Lara</option>
+                        <option value="merida">Mérida</option>
+                        <option value="miranda">Miranda</option>
+                        <option value="monagas">Monagas</option>
+                        <option value="nueva_esparta">Nueva Esparta</option>
+                        <option value="portuguesa">Portuguesa</option>
+                        <option value="sucre">Sucre</option>
+                        <option value="tachira">Táchira</option>
+                        <option value="trujillo">Trujillo</option>
+                        <option value="yaracuy">Yaracuy</option>
+                        <option value="zulia">Zulia</option>
+                      </Select>
+                  </InputGroup>
+                </FormControl>
+              </form>
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Button type="submit" marginTop="10px" colorScheme="green">
+              Actualizar
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
       <Modal isOpen={isOpenModalCustomer} onClose={closeModalCustomer}>
         <ModalOverlay />
         <ModalContent>
@@ -321,10 +429,11 @@ export default function Page() {
                 Crear venta
               </span>
             </div>
-            <div className="bg-teal-500 h-[250px] w-[300px] rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
+            <div className="bg-teal-500 h-[250px] w-[300px] rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer" onClick={handleSettingsClick}>
               <span className="flex w-full flex-col h-full text-3xl text-teal-50 justify-center items-center">
                 <IoSettingsSharp size={100} />
                 Configuración
+                
               </span>
             </div>
           </section>
