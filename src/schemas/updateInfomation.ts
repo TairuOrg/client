@@ -14,7 +14,16 @@ export const updateInformation = z.object({
     .string()
     .length(7, "Número de teléfono inválido")
     .regex(REGEX.phone, "Caracteres inválidos"),
+    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+    confirmPassword: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+    personal_id: z.any(),
+    email: z.string().email("Correo electrónico inválido"),
 
+
+}).refine(data => {
+    return data.password === data.confirmPassword
+}, {
+    message: "Las contraseñas no coinciden",
 });
 
 export type UpdateInformation = z.infer<typeof updateInformation>;

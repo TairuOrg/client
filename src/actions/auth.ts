@@ -5,8 +5,11 @@ import SHA256 from "crypto-js/sha256";
 import { BASE_URL } from "@/constants";
 import { cookies } from 'next/headers';
 import extract from "@/utils/getSessionFromCookies";
-
-export async function login(formData: FormData, role: string): Promise<AuthResponse> {
+import { redirect } from "next/navigation";
+export async function login(
+  formData: FormData,
+  role: string
+): Promise<AuthResponse> {
   const LOGIN_URL =
     `${BASE_URL}/auth/login?` +
     new URLSearchParams({
@@ -25,13 +28,15 @@ export async function login(formData: FormData, role: string): Promise<AuthRespo
 
     body: JSON.stringify(creds),
   });
-  const result = await response.json()
+  const result = await response.json();
+  console.log(result);
+  // Set the session token only if the login was successful
+  if (!result.error) {
+    const session = extract(response.headers.getSetCookie());
 
-  // Set the session token only if the login was successful 
-  const session = extract(response.headers.getSetCookie());
-
-  cookies().set('SESSION_TOKEN', session, { path: '/', secure: true })
-	return result;
+    cookies().set("SESSION_TOKEN", session, { path: "/", secure: true });
+  }
+  return result;
 }
 export async function signUpCode(formData: FormData): Promise<AuthResponse> {
   try {
@@ -87,9 +92,11 @@ interface SignUpDataType {
   personal_id: string;
   phone_number: string;
   residence_location: string;
-  role: 'admin' | 'cashier';
+  role: "admin" | "cashier";
 }
-export async function signUp(signUpData: SignUpDataType): Promise<AuthResponse> {
+export async function signUp(
+  signUpData: SignUpDataType
+): Promise<AuthResponse> {
   const response = await fetch(`${BASE_URL}/auth/signup-insertion`, {
     method: "POST",
     body: JSON.stringify(signUpData),
@@ -100,4 +107,9 @@ export async function signUp(signUpData: SignUpDataType): Promise<AuthResponse> 
   const result = await response.json();
 
   return result;
+}
+
+export async function logOut() {
+  cookies().delete("SESSION_TOKEN");
+  redirect("/login");
 }

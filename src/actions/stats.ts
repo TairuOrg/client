@@ -19,7 +19,6 @@ export async function getStatistics(
     });
 
     const result: ServerResponse<Statistics> = await response.json();
-    console.log('etoy arrecho con est mierdaaaa',result.body.payload);
     return result;
   } catch (e) {
     console.error(e);

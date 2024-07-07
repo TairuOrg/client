@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   ModalBody,
   ModalHeader,
-  ModalFooter,
   ModalCloseButton,
   FormControl,
   FormLabel,
@@ -22,7 +21,7 @@ import {
   useToast
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
+import { FiSettings, FiLogOut } from "react-icons/fi";
 import { MdOutlineBackup } from "react-icons/md";
 import { TbReload } from "react-icons/tb";
 import OpenNotification from "./NotificationPanel";
@@ -35,43 +34,61 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { settings } from "@/actions/settings";
-import { Interface } from "readline";
+import { logOut } from "@/actions/auth";
+import {
+  updateInformation,
+  UpdateInformation,
+} from "@/schemas/updateInfomation";
+import { User } from "@/types";
+import { useRouter } from "next/navigation";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { update: updateRevenue } = useRevenue();
   const { update: updateCashier } = useCashierStatus();
   const { update: updateItemsAndCategories } = useItemsAndCategories();
+  const [userInfo, setUserInfo] = useState<User & { phoneCode: string }>(
+    {} as User & { phoneCode: string }
+  );
+
   const toast = useToast();
-
-  interface EditProfileFormData {
-    name: string;
-    id_type: string;
-    personal_id: string;
-    email: string;
-    phone_code: string;
-    phone_number: string;
-    residence_location: string;
-    password: string;
-  }
-  
-    const { register, setValue, handleSubmit } = useForm<EditProfileFormData>();
-  
-    useEffect(() => {
-      retrieveUserInfo("cashier").then((user) => {
-        setValue("name", user.name);
-        setValue("personal_id", user.personal_id);
-        setValue("email", user.email);
-        setValue("phone_number",user.phone_number)
-        setValue("residence_location", user.residence_location);
+  const router = useRouter();
+  useEffect(() => {
+    retrieveUserInfo().then((res) => {
+      setUserInfo({
+        ...res,
+        phoneCode: res.phone_number.slice(3, 6),
+        phone_number: res.phone_number.slice(6),
       });
-    }, [setValue]);
-    const handleSubmitEditProfile = (data: EditProfileFormData) => {
-      const response = settings(data);
-      
 
-    }
-    
+    });
+  }, []);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UpdateInformation>({
+    resolver: zodResolver(updateInformation),
+  });
+
+  const handleSubmitEditProfile = (data: UpdateInformation) => {
+    const response = settings({...data, personal_id: userInfo.personal_id});
+
+    response.then(({body: { message }}) => {
+
+      toast({
+        title: message.title,
+        description: message.description,
+        status: message.notificationStatus,
+        duration: 9000,
+        isClosable: true,
+      })
+
+      router.replace("/login")
+    })
+  };
+
   const {
     isOpen: isOpenSettings,
     onOpen: onOpenSettings,
@@ -103,84 +120,153 @@ export default function TopBar() {
     logout: {
       icon: <FiLogOut size={30} />,
       label: "Cerrar sesión",
-      action: () => {},
+      action: () => {
+        logOut().then((res) => {
+          console.log(" Se ha salido de sesion");
+        });
+      },
     },
   };
   return (
     <>
-
-<Modal isOpen={isOpenSettings} onClose={onCloseSettings}>
-        <ModalOverlay/>
+      <Modal isOpen={isOpenSettings} onClose={onCloseSettings}>
+        <ModalOverlay />
         <ModalContent>
-           <ModalCloseButton />
+          <ModalCloseButton />
           <ModalHeader>Editar Perfil</ModalHeader>
           <ModalBody>
             <div>
-              <form onSubmit={handleSubmit(handleSubmitEditProfile)}>
+              <form onSubmit={handleSubmit(handleSubmitEditProfile, (data: any)=> {console.log(data)})}>
                 <FormControl className="flex flex-col">
                   <FormLabel>Nombre:</FormLabel>
-                  <Input type="text" {...register("name", { required: true })}/>
+                  <Input
+                    type="text"
+                    {...register("fullname")}
+                    defaultValue={userInfo.name}
+                  />
+                  {errors.fullname && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.fullname.message}{" "}
+                    </span>
+                  )}
                   <FormLabel>Cédula</FormLabel>
-                    <Input type="text" isDisabled={true}{...register("personal_id", { required: true })} />
+                  <Input
+                    type="text"
+                    isDisabled={true}
+                    {...register("personal_id", {
+                      setValueAs: (v: any) => userInfo.personal_id
+                    })}
+                    value={userInfo.personal_id}
+                  />
+                  
+
                   <FormLabel>Correo Electrónico:</FormLabel>
-                  <Input type="text" {...register("email", { required: true })}/>
+                  <Input
+                    type="text"
+                    {...register("email")}
+                    defaultValue={userInfo.email}
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.email.message}{" "}
+                    </span>
+                  )}
                   <FormLabel htmlFor="numero-telefonico">
-                      Número Telefónico:
-                    </FormLabel>
-                    <InputGroup>
-                      <InputLeftAddon>
-                        <Select>
-                          <option value="412">412</option>
-                          <option value="416">416</option>
-                          <option value="426">426</option>
-                          <option value="414">414</option>
-                          <option value="424">424</option>
-                        </Select>
-                      </InputLeftAddon>
-                      <Input type="number" {...register("phone_number", { required: true })}/>
-                    </InputGroup>
-                    <FormLabel>Residencia:</FormLabel>
+                    Número Telefónico:
+                  </FormLabel>
                   <InputGroup>
-                      <Select {...register("residence_location", { required: true })}>
-                      <option value="amazonas">Amazonas</option>
-                        <option value="anzoategui">Anzoátegui</option>
-                        <option value="apure">Apure</option>
-                        <option value="aragua">Aragua</option>
-                        <option value="barinas">Barinas</option>
-                        <option value="bolivar">Bolívar</option>
-                        <option value="carabobo">Carabobo</option>
-                        <option value="cojedes">Cojedes</option>
-                        <option value="delta_amacuro">Delta Amacuro</option>
-                        <option value="distrito_capital">
-                          Distrito Capital
-                        </option>
-                        <option value="falcon">Falcón</option>
-                        <option value="guarico">Guárico</option>
-                        <option value="lara">Lara</option>
-                        <option value="merida">Mérida</option>
-                        <option value="miranda">Miranda</option>
-                        <option value="monagas">Monagas</option>
-                        <option value="nueva_esparta">Nueva Esparta</option>
-                        <option value="portuguesa">Portuguesa</option>
-                        <option value="sucre">Sucre</option>
-                        <option value="tachira">Táchira</option>
-                        <option value="trujillo">Trujillo</option>
-                        <option value="yaracuy">Yaracuy</option>
-                        <option value="zulia">Zulia</option>
+                    <InputLeftAddon>
+                      <Select
+                        {...register("phoneCode")}
+                        defaultValue={userInfo.phoneCode}
+                      >
+                        <option value="412">412</option>
+                        <option value="416">416</option>
+                        <option value="426">426</option>
+                        <option value="414">414</option>
+                        <option value="424">424</option>
                       </Select>
+                    </InputLeftAddon>
+                    <Input
+                      type="number"
+                      {...register("phoneNumber")}
+                      defaultValue={userInfo.phone_number}
+                    />
                   </InputGroup>
+                  {errors.phoneNumber && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.phoneNumber.message}{" "}
+                    </span>
+                  )}
+                  <FormLabel>Residencia:</FormLabel>
+                  <InputGroup>
+                    <Select {...register("state")}>
+                      <option value="amazonas">Amazonas</option>
+                      <option value="anzoategui">Anzoátegui</option>
+                      <option value="apure">Apure</option>
+                      <option value="aragua">Aragua</option>
+                      <option value="barinas">Barinas</option>
+                      <option value="bolivar">Bolívar</option>
+                      <option value="carabobo">Carabobo</option>
+                      <option value="cojedes">Cojedes</option>
+                      <option value="delta_amacuro">Delta Amacuro</option>
+                      <option value="distrito_capital">Distrito Capital</option>
+                      <option value="falcon">Falcón</option>
+                      <option value="guarico">Guárico</option>
+                      <option value="lara">Lara</option>
+                      <option value="merida">Mérida</option>
+                      <option value="miranda">Miranda</option>
+                      <option value="monagas">Monagas</option>
+                      <option value="nueva_esparta">Nueva Esparta</option>
+                      <option value="portuguesa">Portuguesa</option>
+                      <option value="sucre">Sucre</option>
+                      <option value="tachira">Táchira</option>
+                      <option value="trujillo">Trujillo</option>
+                      <option value="yaracuy">Yaracuy</option>
+                      <option value="zulia">Zulia</option>
+                    </Select>
+                  </InputGroup>
+                  {errors.state && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.state.message}{" "}
+                    </span>
+                  )}
+
+                  <FormLabel>Contraseña:</FormLabel>
+                  <Input
+                    type="password"
+                    {...register("password",)}
+                  />
+                  {errors.password && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.password.message}{" "}
+                    </span>
+                  )}
+                  <FormLabel>Confirmar Contraseña:</FormLabel>
+                  <Input
+                    type="password"
+                    {...register("confirmPassword")}
+                  />
+                  {errors.confirmPassword && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.confirmPassword.message}{" "}
+                    </span>
+                  )}
+                  <Button type="submit" marginTop="10px" colorScheme="green">
+                    Actualizar
+                  </Button>
                 </FormControl>
               </form>
             </div>
           </ModalBody>
-          <ModalFooter>
-            <Button type="submit" marginTop="10px" colorScheme="green">
-              Actualizar
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       <OpenNotification isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
       <Flex dir="row" mt="10" justifyContent={"center"} top={5} w="100%">
