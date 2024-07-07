@@ -39,6 +39,11 @@ import {
   searchCustomerByPersonalID,
   createCustomer,
 } from "@/actions/cashier/customers";
+import { settings } from "@/actions/settings";
+import {
+  updateInformation,
+  UpdateInformation,
+} from "@/schemas/updateInfomation";
 
 export default function Page() {
   const [cashier, setCashier] = useState<User>();
@@ -46,31 +51,37 @@ export default function Page() {
   const [isCustomerNotFound, setIsCustomerNotFound] = useState(false);
   const [CustomerPersonalID, setCustomerPersonalID] = useState<string>("");
 
-  interface EditProfileFormData {
-    name: string;
-    id_type: string;
-    personal_id: string;
-    email: string;
-    phone_code: string;
-    phone_number: string;
-    residence_location: string;
-  }
-  
-    const { register, handleSubmit, setValue, formState: { errors } } = useForm<EditProfileFormData>();
-  
-    useEffect(() => {
-      retrieveUserInfo("cashier").then((user) => {
-        setValue("name", user.name);
-        setValue("personal_id", user.personal_id);
-        setValue("email", user.email);
-        setValue("phone_number",user.phone_number)
-        setValue("residence_location", user.residence_location);
-      });
-    }, [setValue]);
+  const [userInfo, setUserInfo] = useState<User & { phoneCode: string }>(
+    {} as User & { phoneCode: string }
+  );
 
-
-  const router = useRouter(); 
   const toast = useToast();
+  const router = useRouter();
+
+  const {
+    register,
+    handleSubmit: handleSubmitOpenSettings,
+    formState: { errors },
+  } = useForm<UpdateInformation>({
+    resolver: zodResolver(updateInformation),
+  });
+
+  
+
+  const handleSubmitEditProfile = (data: UpdateInformation) => {
+    const response = settings({ ...data, personal_id: userInfo.personal_id });
+
+    response.then(({ body: { message } }) => {
+      toast({
+        title: message.title,
+        description: message.description,
+        status: message.notificationStatus,
+        duration: 9000,
+        isClosable: true,
+      });
+      router.replace("/login")
+    });
+  };
 
   const {
     isOpen: isOpenSettings,
@@ -78,10 +89,6 @@ export default function Page() {
     onClose: onCloseSettings,
   } = useDisclosure();
 
-  const handleSettingsClick = () => {
-    onOpenSettings();
-  
-  };
   const {
     register: registerCustomer,
     formState: { errors: errorsCustomer },
@@ -97,7 +104,7 @@ export default function Page() {
     formState: { errors: errorsSearchCustomer },
     handleSubmit: handleSubmitSearchCustomer,
   } = useForm<SearchCustomer>({
-    resolver: zodResolver(searchCustomerSchema), 
+    resolver: zodResolver(searchCustomerSchema),
     mode: "onChange",
     delayError: 3000,
   });
@@ -105,9 +112,18 @@ export default function Page() {
   useEffect(() => {
     retrieveUserInfo("cashier").then((d) => {
       setCashier(d);
+      setIsCashierLoaded(true);
+      setUserInfo({
+        ...d,
+        phoneCode: d.phone_number.slice(3, 6),
+        phone_number: d.phone_number.slice(6),
+      });
+    }).catch(error => {
+      console.error("Error al obtener la información del cajero:", error);
     });
-    setIsCashierLoaded(true);
   }, []);
+
+  
 
   const {
     isOpen: isOpenModalCustomer,
@@ -178,82 +194,148 @@ export default function Page() {
       }
     });
   };
-  
-  
+
   return (
     <>
+      {console.log("Renderizando con cashier:", userInfo)}
       <Modal isOpen={isOpenSettings} onClose={onCloseSettings}>
-        <ModalOverlay/>
+        <ModalOverlay />
         <ModalContent>
-           <ModalCloseButton />
+          <ModalCloseButton />
           <ModalHeader>Editar Perfil</ModalHeader>
           <ModalBody>
             <div>
-              <form>
+              <form
+                onSubmit={handleSubmitOpenSettings(
+                  handleSubmitEditProfile,
+                  (data: any) => {
+                    console.log(data);
+                  }
+                )}
+              >
                 <FormControl className="flex flex-col">
                   <FormLabel>Nombre:</FormLabel>
-                  <Input type="text" {...register("name", { required: true })}/>
+                  <Input
+                    type="text"
+                    {...register("fullname")}
+                    defaultValue={userInfo.name}
+                  />
+                  {errors.fullname && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.fullname.message}{" "}
+                    </span>
+                  )}
                   <FormLabel>Cédula</FormLabel>
-                    <Input type="text" isDisabled={true}{...register("personal_id", { required: true })} />
+                  <Input
+                    type="text"
+                    isDisabled={true}
+                    {...register("personal_id", {
+                      setValueAs: (v: any) => userInfo.personal_id,
+                    })}
+                    value={userInfo.personal_id}
+                  />
+
                   <FormLabel>Correo Electrónico:</FormLabel>
-                  <Input type="text" {...register("email", { required: true })}/>
+                  <Input
+                    type="text"
+                    {...register("email")}
+                    defaultValue={userInfo.email}
+                  />
+                  {errors.email && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.email.message}{" "}
+                    </span>
+                  )}
                   <FormLabel htmlFor="numero-telefonico">
-                      Número Telefónico:
-                    </FormLabel>
-                    <InputGroup>
-                      <InputLeftAddon>
-                        <Select>
-                          <option value="412">412</option>
-                          <option value="416">416</option>
-                          <option value="426">426</option>
-                          <option value="414">414</option>
-                          <option value="424">424</option>
-                        </Select>
-                      </InputLeftAddon>
-                      <Input type="number" {...register("phone_number", { required: true })}/>
-                    </InputGroup>
-                    <FormLabel>Residencia:</FormLabel>
+                    Número Telefónico:
+                  </FormLabel>
                   <InputGroup>
-                      <Select {...register("residence_location", { required: true })}>
-                      <option value="amazonas">Amazonas</option>
-                        <option value="anzoategui">Anzoátegui</option>
-                        <option value="apure">Apure</option>
-                        <option value="aragua">Aragua</option>
-                        <option value="barinas">Barinas</option>
-                        <option value="bolivar">Bolívar</option>
-                        <option value="carabobo">Carabobo</option>
-                        <option value="cojedes">Cojedes</option>
-                        <option value="delta_amacuro">Delta Amacuro</option>
-                        <option value="distrito_capital">
-                          Distrito Capital
-                        </option>
-                        <option value="falcon">Falcón</option>
-                        <option value="guarico">Guárico</option>
-                        <option value="lara">Lara</option>
-                        <option value="merida">Mérida</option>
-                        <option value="miranda">Miranda</option>
-                        <option value="monagas">Monagas</option>
-                        <option value="nueva_esparta">Nueva Esparta</option>
-                        <option value="portuguesa">Portuguesa</option>
-                        <option value="sucre">Sucre</option>
-                        <option value="tachira">Táchira</option>
-                        <option value="trujillo">Trujillo</option>
-                        <option value="yaracuy">Yaracuy</option>
-                        <option value="zulia">Zulia</option>
+                    <InputLeftAddon>
+                      <Select
+                        {...register("phoneCode")}
+                        defaultValue={userInfo.phoneCode}
+                      >
+                        <option value="412">412</option>
+                        <option value="416">416</option>
+                        <option value="426">426</option>
+                        <option value="414">414</option>
+                        <option value="424">424</option>
                       </Select>
+                    </InputLeftAddon>
+                    <Input
+                      type="number"
+                      {...register("phoneNumber")}
+                      defaultValue={userInfo.phone_number}
+                    />
                   </InputGroup>
+                  {errors.phoneNumber && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.phoneNumber.message}{" "}
+                    </span>
+                  )}
+                  <FormLabel>Residencia:</FormLabel>
+                  <InputGroup>
+                    <Select {...register("state")}>
+                      <option value="amazonas">Amazonas</option>
+                      <option value="anzoategui">Anzoátegui</option>
+                      <option value="apure">Apure</option>
+                      <option value="aragua">Aragua</option>
+                      <option value="barinas">Barinas</option>
+                      <option value="bolivar">Bolívar</option>
+                      <option value="carabobo">Carabobo</option>
+                      <option value="cojedes">Cojedes</option>
+                      <option value="delta_amacuro">Delta Amacuro</option>
+                      <option value="distrito_capital">Distrito Capital</option>
+                      <option value="falcon">Falcón</option>
+                      <option value="guarico">Guárico</option>
+                      <option value="lara">Lara</option>
+                      <option value="merida">Mérida</option>
+                      <option value="miranda">Miranda</option>
+                      <option value="monagas">Monagas</option>
+                      <option value="nueva_esparta">Nueva Esparta</option>
+                      <option value="portuguesa">Portuguesa</option>
+                      <option value="sucre">Sucre</option>
+                      <option value="tachira">Táchira</option>
+                      <option value="trujillo">Trujillo</option>
+                      <option value="yaracuy">Yaracuy</option>
+                      <option value="zulia">Zulia</option>
+                    </Select>
+                  </InputGroup>
+                  {errors.state && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.state.message}{" "}
+                    </span>
+                  )}
+
+                  <FormLabel>Contraseña:</FormLabel>
+                  <Input type="password" {...register("password")} />
+                  {errors.password && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.password.message}{" "}
+                    </span>
+                  )}
+                  <FormLabel>Confirmar Contraseña:</FormLabel>
+                  <Input type="password" {...register("confirmPassword")} />
+                  {errors.confirmPassword && (
+                    <span className="text-red-500">
+                      {" "}
+                      {errors.confirmPassword.message}{" "}
+                    </span>
+                  )}
+                  <Button type="submit" marginTop="10px" colorScheme="green">
+                    Actualizar
+                  </Button>
                 </FormControl>
               </form>
             </div>
           </ModalBody>
-          <ModalFooter>
-            <Button type="submit" marginTop="10px" colorScheme="green">
-              Actualizar
-            </Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
-
 
       <Modal isOpen={isOpenModalCustomer} onClose={closeModalCustomer}>
         <ModalOverlay />
@@ -262,7 +344,6 @@ export default function Page() {
           <ModalCloseButton />
           <ModalBody className="flex flex-col gap-4">
             <form onSubmit={handleSubmitSearchCustomer(handleSearchCustomer)}>
-              
               <FormControl className="flex flex-col gap-4">
                 <FormLabel>
                   Ingrese la cédula del cliente para su búsqueda:{" "}
@@ -279,7 +360,6 @@ export default function Page() {
                   </InputLeftAddon>
                   <Input
                     type="text"
-                    
                     placeholder="Ingrese la cédula del cliente"
                     {...registerSearchCustomer("personal_id")}
                   />
@@ -401,9 +481,10 @@ export default function Page() {
 
             <ModalFooter>
               <div className="w-full flex justify-start">
-                <Button colorScheme="red" onClick={closeModalCustomer}>Cerrar ventana</Button>
+                <Button colorScheme="red" onClick={closeModalCustomer}>
+                  Cerrar ventana
+                </Button>
               </div>
-              
             </ModalFooter>
           </ModalBody>
         </ModalContent>
@@ -414,10 +495,10 @@ export default function Page() {
         </span>
 
         <section className="flex flex-col gap-4 w-full h-full justify-center items-center">
-            <span className="fixed top-20 w-fit py-2 px-5 text-4xl text-teal-800">
-              {" "}
-              Panel de cajero
-            </span>
+          <span className="fixed top-20 w-fit py-2 px-5 text-4xl text-teal-800">
+            {" "}
+            Panel de cajero
+          </span>
 
           <section className="flex gap-4 w-full justify-center">
             <div
@@ -429,11 +510,13 @@ export default function Page() {
                 Crear venta
               </span>
             </div>
-            <div className="bg-teal-500 h-[250px] w-[300px] rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer" onClick={handleSettingsClick}>
+            <div
+              className="bg-teal-500 h-[250px] w-[300px] rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
+              onClick={onOpenSettings}
+            >
               <span className="flex w-full flex-col h-full text-3xl text-teal-50 justify-center items-center">
                 <IoSettingsSharp size={100} />
                 Configuración
-                
               </span>
             </div>
           </section>
