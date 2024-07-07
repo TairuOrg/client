@@ -19,6 +19,7 @@ import {
   Input,
   ModalContent,
   Button,
+  useToast
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiBell, FiSettings, FiLogOut } from "react-icons/fi";
@@ -33,12 +34,15 @@ import {
 } from "@/store/useSideMenuReload";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { settings } from "@/actions/settings";
+import { Interface } from "readline";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { update: updateRevenue } = useRevenue();
   const { update: updateCashier } = useCashierStatus();
   const { update: updateItemsAndCategories } = useItemsAndCategories();
+  const toast = useToast();
 
   interface EditProfileFormData {
     name: string;
@@ -48,9 +52,10 @@ export default function TopBar() {
     phone_code: string;
     phone_number: string;
     residence_location: string;
+    password: string;
   }
   
-    const { register, setValue } = useForm<EditProfileFormData>();
+    const { register, setValue, handleSubmit } = useForm<EditProfileFormData>();
   
     useEffect(() => {
       retrieveUserInfo("cashier").then((user) => {
@@ -61,7 +66,12 @@ export default function TopBar() {
         setValue("residence_location", user.residence_location);
       });
     }, [setValue]);
+    const handleSubmitEditProfile = (data: EditProfileFormData) => {
+      const response = settings(data);
+      
 
+    }
+    
   const {
     isOpen: isOpenSettings,
     onOpen: onOpenSettings,
@@ -106,7 +116,7 @@ export default function TopBar() {
           <ModalHeader>Editar Perfil</ModalHeader>
           <ModalBody>
             <div>
-              <form>
+              <form onSubmit={handleSubmit(handleSubmitEditProfile)}>
                 <FormControl className="flex flex-col">
                   <FormLabel>Nombre:</FormLabel>
                   <Input type="text" {...register("name", { required: true })}/>

@@ -21,6 +21,15 @@ export interface User {
   phone_number: string;
   residence_location: string;
 }
+export type EditUserData = {
+  current_personal_id: string;
+  new_password: string;
+  new_name: string;
+  new_phone_number: string;
+  new_email: string;
+  new_residence_location: string;
+};
+
 
 export type Revenue = {
   VE: { amount: string };
@@ -257,4 +266,6 @@ export type Statistics = {
     total_sold: number;
     total_income: string;
   }[];
+
+  
 };
