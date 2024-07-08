@@ -99,6 +99,7 @@ export default function Page() {
     mode: "onChange",
     delayError: 3000,
   });
+
   const {
     register: registerSearchCustomer,
     formState: { errors: errorsSearchCustomer },
@@ -521,13 +522,7 @@ export default function Page() {
             </div>
           </section>
           <section className="flex gap-4 w-full justify-center">
-            <div className="bg-teal-500 h-[200px] w-[500px] rounded-xl shadow-lg transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
-              <span className="flex w-full  h-full items-center justify-center text-3xl text-teal-50 gap-2">
-                <TbReportMoney size={100} />
-                Ventas creadas
-              </span>
-            </div>
-            <div className="bg-teal-300 h-[200px] w-[300px] rounded-xl shadow-lg border-2 transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
+            <div className="bg-teal-300 h-[200px] w-[800px] rounded-xl shadow-lg border-2 transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
               <span className="flex w-full flex-col h-full text-3xl text-teal-800 justify-center items-center">
                 <CiLogout size={100} />
                 Cerrar sesión

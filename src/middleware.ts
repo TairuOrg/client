@@ -8,7 +8,8 @@ const routes = {
     "/admin/dashboard",
     "/admin/settings",
     "/admin/cashier",
-    "/admin/reports"
+    "/admin/reports",
+    '/admin/sales'
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings", '/cashier/sales'],
   public: ["/login", "/about-us", "/unauthorized", "/", "/testing", "/sign-up", "/admin/stock",],

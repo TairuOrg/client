@@ -11,6 +11,7 @@ import { CiFilter } from "react-icons/ci";
 import { MdOutlineSearch } from "react-icons/md";
 
 import { stockItems } from "@/actions/stock";
+import { useRouter } from "next/navigation";
 import {
   Table,
   Thead,
@@ -42,6 +43,7 @@ import { updateStockItem } from "@/actions/stock";
 import { loadEntries, createEntry as createEntryFn } from "@/actions/entries";
 import { addItemSchema, AddItemSchemaType } from "@/schemas/AddItemSchema";
 import { retrieveUserInfo } from "@/actions/retrieveUserInfo";
+import { getSales } from "@/actions/sales";
 
 enum FilterOptions {
   NAME = "name",
@@ -65,6 +67,7 @@ export default function Page() {
   const [admin_logged_in, set_admin_logged_in] = useState<number>(-1);
 
   const toast = useToast();
+  const router = useRouter()
   const {
     isOpen: isOpenModalDetails,
     onOpen: onOpenModalDetails,
@@ -318,10 +321,21 @@ export default function Page() {
         </button>
         <button
           className="rounded-xl h-fit w-fit p-4 text-center bg-white"
+          onClick={(e)=> {
+            getSales().then(e => {
+              router.replace('/admin/sales')
+            })
+          }}
+        >
+          Ventas
+        </button>
+        <button
+          className="rounded-xl h-fit w-fit p-4 text-center bg-white"
           onClick={onOpenMOdalEntries}
         >
           Entradas en inventario
         </button>
+        
       </div>
       <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4">
         <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>

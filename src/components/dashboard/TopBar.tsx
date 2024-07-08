@@ -41,6 +41,7 @@ import {
 } from "@/schemas/updateInfomation";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
+import { download_backup } from "@/actions/download";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -107,7 +108,13 @@ export default function TopBar() {
     backup: {
       icon: <MdOutlineBackup size={30} />,
       label: "Respaldo",
-      action: () => onOpen(),
+      action: () => {
+        download_backup()
+        toast({
+          title: 'Descargando respaldo...',
+          status: 'info'
+        })
+      },
     },
     settings: {
       icon: <FiSettings size={30} />,

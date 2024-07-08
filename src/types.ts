@@ -267,5 +267,12 @@ export type Statistics = {
     total_income: string;
   }[];
 
-  
 };
+
+export type Sale =  {
+  id: number,
+  cashier_id: number,
+  customer_id: number,
+  date: string,
+  is_completed: boolean;
+}
