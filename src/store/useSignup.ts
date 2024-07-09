@@ -8,6 +8,7 @@ export const useSignupStore = create<SignUpData>((set) => ({
   password: "",
   phone_number: "",
   residence_location: "",
+  role: "admin",
   updateName: (name: string) => set({ name }),
   updateEmail: (email: string) => set({ email }),
   updatePassword: (password: string) => set({ password }),

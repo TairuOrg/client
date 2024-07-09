@@ -33,11 +33,14 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect,  useState } from "react";
+import { Suspense, useEffect,  useState } from "react";
 import { getProductsFromSale } from "@/actions/cashier/sales";
 import QRCode from "react-qr-code";
 import { Item, SaleItems } from "@/types";
 import { getCustomerInformation } from "@/actions/cashier/customers";
+
+const Loading = () => <div>Loading...</div>;
+
 
 export default function Page() {
   const toast = useToast();
@@ -151,7 +154,7 @@ export default function Page() {
   ];
 
   return (
-    <>
+    <Suspense fallback={<Loading />}>
       <Modal isOpen={isOpenItemModal} onClose={onCloseItemModal}>
         <ModalOverlay />
         <ModalContent>
@@ -413,6 +416,6 @@ export default function Page() {
           </Table>
         </section>
       </main>
-    </>
+    </Suspense>
   );
 }
