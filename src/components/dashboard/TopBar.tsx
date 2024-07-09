@@ -79,8 +79,8 @@ export default function TopBar() {
   const handleSubmitEditProfile = (data: UpdateInformation) => {
     const response = settings({...data, personal_id: userInfo.personal_id});
 
-    response.then(({body: { message }}) => {
-
+    response.then(({error, body: { message }}) => {
+      if (!error) {
       toast({
         title: message.title,
         description: message.description,
@@ -88,8 +88,15 @@ export default function TopBar() {
         duration: 9000,
         isClosable: true,
       })
-
       router.replace("/login")
+    } else {
+      toast({
+        title: 'Ha ocurrido un error en el servidor',
+        status: 'error',
+      })
+    }
+
+      
     })
   };
 
