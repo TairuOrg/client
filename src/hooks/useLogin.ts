@@ -30,7 +30,7 @@ export const useLogin = ({isAdmin, setIsInvalid, isInvalid}: useLoginProps) => {
     });
     console.log('paso algo?:', error, body)
     if (!error) {
-      console.log('HOLAAAAAA')
+      
       router.push(isAdmin ? `${PrefixRoutes.ADMIN}/dashboard` : `${PrefixRoutes.CASHIER}/dashboard`);
     }
     setIsInvalid(!isInvalid);

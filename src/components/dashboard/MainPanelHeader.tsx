@@ -22,7 +22,7 @@ export default function MainPanelHeader() {
       <Box w="125px" pl="10" mr ="5px">
         <Logo h={100} w={100} />
       </Box>
-      <strong style={{ marginRight: "10px" }}>¡Hola!</strong>{user?.name}, aquí
+      <strong style={{ marginRight: "10px" }}>¡Hola!</strong>{user?.name} aquí
       tienes tu resumen:
     </Heading>
   );

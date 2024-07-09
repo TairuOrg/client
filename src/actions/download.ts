@@ -11,6 +11,8 @@ export async function download_backup(): Promise<void> {
         Cookie: `SESSION_TOKEN=${session}`,
       },
     });
+
+    console.log('response', await response.text())
   } catch (error) {
 
     throw new Error(`error: ${error}`)

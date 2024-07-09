@@ -9,10 +9,11 @@ const routes = {
     "/admin/settings",
     "/admin/cashier",
     "/admin/reports",
-    '/admin/sales'
+    '/admin/sales',
+    '/backup'
   ],
   cashier: ["/cashier", "/cashier/dashboard", "/cashier/settings", '/cashier/sales'],
-  public: ["/login", "/about-us", "/unauthorized", "/", "/testing", "/sign-up", "/admin/stock",],
+  public: ["/login", "/about-us", "/unauthorized", "/", "/testing", "/sign-up", "/admin/stock"],
 };
 
 export default async function handler(req: NextRequest) {

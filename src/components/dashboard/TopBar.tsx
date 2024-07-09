@@ -41,8 +41,8 @@ import {
 } from "@/schemas/updateInfomation";
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
-import { download_backup } from "@/actions/download";
 import Link from "next/link";
+import { BASE_URL, HOST } from "@/constants";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -110,7 +110,6 @@ export default function TopBar() {
       icon: <MdOutlineBackup size={30} />,
       label: "Respaldo",
       action: () => {
-        download_backup()
         toast({
           title: 'Descargando respaldo...',
           status: 'info'
@@ -309,7 +308,7 @@ export default function TopBar() {
                 transition="transform 0.3s ease-in-out"
               >
                 {index === 1 ? (
-                  <Link href='http://localhost:4000/admin/backup-database'>{icon}</Link>
+                  <Link href={`${HOST}/backup`}> {icon}</Link>
                 ) : (
                   <span>{icon}</span>
                 )}

@@ -1,1 +1,2 @@
-export const BASE_URL = "http://localhost:4000";
+export const BASE_URL = "https://smart-quality-antelope.ngrok-free.app";
+export const HOST = "https://tairu.vercel.app"
