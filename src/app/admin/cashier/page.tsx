@@ -30,6 +30,7 @@ import {
   Input,
   InputGroup,
   InputLeftAddon,
+  Spinner,
 } from "@chakra-ui/react";
 import { MdOutlineSearch } from "react-icons/md";
 import { FaUserPlus } from "react-icons/fa";
@@ -105,9 +106,9 @@ export default function CashierPage() {
       email: cashier.email,
       password: cashier.password,
       residence_location: cashier.state,
-      role: 'cashier'
-    }
-    createCashier(cashier_to_insert); 
+      role: "cashier",
+    };
+    createCashier(cashier_to_insert);
     toast({
       title: "Cajero registrado",
       description: "El cajero ha sido registrado con éxito",
@@ -548,6 +549,16 @@ export default function CashierPage() {
                 </Td>
               </Tr>
             ))}
+
+            {data.length === 0 && (
+              <Tr>
+                <Td colSpan={5}>
+                  <div className="text-3xl flex gap-4 justify-center h-full">
+                    <Spinner size={"lg"} /> Cargando resultados
+                  </div>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </section>

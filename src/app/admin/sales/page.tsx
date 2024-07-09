@@ -2,11 +2,11 @@
 
 import { getSales } from "@/actions/sales";
 import { Sale } from "@/types";
-import { Badge, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import { Badge, Spinner, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 export default function SalesPage() {
-    const [data, setData] = useState<Sale[]>()
+    const [data, setData] = useState<Sale[]>([])
     useEffect(()=> {
         getSales().then(e => {
             setData(e)
@@ -36,7 +36,7 @@ export default function SalesPage() {
       ];
     
   return (
-    <div className="flex flex-col justify-items items-center w-full p-[100px] h-[800px] gap-4">
+    <div className="flex flex-col justify-items items-center w-full p-[100px] min-h-fit max-h-[800px] gap-4">
         <section className="border-teal-700 border-[2px] p-4 rounded-lg w-full h-full overflow-y-scroll">
       <Table variant="striped" size="lg" borderColor="teal.500" overflowY={'scroll'}>
         <Thead>
@@ -79,6 +79,13 @@ export default function SalesPage() {
               </Td>
             </Tr>
           ))}
+          {data.length === 0 && (
+              <Tr>
+                <Td colSpan={5}>
+                  <div className="text-3xl flex gap-4 justify-center h-full"><Spinner size={'lg'}/> Cargando resultados</div>
+                </Td>
+              </Tr>
+            )}
         </Tbody>
       </Table>
       </section>

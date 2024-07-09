@@ -42,6 +42,7 @@ import {
 import { User } from "@/types";
 import { useRouter } from "next/navigation";
 import { download_backup } from "@/actions/download";
+import Link from "next/link";
 
 export default function TopBar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -289,7 +290,7 @@ export default function TopBar() {
           w="fit-content"
           boxShadow={"lg"}
         >
-          {Object.entries(buttons).map(([key, { icon, label, action }]) => (
+          {Object.entries(buttons).map(([key, { icon, label, action }], index) => (
             <Tooltip
               p={2}
               boxSizing="content-box"
@@ -307,7 +308,11 @@ export default function TopBar() {
                 _hover={{ transform: "scale(1.10)" }}
                 transition="transform 0.3s ease-in-out"
               >
-                {icon}
+                {index === 1 ? (
+                  <Link href='http://localhost:4000/admin/backup-database'>{icon}</Link>
+                ) : (
+                  <span>{icon}</span>
+                )}
               </Text>
             </Tooltip>
           ))}

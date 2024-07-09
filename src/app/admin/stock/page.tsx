@@ -34,6 +34,7 @@ import {
   FormLabel,
   Input,
   Checkbox,
+  Spinner,
 } from "@chakra-ui/react";
 import { Entry, Item, EntryItem } from "@/types";
 import { useForm } from "react-hook-form";
@@ -760,6 +761,14 @@ export default function Page() {
                 </Td>
               </Tr>
             ))}
+
+            {data.length === 0 && (
+              <Tr>
+                <Td colSpan={5}>
+                  <div className="text-3xl flex gap-4 justify-center"><Spinner size={'lg'}/> Cargando resultados</div>
+                </Td>
+              </Tr>
+            )}
           </Tbody>
         </Table>
       </section>
