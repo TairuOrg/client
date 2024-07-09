@@ -163,6 +163,17 @@ export default function Page() {
     const entry_to_add = addedEntry as Entry;
     createEntryFn(entry_to_add);
     setReloadFromServer(!reloadFromServer);
+    resetEntry({
+      add_quantity: "",
+      barcode_id: "",
+      category: "",
+      description: "",
+      manufacturer: "",
+      name: "",
+      price: "",
+    });
+    setAddedEntry(null);
+    
     onCloseModalEntries()
   };
 

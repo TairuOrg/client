@@ -346,7 +346,7 @@ export default function Page() {
                     status: "success",
                     duration: 2000,
                   });
-                  
+                  router.replace('/cashier')
                 } else{
                   toast({
                     title: "No se seleccionado una venta",
