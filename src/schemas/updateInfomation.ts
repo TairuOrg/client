@@ -14,8 +14,8 @@ export const updateInformation = z.object({
     .string()
     .length(7, "Número de teléfono inválido")
     .regex(REGEX.phone, "Caracteres inválidos"),
-    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
-    confirmPassword: z.string().min(8, "La contraseña debe tener al menos 8 caracteres"),
+    password: z.string().min(8, "La contraseña debe tener al menos 8 caracteres").optional(),
+    confirmPassword: z.string().min(8, "La contraseña debe tener al menos 8 caracteres").optional(),
     personal_id: z.any(),
     email: z.string().email("Correo electrónico inválido"),
 

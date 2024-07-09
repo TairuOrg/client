@@ -7,7 +7,21 @@ import { cookies } from "next/headers";
 
 export async function settings(data: UpdateInformation): Promise<AuthResponse> {
     try {
-        console.log('data', data)
+        const payload = data.password ? {
+          current_personal_id: data.personal_id,
+          new_password: SHA256(data.password).toString(),
+          new_name: data.fullname,
+          new_phone_number: data.phoneCode + data.phoneNumber,
+          new_email: data.email,
+          new_residence_location: data.state,
+
+        } : {
+          current_personal_id: data.personal_id,
+          new_name: data.fullname,
+          new_phone_number: data.phoneCode + data.phoneNumber,
+          new_email: data.email,
+          new_residence_location: data.state,
+        }
         const session = cookies().get("SESSION_TOKEN")?.value;
         const response = await fetch(`${BASE_URL}/auth/edit-user`, {
           method :'POST',
@@ -15,15 +29,7 @@ export async function settings(data: UpdateInformation): Promise<AuthResponse> {
             "Content-Type": "application/json",
             Cookie: `SESSION_TOKEN=${session}`,
           },
-          body: JSON.stringify({
-            current_personal_id: data.personal_id,
-            new_password: SHA256(data.password).toString(),
-            new_name: data.fullname,
-            new_phone_number: data.phoneCode + data.phoneNumber,
-            new_email: data.email,
-            new_residence_location: data.state,
-
-          })
+          body: JSON.stringify(payload)
           
         });
     
