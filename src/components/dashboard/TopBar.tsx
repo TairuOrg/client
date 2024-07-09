@@ -18,7 +18,8 @@ import {
   Input,
   ModalContent,
   Button,
-  useToast
+  useToast,
+  Checkbox
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiSettings, FiLogOut } from "react-icons/fi";
@@ -49,6 +50,7 @@ export default function TopBar() {
   const { update: updateRevenue } = useRevenue();
   const { update: updateCashier } = useCashierStatus();
   const { update: updateItemsAndCategories } = useItemsAndCategories();
+  const [editPassword, setEditPassword] = useState(false);
   const [userInfo, setUserInfo] = useState<User & { phoneCode: string }>(
     {} as User & { phoneCode: string }
   );
@@ -242,10 +244,16 @@ export default function TopBar() {
                       {errors.state.message}{" "}
                     </span>
                   )}
-
+                  <Checkbox
+                      isChecked={editPassword}
+                      onChange={() => setEditPassword(!editPassword)}
+                    >
+                      ¿Desea editar la contraseña?
+                  </Checkbox>
                   <FormLabel>Contraseña:</FormLabel>
                   <Input
                     type="password"
+                    isDisabled={!editPassword}
                     {...register("password",)}
                   />
                   {errors.password && (
@@ -257,6 +265,7 @@ export default function TopBar() {
                   <FormLabel>Confirmar Contraseña:</FormLabel>
                   <Input
                     type="password"
+                    isDisabled={!editPassword}
                     {...register("confirmPassword")}
                   />
                   {errors.confirmPassword && (
