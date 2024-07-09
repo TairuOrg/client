@@ -22,6 +22,7 @@ export async function settings(data: UpdateInformation): Promise<AuthResponse> {
           new_email: data.email,
           new_residence_location: data.state,
         }
+        console.log('payload a enviar', payload)
         const session = cookies().get("SESSION_TOKEN")?.value;
         const response = await fetch(`${BASE_URL}/auth/edit-user`, {
           method :'POST',

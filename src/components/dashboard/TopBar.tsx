@@ -61,8 +61,9 @@ export default function TopBar() {
     retrieveUserInfo().then((res) => {
       setUserInfo({
         ...res,
-        phoneCode: res.phone_number.slice(3, 6),
-        phone_number: res.phone_number.slice(6),
+        
+        phoneCode: res.phone_number.slice(0, 2),
+        phone_number: res.phone_number.slice(3),
       });
 
     });
@@ -79,12 +80,13 @@ export default function TopBar() {
   const handleSubmitEditProfile = (data: UpdateInformation) => {
     const response = settings({...data, personal_id: userInfo.personal_id});
 
-    response.then(({error, body: { message }}) => {
+    response.then(({error, body}) => {
       if (!error) {
+        console.log(body)
       toast({
-        title: message.title,
-        description: message.description,
-        status: message.notificationStatus,
+        title: 'keke',
+        // description: message.description,
+        // status: message.notificationStatus,
         duration: 9000,
         isClosable: true,
       })
