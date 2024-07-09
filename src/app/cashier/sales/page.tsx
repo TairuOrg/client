@@ -304,11 +304,11 @@ export default function Page() {
             <h2>Total:</h2>
             <p>
               ${" "}
-              {products.reduce((total, product) => {
+              {(products.reduce((total, product) => {
                 return (
-                  total + product.quantity * parseFloat(product.items.price)
+                  (total + product.quantity * parseFloat(product.items.price))
                 );
-              }, 0.0)}
+              }, 0.0)).toFixed(2)}
             </p>
           </div>
 
