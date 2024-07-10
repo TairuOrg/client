@@ -24,6 +24,7 @@ import {
   InputLeftAddon,
   Select,
   useToast,
+  Checkbox,
 } from "@chakra-ui/react";
 import {
   createCustomerSchema,
@@ -50,7 +51,7 @@ export default function Page() {
   const [isCashierLoaded, setIsCashierLoaded] = useState(false);
   const [isCustomerNotFound, setIsCustomerNotFound] = useState(false);
   const [CustomerPersonalID, setCustomerPersonalID] = useState<string>("");
-
+  const [editPassword, setEditPassword] = useState(false)
   const [userInfo, setUserInfo] = useState<User & { phoneCode: string }>(
     {} as User & { phoneCode: string }
   );
@@ -116,8 +117,8 @@ export default function Page() {
       setIsCashierLoaded(true);
       setUserInfo({
         ...d,
-        phoneCode: d.phone_number.slice(3, 6),
-        phone_number: d.phone_number.slice(6),
+        phoneCode: d.phone_number.slice(0,2),
+        phone_number: d.phone_number.slice(3),
       });
     }).catch(error => {
       console.error("Error al obtener la información del cajero:", error);
@@ -311,9 +312,14 @@ export default function Page() {
                       {errors.state.message}{" "}
                     </span>
                   )}
-
+                   <Checkbox
+                      isChecked={editPassword}
+                      onChange={() => setEditPassword(!editPassword)}
+                    >
+                      ¿Desea editar la contraseña?
+                  </Checkbox>
                   <FormLabel>Contraseña:</FormLabel>
-                  <Input type="password" {...register("password")} />
+                  <Input type="password" {...register("password")} isDisabled={!editPassword}/>
                   {errors.password && (
                     <span className="text-red-500">
                       {" "}
@@ -321,7 +327,7 @@ export default function Page() {
                     </span>
                   )}
                   <FormLabel>Confirmar Contraseña:</FormLabel>
-                  <Input type="password" {...register("confirmPassword")} />
+                  <Input type="password" {...register("confirmPassword")} isDisabled={!editPassword} />
                   {errors.confirmPassword && (
                     <span className="text-red-500">
                       {" "}
