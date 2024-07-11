@@ -20,6 +20,7 @@ import {
   checkPINCode,
   saveNewPassword,
 } from "@/services/resetPassword";
+//import { checkPasscode } from "@/actions/checkPassCode";
 
 const ModalStatus = {
   INITIAL: "Initial",
@@ -88,11 +89,14 @@ export default function ResetPassword({
               />
 
               <Button
+                onClick={(e) => {
+                  console.log('enviando')
+                }}
                 type="submit"
                 isDisabled={status !== ModalStatus.INITIAL}
                 colorScheme="teal"
               >
-                Enviar PIN
+                Guardar correo electrónico
               </Button>
             </VStack>
           </form>
@@ -126,11 +130,18 @@ export default function ResetPassword({
                   <PinInputField borderColor="teal.900" />
                   <PinInputField borderColor="teal.900" />
                   <PinInputField borderColor="teal.900" />
+                  <PinInputField borderColor="teal.900" />
+                  <PinInputField borderColor="teal.900" />
                 </PinInput>
               </HStack>
               <Button
                 type="submit"
-                isDisabled={status !== ModalStatus.PIN_SENT || PIN.length !== 4}
+                onClick={e => {
+                  //checkPasscode(PIN).then(e => {
+                   // console.log('siii', e)
+                //  })
+                }}
+                isDisabled={status !== ModalStatus.PIN_SENT || PIN.length !== 6}
                 colorScheme="teal"
               >
                 Validar PIN

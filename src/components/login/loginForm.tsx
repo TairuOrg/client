@@ -78,7 +78,7 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                 )}
               </FormControl>
 
-              {/* {isAdmin && (
+              {isAdmin && (
                 <HStack mt="4" justifyContent="flex-start" width="100%">
                   <Button
                     onClick={onOpen}
@@ -96,7 +96,7 @@ export default function LoginForm({ isAdmin }: { isAdmin: boolean }) {
                     Olvidé mi contraseña
                   </Button>
                 </HStack>
-              )}*/}
+              )}
               <HStack mt="2" justifyContent="center" width="100%">
                 <Button
                   type="submit"
