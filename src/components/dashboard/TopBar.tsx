@@ -84,9 +84,9 @@ export default function TopBar() {
       if (!error) {
         console.log(body)
       toast({
-        title: 'keke',
-        // description: message.description,
-        // status: message.notificationStatus,
+        title: 'Datos actualizados correctamente',
+        description: "Por favor, inicie sesión nuevamente",
+        status: "success",
         duration: 9000,
         isClosable: true,
       })

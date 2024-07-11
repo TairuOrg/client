@@ -20,7 +20,7 @@ import {
   checkPINCode,
   saveNewPassword,
 } from "@/services/resetPassword";
-//import { checkPasscode } from "@/actions/checkPassCode";
+import { checkPasscode, sendNewPassword } from "@/actions/checkPasscode";
 
 const ModalStatus = {
   INITIAL: "Initial",
@@ -30,7 +30,7 @@ const ModalStatus = {
 } as const;
 
 type ModalStatusType = (typeof ModalStatus)[keyof typeof ModalStatus];
-
+// TODO: REFACTOR INTO USING RHF
 export default function ResetPassword({
   isOpen,
   onOpen,
@@ -90,7 +90,7 @@ export default function ResetPassword({
 
               <Button
                 onClick={(e) => {
-                  console.log('enviando')
+                  console.log("enviando");
                 }}
                 type="submit"
                 isDisabled={status !== ModalStatus.INITIAL}
@@ -105,14 +105,14 @@ export default function ResetPassword({
         <FormControl
           onSubmit={(evt: FormEvent<HTMLDivElement>) => {
             evt.preventDefault();
-            const { description, notificationStatus, title, isError } =
-              checkPINCode(PIN);
-            toast({
-              status: notificationStatus,
-              title,
-              description,
+            checkPasscode(PIN).then(({ body: { message }, error }) => {
+              toast({
+                title: message.title,
+                description: message.description,
+                status: message.notificationStatus,
+              });
+              if (!error) setStatus(ModalStatus.READY_TO_RESET_PASSWORD);
             });
-            if (!isError) setStatus(ModalStatus.READY_TO_RESET_PASSWORD);
           }}
         >
           <form>
@@ -136,11 +136,6 @@ export default function ResetPassword({
               </HStack>
               <Button
                 type="submit"
-                onClick={e => {
-                  //checkPasscode(PIN).then(e => {
-                   // console.log('siii', e)
-                //  })
-                }}
                 isDisabled={status !== ModalStatus.PIN_SENT || PIN.length !== 6}
                 colorScheme="teal"
               >
@@ -153,14 +148,17 @@ export default function ResetPassword({
         <FormControl
           onSubmit={(e: FormEvent<HTMLDivElement>) => {
             e.preventDefault();
-            const { description, notificationStatus, title, isError } =
-              saveNewPassword(newPassword);
-            toast({
-              status: notificationStatus,
-              title,
-              description,
-            });
-            if (!isError) setStatus(ModalStatus.PASSWORD_RESET);
+            sendNewPassword(email, newPassword).then(
+              ({ body: { message }, error }) => {
+                toast({
+                  title: message.title,
+                  description: message.description,
+                  status: message.notificationStatus,
+                });
+                if (!error) setStatus(ModalStatus.PASSWORD_RESET);
+                onClose()
+              }
+            );
           }}
         >
           <form>
@@ -196,7 +194,6 @@ export default function ResetPassword({
                 type="submit"
                 isDisabled={!passwordsMatch}
                 colorScheme="teal"
-                onClick={onClose}
               >
                 Restaurar contraseña
               </Button>

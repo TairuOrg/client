@@ -103,7 +103,7 @@ export default function ReportsPage() {
                   statistics: kindOfStatistics,
                 }).then(({ body: { payload } }) => {
                   setStatistics(payload);
-                  console.log(payload);
+                  console.log("Las estadisticas son:", payload);
                 });
                 onCloseFilters();
               }}
@@ -154,30 +154,30 @@ export default function ReportsPage() {
         ) : (
           ""
         )}
-        {statistics?.salesAmount ||
+        {(statistics?.salesAmount ||
           statistics?.salesTotal ||
-          (statistics?.salesAverage && (
-            <div className="flex gap-4 w-full h-[50%]">
-              {statistics?.salesAmount && (
-                <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                  <h1>Ganancia total de ventas</h1>
-                  <h1>{statistics.salesAmount} USD</h1>
-                </div>
-              )}
-              {statistics?.salesTotal && (
-                <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                  <h1>Cantidad de ventas</h1>
-                  <h1>{statistics.salesTotal}</h1>
-                </div>
-              )}
-              {statistics?.salesAverage && (
-                <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                  <h1>Promedio de ventas</h1>
-                  <h1>{statistics.salesAverage} USD</h1>
-                </div>
-              )}
-            </div>
-          ))}
+          statistics?.salesAverage) && (
+          <div className="flex gap-4 w-full h-[50%]">
+            {statistics?.salesAmount && (
+              <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
+                <h1>Ganancia total de ventas</h1>
+                <h1>{statistics.salesTotal} USD</h1>
+              </div>
+            )}
+            {statistics?.salesTotal && (
+              <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
+                <h1>Promedio de ventas</h1>
+                <h1>{statistics.salesAverage}</h1>
+              </div>
+            )}
+            {statistics?.salesAverage && (
+              <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
+                <h1>Promedio de monto ventas</h1>
+                <h1>{statistics.salesAmount} USD</h1>
+              </div>
+            )}
+          </div>
+        )}
 
         {!statistics?.salesAmount &&
           !statistics?.salesTotal &&
