@@ -1,4 +1,5 @@
-import { AuthMessage } from "../types";
+import { BASE_URL } from "@/constants";
+import { AuthMessage, ServerResponse } from "../types";
 
 const URL = {
   email: "https://api.example.com/reset-password-email",
@@ -6,15 +7,18 @@ const URL = {
   newPassword: "https://api.example.com/reset-password-new-password",
 };
 
-export function checkAdminEmail(email: string): AuthMessage {
+export async function checkAdminEmail(email: string): Promise<any> {
   // fetch the admin email from the database
-  return {
-    title: "código PIN envíado",
-    description:
-      "Hemos enviado un código PIN a tu correo electrónico. Por favor, revisa tu bandeja de entrada.",
-    notificationStatus: "success",
-    isError: false,
-  };
+  const response = await fetch(`${BASE_URL}/auth/send-reset-code`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  const data = await response.json();
+  return data
+  
 }
 
 export function checkPINCode(PIN: string): AuthMessage {

@@ -20,7 +20,7 @@ import {
   checkPINCode,
   saveNewPassword,
 } from "@/services/resetPassword";
-import { checkPasscode, sendNewPassword } from "@/actions/checkPasscode";
+import { checkPasscode, sendNewPassword } from "@/actions/resetPassword";
 
 const ModalStatus = {
   INITIAL: "Initial",
@@ -62,15 +62,18 @@ export default function ResetPassword({
         <FormControl
           onSubmit={(evt: FormEvent<HTMLDivElement>) => {
             evt.preventDefault();
-            const { description, notificationStatus, title, isError } =
-              checkAdminEmail(email);
-
-            toast({
-              status: notificationStatus,
-              title,
-              description,
+            checkAdminEmail(email).then((res) => {
+              // TODO: FIX THIS TYPING LATER IN THE SERVER ACTION
+              const { title, description, notificationStatus, isError } = res.body.message;
+              if (!isError) {
+                toast({
+                  status: notificationStatus,
+                  title,
+                  description,
+                });
+                setStatus(ModalStatus.PIN_SENT);
+              }
             });
-            if (!isError) setStatus(ModalStatus.PIN_SENT);
           }}
         >
           <form>
@@ -96,7 +99,7 @@ export default function ResetPassword({
                 isDisabled={status !== ModalStatus.INITIAL}
                 colorScheme="teal"
               >
-                Guardar correo electrónico
+                Enviar PIN al correo
               </Button>
             </VStack>
           </form>
@@ -105,7 +108,7 @@ export default function ResetPassword({
         <FormControl
           onSubmit={(evt: FormEvent<HTMLDivElement>) => {
             evt.preventDefault();
-            checkPasscode(PIN).then(({ body: { message }, error }) => {
+            checkPasscode(email,PIN).then(({ body: { message }, error }) => {
               toast({
                 title: message.title,
                 description: message.description,
@@ -122,6 +125,7 @@ export default function ResetPassword({
               </FormLabel>
               <HStack spacing="4">
                 <PinInput
+                 type='alphanumeric'
                   isDisabled={status !== ModalStatus.PIN_SENT}
                   size="lg"
                   onChange={(pinValue) => setPIN(pinValue)}
@@ -156,7 +160,7 @@ export default function ResetPassword({
                   status: message.notificationStatus,
                 });
                 if (!error) setStatus(ModalStatus.PASSWORD_RESET);
-                onClose()
+                onClose();
               }
             );
           }}

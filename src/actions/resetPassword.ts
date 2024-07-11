@@ -4,18 +4,18 @@ import { AuthResponse } from "@/types";
 import { SHA256 } from "crypto-js";
 import { cookies } from "next/headers";
 
-export async function checkPasscode(pincode: string): Promise<AuthResponse> {
+export async function checkPasscode(email: string, pincode: string): Promise<AuthResponse> {
   try {
 
     const session = cookies().get("SESSION_TOKEN")?.value;
-    const response = await fetch(`${BASE_URL}/auth/signup-access`, {
+    const response = await fetch(`${BASE_URL}/auth/verify-reset-code`, {
 
         method: 'POST',
         headers: {
             "Content-Type": "application/json",
             Cookie: `SESSION_TOKEN=${session}`,
         },
-        body: JSON.stringify({code: pincode})
+        body: JSON.stringify({email, code: pincode})
     });
     
     return await response.json()
