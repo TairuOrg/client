@@ -324,6 +324,7 @@ export default function TopBar() {
                 formData.append("file", payload.file[0]);
 
                 uploadFile(formData).then((res) => {
+                  onCloseBackup()
                   toast({
                     title: "Respaldo subido correctamente",
                     status: "success",
