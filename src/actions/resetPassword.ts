@@ -4,6 +4,21 @@ import { AuthResponse } from "@/types";
 import { SHA256 } from "crypto-js";
 import { cookies } from "next/headers";
 
+
+export async function checkAdminEmail(email: string): Promise<any> {
+  // fetch the admin email from the database
+  const response = await fetch(`${BASE_URL}/auth/send-reset-code`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  const data = await response.json();
+  return data
+  
+}
+
 export async function checkPasscode(email: string, pincode: string): Promise<AuthResponse> {
   try {
 

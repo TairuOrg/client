@@ -9,13 +9,11 @@ export default function MainPanelHeader() {
  
   const [user, setUser] = useState<User>();
 
-  useEffect(() => {
-    (async () => {
-      retrieveUserInfo().then((user) => {
-        setUser(user);
-      });
-    })();
-  }, []);
+  useEffect(()=> {
+    retrieveUserInfo().then((user) => {
+      setUser(user);
+    });
+  }, [])
 
   return (
     <Heading fontWeight="regular" display="flex" alignItems={"center"} mt='10'>

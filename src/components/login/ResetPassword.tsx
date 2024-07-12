@@ -15,12 +15,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { FormEvent, useState } from "react";
-import {
-  checkAdminEmail,
-  checkPINCode,
-  saveNewPassword,
-} from "@/services/resetPassword";
-import { checkPasscode, sendNewPassword } from "@/actions/resetPassword";
+
+import { checkPasscode, sendNewPassword, checkAdminEmail } from "@/actions/resetPassword";
 
 const ModalStatus = {
   INITIAL: "Initial",
