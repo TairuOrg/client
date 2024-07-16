@@ -45,13 +45,14 @@ import {
   updateInformation,
   UpdateInformation,
 } from "@/schemas/updateInfomation";
+import { logOut } from "@/actions/auth";
 
 export default function Page() {
   const [cashier, setCashier] = useState<User>();
   const [isCashierLoaded, setIsCashierLoaded] = useState(false);
   const [isCustomerNotFound, setIsCustomerNotFound] = useState(false);
   const [CustomerPersonalID, setCustomerPersonalID] = useState<string>("");
-  const [editPassword, setEditPassword] = useState(false)
+  const [editPassword, setEditPassword] = useState(false);
   const [userInfo, setUserInfo] = useState<User & { phoneCode: string }>(
     {} as User & { phoneCode: string }
   );
@@ -67,8 +68,6 @@ export default function Page() {
     resolver: zodResolver(updateInformation),
   });
 
-  
-
   const handleSubmitEditProfile = (data: UpdateInformation) => {
     const response = settings({ ...data, personal_id: userInfo.personal_id });
 
@@ -80,7 +79,7 @@ export default function Page() {
         duration: 9000,
         isClosable: true,
       });
-      router.replace("/login")
+      router.replace("/login");
     });
   };
 
@@ -112,20 +111,20 @@ export default function Page() {
   });
 
   useEffect(() => {
-    retrieveUserInfo("cashier").then((d) => {
-      setCashier(d);
-      setIsCashierLoaded(true);
-      setUserInfo({
-        ...d,
-        phoneCode: d.phone_number.slice(0,2),
-        phone_number: d.phone_number.slice(3),
+    retrieveUserInfo("cashier")
+      .then((d) => {
+        setCashier(d);
+        setIsCashierLoaded(true);
+        setUserInfo({
+          ...d,
+          phoneCode: d.phone_number.slice(0, 2),
+          phone_number: d.phone_number.slice(3),
+        });
+      })
+      .catch((error) => {
+        console.error("Error al obtener la información del cajero:", error);
       });
-    }).catch(error => {
-      console.error("Error al obtener la información del cajero:", error);
-    });
   }, []);
-
-  
 
   const {
     isOpen: isOpenModalCustomer,
@@ -312,14 +311,18 @@ export default function Page() {
                       {errors.state.message}{" "}
                     </span>
                   )}
-                   <Checkbox
-                      isChecked={editPassword}
-                      onChange={() => setEditPassword(!editPassword)}
-                    >
-                      ¿Desea editar la contraseña?
+                  <Checkbox
+                    isChecked={editPassword}
+                    onChange={() => setEditPassword(!editPassword)}
+                  >
+                    ¿Desea editar la contraseña?
                   </Checkbox>
                   <FormLabel>Contraseña:</FormLabel>
-                  <Input type="password" {...register("password")} isDisabled={!editPassword}/>
+                  <Input
+                    type="password"
+                    {...register("password")}
+                    isDisabled={!editPassword}
+                  />
                   {errors.password && (
                     <span className="text-red-500">
                       {" "}
@@ -327,7 +330,11 @@ export default function Page() {
                     </span>
                   )}
                   <FormLabel>Confirmar Contraseña:</FormLabel>
-                  <Input type="password" {...register("confirmPassword")} isDisabled={!editPassword} />
+                  <Input
+                    type="password"
+                    {...register("confirmPassword")}
+                    isDisabled={!editPassword}
+                  />
                   {errors.confirmPassword && (
                     <span className="text-red-500">
                       {" "}
@@ -528,7 +535,16 @@ export default function Page() {
             </div>
           </section>
           <section className="flex gap-4 w-full justify-center">
-            <div className="bg-teal-300 h-[200px] w-[800px] rounded-xl shadow-lg border-2 transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer">
+            <div
+              className="bg-teal-300 h-[200px] w-[800px] rounded-xl shadow-lg border-2 transition-transform duration-300 ease-in-out hover:scale-105 cursor-pointer"
+              onClick={() => {
+                logOut("cashier").then(() => {
+                  toast({
+                    title: "Sesión cerrada",
+                  });
+                });
+              }}
+            >
               <span className="flex w-full flex-col h-full text-3xl text-teal-800 justify-center items-center">
                 <CiLogout size={100} />
                 Cerrar sesión

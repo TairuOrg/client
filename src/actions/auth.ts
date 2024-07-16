@@ -108,8 +108,23 @@ export async function signUp(
 
   return result;
 }
+// When no role is provided it means it is an admin
+// If it's a cashier then fetch the provided endpoint to update the status
 
-export async function logOut() {
+export async function logOut(role: string = "admin") {
+  const session = cookies().get("SESSION_TOKEN")?.value;
+  if(role === "cashier") {
+    const response =  await fetch(`${BASE_URL}/auth/logout-cashier`, {
+      headers: {
+        Cookie: `SESSION_TOKEN=${session}`,
+      }
+    });
+    console.log(await response.json())
+    if(response.ok) {
+      cookies().delete("SESSION_TOKEN");
+      redirect("/login");
+    }
+  }
   cookies().delete("SESSION_TOKEN");
   redirect("/login");
 }

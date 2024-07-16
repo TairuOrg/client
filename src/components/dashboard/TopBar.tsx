@@ -137,10 +137,6 @@ export default function TopBar() {
       label: "Respaldo",
       action: () => {
         onOpenBackup();
-        toast({
-          title: "Descargando respaldo...",
-          status: "info",
-        });
       },
     },
     settings: {
@@ -315,8 +311,17 @@ export default function TopBar() {
       <Modal isOpen={isOpenBackup} onClose={onCloseBackup}>
         <ModalContent>
           <ModalBody className="flex flex-col gap-4">
-            <Button onClick={(e) => setIsDownloadable(!isDownloadable)}>
-              <Link href={`${HOST}/backup`}>Descargar</Link>
+            <Button
+              onClick={(e) => {
+                setIsDownloadable(!isDownloadable);
+                toast({
+                  title: "Descargando respaldo...",
+                  status: "info",
+                });
+              }}
+            >
+              <a href={`${HOST}/backup`}>Descargar</a> 
+              {/* // Instead of the Link component, because it pre-fecthes and caches the page after the first download. */}
             </Button>
             <form
               onSubmit={handleSubmitUploadBackup((payload) => {
@@ -324,7 +329,7 @@ export default function TopBar() {
                 formData.append("file", payload.file[0]);
 
                 uploadFile(formData).then((res) => {
-                  onCloseBackup()
+                  onCloseBackup();
                   toast({
                     title: "Respaldo subido correctamente",
                     status: "success",
