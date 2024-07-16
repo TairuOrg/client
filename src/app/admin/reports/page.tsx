@@ -120,7 +120,7 @@ export default function ReportsPage() {
           <div className="flex gap-4 w-full h-[50%] bg-red-">
             {statistics?.topTenItems && (
               <div className="flex flex-col items-center w-full h-full  pt-4 bg-white shadow-lg rounded-lg">
-                <h1>Top artículos más vendidos este {frequency}</h1>
+                <h1>Top artículos más vendidos</h1>
                 <ResponsiveContainer width={"100%"} height={"100%"}>
                   <BarChart
                     data={statistics?.topTenItems}
@@ -140,7 +140,7 @@ export default function ReportsPage() {
             )}
             {statistics?.topTenCategories && (
               <div className="flex flex-col items-center w-full h-full pt-4 bg-white shadow-lg rounded-lg">
-                <h1>Top categorías más vendidos este {frequency}</h1>
+                <h1>Top categorías más vendidos</h1>
                 <ResponsiveContainer width={"100%"} height={"100%"}>
                   <BarChart data={statistics?.topTenCategories}>
                     <XAxis dataKey="category" />
