@@ -305,7 +305,7 @@ export default function Page() {
   });
 
   return (
-    <div className="flex flex-col w-full items-center p-[100px] gap-4">
+    <div className="flex flex-col w-full items-center p-[100px] gap-4 min-h-fit max-h-[800px]">
       <div className="flex gap-4 w-fit ">
         <form className="flex flex-row gap-4">
           <input
@@ -349,7 +349,7 @@ export default function Page() {
         </button>
         
       </div>
-      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4">
+      <section className="w-full h-fit rounded-lg border-teal-700 border-[2px] p-4 overflow-y-scroll">
         <Modal isOpen={isOpenModalFilter} onClose={onCloseModalFilter}>
           <ModalOverlay />
           <ModalContent>

@@ -251,7 +251,7 @@ export default function CashierPage() {
   };
 
   return (
-    <div className="flex flex-col justify-items items-center w-full p-[100px] gap-4">
+    <div className="flex flex-col justify-items items-center w-full p-[100px] min-h-fit max-h-[800px] gap-4">
       <form className="flex flex-row gap-4">
         <input
           type="text"
@@ -290,7 +290,7 @@ export default function CashierPage() {
         </button>
       </form>
 
-      <section className="border-teal-700 border-[2px] p-4 rounded-lg w-full h-fit">
+      <section className="border-teal-700 border-[2px] p-4 rounded-lg w-full h-full overflow-y-scroll">
         <AlertDialog
           isOpen={isOpenDeleteCashier}
           onClose={onCloseDeleteCashier}
@@ -503,7 +503,8 @@ export default function CashierPage() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        <Table variant="striped" size="lg" borderColor="teal.500">
+        
+        <Table variant="striped" size="lg">
           <Thead>
             <Tr>
               {col.map((column, index) => (
