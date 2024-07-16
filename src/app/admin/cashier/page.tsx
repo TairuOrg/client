@@ -81,6 +81,7 @@ export default function CashierPage() {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<CashierSchema>({
     resolver: zodResolver(cashierSchema),
     mode: "onChange",
@@ -121,6 +122,9 @@ export default function CashierPage() {
     console.log("se ejecutaaa");
     e.preventDefault();
     handleSubmit(handleSubmitValid)();
+    setReloadFromServer(!reloadFromServer);
+    reset()
+    onCloseRegisterCashier()
   };
 
   const handleFilterPreferences = () => {
@@ -498,9 +502,6 @@ export default function CashierPage() {
                 </form>
               </div>
             </ModalBody>
-            <ModalFooter>
-              <Button variant="ghost">Cerrar</Button>
-            </ModalFooter>
           </ModalContent>
         </Modal>
         

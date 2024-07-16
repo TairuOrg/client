@@ -74,6 +74,12 @@ export default function Page() {
     onOpen: onOpenModalDetails,
     onClose: onCloseModalDetails,
   } = useDisclosure();
+
+  const handleOnCloseModalDetails = () => {
+    onCloseModalDetails()
+    setIsEditing(!isEditing)
+    resetItemModificationForm()
+  }
   const {
     isOpen: isOpenModalFilter,
     onOpen: onOpenModalFilter,
@@ -112,6 +118,7 @@ export default function Page() {
     register: registerItem,
     handleSubmit: handleSubmitItem,
     formState: { errors: errorsItem },
+    reset: resetItemModificationForm,
   } = useForm<ModifyItemSchema>({
     resolver: zodResolver(
       modifyItemSchema(selectedItem?.[0].quantity as number)
@@ -608,7 +615,7 @@ export default function Page() {
           </ModalContent>
         </Modal>
 
-        <Modal isOpen={isOpenModalDetails} onClose={onCloseModalDetails}>
+        <Modal isOpen={isOpenModalDetails} onClose={handleOnCloseModalDetails}>
           <ModalOverlay />
           <ModalContent>
             <ModalHeader>Producto: {selectedItem?.[0].name}</ModalHeader>

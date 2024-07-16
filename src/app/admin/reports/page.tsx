@@ -21,7 +21,7 @@ export default function ReportsPage() {
   const [statistics, setStatistics] = useState<Statistics>();
   const [reloadFromServer, setReloadFromServer] = useState(false);
   const [kindOfStatistics, setKindOfStatistics] = useState<string[]>([]);
-  const [frequency, setFrequency] = useState<string>("Este mes");
+  const [frequency, setFrequency] = useState<string>("Este año");
 
   const {
     isOpen: isOpenFilters,
@@ -89,7 +89,7 @@ export default function ReportsPage() {
 
             <h1>Seleccione la frecuencia de los datos</h1>
             <hr />
-            <Select onChange={(e) => setFrequency(e.target.value)}>
+            <Select onChange={(e) => setFrequency(e.target.value)} defaultValue={"Este año"}>
               <option value="Este año">Este año</option>
               <option value="Este mes">Este mes</option>
               <option value="Hoy">Hoy</option>
@@ -172,7 +172,7 @@ export default function ReportsPage() {
             )}
             {statistics?.salesAverage && (
               <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                <h1>Promedio de ventas</h1>
+                <h1>Cantidad de ventas</h1>
                 <h1>{statistics.salesAmount}</h1>
               </div>
             )}
