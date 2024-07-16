@@ -544,7 +544,7 @@ export default function CashierPage() {
                 </Td>
                 <Td>
                   <div className="text-center">
-                    {cashier.User.phone_number.length === 0
+                    {cashier.User.is_deleted
                       ? "Número no asignado"
                       : cashier.User.phone_number}
                   </div>
