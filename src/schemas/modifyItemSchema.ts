@@ -8,6 +8,7 @@ export const modifyItemSchema = (maxStock: number) =>
       .max(70, "El nombre del artículo no puede tener más de 50 caracteres"),
     price: z
       .string()
+      .min(1, "El precio del artículo no puede estar vacío")
       .regex(
         /^\d{1,4}(\.\d{1,2})?$/,
         "El precio no cumple con el formato deseado de hasta 4 dígitos enteros y 2 decimales"

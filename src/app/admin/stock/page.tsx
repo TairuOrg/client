@@ -714,7 +714,7 @@ export default function Page() {
                       Precio Unitario:
                     </FormLabel>
                     <Input
-                      type="number"
+                      type="text"
                       isDisabled={!isEditing}
                       {...registerItem("price")}
                     />
