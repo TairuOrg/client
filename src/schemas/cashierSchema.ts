@@ -1,6 +1,7 @@
 import z from "zod";
 const REGEX = {
-  id: new RegExp(/^[^a-zA-Z*/+.\?\\'[\]{}><!~|¡=¿@#$%^&()_`:;"-]+$/),
+  id: new RegExp(/^[^a-zA-Z*/+.\?\\'[\]{}><!~|¡=¿@#$%^&()_`:;",\- ]+$/),
+
   phone: new RegExp(/^[^a-zA-Z*/+.\?\\'[\]{}><!~|¡=¿@#$%^&()_`:;"-]+$/),
   name: new RegExp(/^[A-Za-zÁÉÍÓÚáéíóúÑñÜü' ]+$/) ,
 };
