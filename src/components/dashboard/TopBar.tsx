@@ -123,15 +123,15 @@ export default function TopBar() {
     onClose: onCloseSettings,
   } = useDisclosure();
   const buttons = {
-    update: {
-      icon: <TbReload size={30} />,
-      label: "Actualizar",
-      action: () => {
-        updateRevenue();
-        updateCashier();
-        updateItemsAndCategories();
-      },
-    },
+      // update: {
+      //   icon: <TbReload size={30} />,
+      //   label: "Actualizar",
+      //   action: () => {
+      //     updateRevenue();
+      //     updateCashier();
+      //     updateItemsAndCategories();
+      //   },
+      // },
     backup: {
       icon: <MdOutlineBackup size={30} />,
       label: "Respaldo",
