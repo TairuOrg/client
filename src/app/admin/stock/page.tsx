@@ -217,7 +217,7 @@ export default function Page() {
                 size="lg"
                 colorScheme={item.quantity > 50 ? "green" : "red"}
               >
-                {item.quantity > 50 ? "Disponible" : "Últimas unidades"}
+                {item.quantity > 50 ? "Disponible" : item.quantity > 0 ? "Últimas unidades" : 'Agotado'}
               </Badge>
             ),
             btnAction: (
