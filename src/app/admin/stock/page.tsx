@@ -557,7 +557,7 @@ export default function Page() {
                       }}
                       placeholder="Seleccione el producto.">
                         {rawData.map((item) => (
-                          <option value={item.barcode_id}>{item.barcode_id} | {item.name}</option>
+                          <option key={item.barcode_id} value={item.barcode_id}>{item.barcode_id} | {item.name}</option>
                         ))}
                       </Select>
                     <FormLabel>
