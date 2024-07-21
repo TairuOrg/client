@@ -119,6 +119,7 @@ export default function Page() {
     handleSubmit: handleSubmitItem,
     formState: { errors: errorsItem },
     reset: resetItemModificationForm,
+    setValue: setValueItem,
   } = useForm<ModifyItemSchema>({
     resolver: zodResolver(
       modifyItemSchema(selectedItem?.[0].quantity as number)
@@ -127,6 +128,16 @@ export default function Page() {
     shouldFocusError: true,
     delayError: 5,
   });
+  // Set the values of the form to the selected item
+  // This should be done by setting DefaultValues props in each input
+  // but it is not working as expected
+  // so we are setting the values manually when the item is selected
+  // One day we will fix this issue and remove this code block :)
+    setValueItem('name', selectedItem?.[0].name as string);
+    setValueItem('barcode_id', selectedItem?.[0].barcode_id as string);
+    setValueItem('quantity', selectedItem?.[0].quantity.toString() as string);
+    setValueItem('manufacturer', selectedItem?.[0].manufacturer as string);
+    setValueItem('price', selectedItem?.[0].price as string);
 
   const {
     register: registerEntry,
