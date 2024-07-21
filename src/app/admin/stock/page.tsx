@@ -92,14 +92,20 @@ export default function Page() {
     onClose: onCloseModalEntries,
   } = useDisclosure();
 
-  const handleModifyItemSubmit = (d: ModifyItemSchema) => {
+  const handleModifyItemSubmit = async (d: ModifyItemSchema) => {
     const dataToSend = {
       ...d,
       category: selectedItem?.[0].category as string,
       old_barcode_id: selectedItem?.[0].barcode_id as string,
     };
     try {
-      updateStockItem(dataToSend);
+      const {error} =  await updateStockItem(dataToSend);
+      if (error) {
+        toast({
+          title: "No se ha podido actualizar el artículo",
+          status: "error",
+        });
+      }
       toast({
         title: "Artículo actualizado correctamente",
         status: "success",
