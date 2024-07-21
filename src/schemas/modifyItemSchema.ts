@@ -6,14 +6,14 @@ export const modifyItemSchema = (maxStock: number) =>
       .string()
       .min(1, "El nombre del artículo no puede estar vacío")
       .max(70, "El nombre del artículo no puede tener más de 50 caracteres"),
-      price: z
+    price: z
       .string()
       .min(1, "El precio del artículo no puede estar vacío")
       .regex(
         /^(?!-)\d{1,4}(\.\d{1,2})?$/,
         "El precio no cumple con el formato deseado de hasta 4 dígitos enteros y 2 decimales y no puede ser negativo"
       ),
-    
+
     barcode_id: z
       .string()
       .min(4, "El código de barras debe tener al menos 4 dígitos")
@@ -24,10 +24,13 @@ export const modifyItemSchema = (maxStock: number) =>
       ),
     quantity: z
       .string()
-      .min(1, "El stock del artículo no puede estar vacío")
-      .refine((currentStock: string) => parseInt(currentStock) <= maxStock && parseInt(currentStock) >= 0, {
+      .refine((value) => value.trim() === "" || parseInt(value) >= 1, {
+        message: "El stock del artículo debe ser mayor a 0",
+      })
+      .refine((value) => value.trim() === "" || parseInt(value) <= maxStock, {
         message: `El stock no puede ser mayor al stock máximo (${maxStock})`,
       }),
+
     manufacturer: z
       .string()
       .min(1, "El fabricante del artículo no puede estar vacío")

@@ -105,11 +105,12 @@ export default function Page() {
           title: "No se ha podido actualizar el artículo",
           status: "error",
         });
+      } else {
+        toast({
+          title: "Artículo actualizado correctamente",
+          status: "success",
+        });
       }
-      toast({
-        title: "Artículo actualizado correctamente",
-        status: "success",
-      });
       setReloadFromServer(true);
       onCloseModalDetails();
     } catch (error) {
