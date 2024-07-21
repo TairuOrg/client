@@ -53,6 +53,11 @@ enum FilterOptions {
 
 export default function Page() {
   const [data, setData] = useState<Item[]>([]); // data is an array of items
+  const [rawData, setRawData] = useState<Item[]>([]);
+  // This state should work as a flag to determine if the selected Item is loaded from the server (which means it already exists and no need to create a new one but to update its quantity)
+  const [alreadyExistingItems, setAlreadyExistingItems] = useState<boolean>(false);
+  // This should only be used when the form is being filled to create a new entry and all the items are already in the system, this isn't a good practice (prolly) but otherwise the form will throw a required error because the description isn't filled.
+  const [entryDescription, setEntryDescription] = useState<string>("");
   const [filterOption, setFilterOption] = useState<string>(FilterOptions.NAME);
   const [filterValue, setFilterValue] = useState<string>("");
   const [reloadFromServer, setReloadFromServer] = useState(false);
@@ -152,7 +157,7 @@ export default function Page() {
     formState: { errors: errorsEntry },
     reset: resetEntry,
   } = useForm<AddItemSchemaType>({
-    resolver: zodResolver(addItemSchema),
+    resolver: zodResolver(addItemSchema(rawData, alreadyExistingItems)),
     mode: "onChange",
     shouldFocusError: true,
     delayError: 5,
@@ -208,7 +213,7 @@ export default function Page() {
         const {
           body: { payload },
         } = await stockItems();
-
+        setRawData(payload)
         const newPayload = payload.map((item: Item) => {
           return {
             ...item,
@@ -504,7 +509,8 @@ export default function Page() {
                         data,
                       ],
                     });
-
+                    setAlreadyExistingItems(false);
+                    
                     resetEntry({
                       add_quantity: "",
                       barcode_id: "",
@@ -525,6 +531,7 @@ export default function Page() {
                       type="text"
                       {...registerEntry("description")}
                       isDisabled={Boolean(addedEntry)}
+                      onChange={(e) => setEntryDescription(e.target.value)}
                     />
                     {errorsEntry.description && (
                       <span className="text-red-500">
@@ -532,11 +539,31 @@ export default function Page() {
                         {errorsEntry.description.message}
                       </span>
                     )}
-
+                      <FormLabel>
+                        Elegir artículo ya existente:
+                      </FormLabel>
+                      <Select onChange={(e) => {
+                        const item = rawData.find((i) => i.barcode_id === e.target.value)
+                        setAlreadyExistingItems(true)
+                        resetEntry({
+                          add_quantity: "",
+                          barcode_id: item?.barcode_id,
+                          category: item?.category,
+                          description: entryDescription,
+                          manufacturer: item?.manufacturer,
+                          name: item?.name,
+                          price: item?.price.toString(),
+                        })
+                      }}
+                      placeholder="Seleccione el producto.">
+                        {rawData.map((item) => (
+                          <option value={item.barcode_id}>{item.barcode_id} | {item.name}</option>
+                        ))}
+                      </Select>
                     <FormLabel>
                       Nombre del artículo:
                     </FormLabel>
-                    <Input type="text" {...registerEntry("name")} />
+                    <Input type="text" {...registerEntry("name")} isDisabled={alreadyExistingItems}/>
                     {errorsEntry.name && (
                       <span className="text-red-500">
                         {" "}
@@ -545,7 +572,7 @@ export default function Page() {
                     )}
 
                     <FormLabel> Código de barras</FormLabel>
-                    <Input type="text" {...registerEntry("barcode_id")} />
+                    <Input type="text" {...registerEntry("barcode_id")} isDisabled={alreadyExistingItems}/>
                     {errorsEntry.barcode_id && (
                       <span className="text-red-500">
                         {" "}
@@ -554,7 +581,7 @@ export default function Page() {
                     )}
 
                     <FormLabel>Fabricante:</FormLabel>
-                    <Input type="text" {...registerEntry("manufacturer")} />
+                    <Input type="text" {...registerEntry("manufacturer")} isDisabled={alreadyExistingItems}/>
                     {errorsEntry.manufacturer && (
                       <span className="text-red-500">
                         {" "}
@@ -566,6 +593,7 @@ export default function Page() {
                     <Select
                       placeholder="Seleccione una categoría"
                       {...registerEntry("category")}
+                      isDisabled={alreadyExistingItems}
                     >
                       <option value="higiene">Higiene</option>
                       <option value="confitería">Confitería</option>
@@ -589,7 +617,7 @@ export default function Page() {
                     )}
 
                     <FormLabel>Precio unitario:</FormLabel>
-                    <Input type="string" {...registerEntry("price")} />
+                    <Input type="string" {...registerEntry("price")} isDisabled={alreadyExistingItems}/>
                     {errorsEntry.price && (
                       <span className="text-red-500">
                         {" "}
