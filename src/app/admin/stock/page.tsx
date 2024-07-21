@@ -663,6 +663,7 @@ export default function Page() {
                       type="text"
                       isDisabled={!isEditing}
                       {...registerItem("name")}
+                      defaultValue={selectedItem?.[0].name}
                     />
                     {errorsItem.name && (
                       <span className="text-red-500">
@@ -677,6 +678,7 @@ export default function Page() {
                       type="number"
                       isDisabled={!isEditing}
                       {...registerItem("barcode_id")}
+                      defaultValue={selectedItem?.[0].barcode_id}
                     />
                     {errorsItem.barcode_id && (
                       <span className="text-red-500">
@@ -691,6 +693,7 @@ export default function Page() {
                       type="number"
                       isDisabled={!isEditing}
                       {...registerItem("quantity")}
+                      defaultValue={selectedItem?.[0].quantity}
                     />
                     {errorsItem.quantity && (
                       <span className="text-red-500">
@@ -703,6 +706,7 @@ export default function Page() {
                       type="text"
                       isDisabled={!isEditing}
                       {...registerItem("manufacturer")}
+                      defaultValue={selectedItem?.[0].manufacturer}
                     />
                     {errorsItem.manufacturer && (
                       <span className="text-red-500">
@@ -717,6 +721,7 @@ export default function Page() {
                       type="text"
                       isDisabled={!isEditing}
                       {...registerItem("price")}
+                      defaultValue={selectedItem?.[0].price}
                     />
                     {errorsItem.price && (
                       <span className="text-red-500">
