@@ -139,13 +139,21 @@ export default function CashierPage() {
   };
   const handleDeleteCashierBtn = async (_e: any) => {
     try {
-      const response = await deleteCashier(selectedCashier?.[0].User.personal_id as string);
-      console.log("Cajero que ha sido eliminado: ", response)
-      onCloseDeleteCashier();
-      toast({
-        title: "Se ha eliminado correctamente el cajero",
-        status: "info",
-      });
+      const {error} = await deleteCashier(selectedCashier?.[0].User.personal_id as string);
+      
+
+      if(error) {
+        throw new Error("An error occurred while deleting the cashier");
+      
+      }
+      else {
+        onCloseDeleteCashier();
+        toast({
+          title: "Se ha eliminado correctamente el cajero",
+          status: "info",
+        });
+        setReloadFromServer(!reloadFromServer);
+      }
       setReloadFromServer(!reloadFromServer);
     } catch (e) {
       toast({

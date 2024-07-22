@@ -8,6 +8,7 @@ export async function getStatistics(
   payload: getStatisticsData
 ): Promise<ServerResponse<Statistics>> {
   try {
+    console.log("payload", payload);
     const session = cookies().get("SESSION_TOKEN")?.value;
     const response = await fetch(`${BASE_URL}/admin/get-statistics`, {
       method: "POST",
@@ -19,6 +20,7 @@ export async function getStatistics(
     });
 
     const result: ServerResponse<Statistics> = await response.json();
+    console.log("result", result);
     return result;
   } catch (e) {
     console.error(e);

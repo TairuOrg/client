@@ -160,20 +160,20 @@ export default function ReportsPage() {
           <div className="flex gap-4 w-full h-[50%]">
             {statistics?.salesAmount && (
               <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                <h1>Ganancia total de ventas</h1>
-                <h1>{statistics.salesTotal} USD</h1>
-              </div>
-            )}
-            {statistics?.salesTotal && (
-              <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                <h1>Promedio de monto de ventas</h1>
-                <h1>{statistics.salesAverage?.toFixed(3)} USD</h1>
+                <h1>Cantidad total de ventas</h1>
+                <h1>{statistics.salesAmount}</h1>
               </div>
             )}
             {statistics?.salesAverage && (
               <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
-                <h1>Cantidad de ventas</h1>
-                <h1>{statistics.salesAmount}</h1>
+                <h1>Promedio de monto de ventas</h1>
+                <h1>{statistics.salesAverage?.toFixed(2)} USD</h1>
+              </div>
+            )}
+            {statistics?.salesTotal && (
+              <div className="flex flex-col justify-center items-center w-full h-full pt-4 bg-white shadow-lg rounded-xl text-2xl">
+                <h1>Ganancia total de ventas</h1>
+                <h1>{statistics.salesTotal?.toFixed(2)} USD</h1>
               </div>
             )}
           </div>
