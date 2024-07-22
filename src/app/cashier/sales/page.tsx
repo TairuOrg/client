@@ -166,8 +166,8 @@ export default function Page() {
               <p>Cantidad disponible: {selectedProduct?.[0]?.quantity}</p>
               <p>
                 Cantidad agregada:{" "}
-                {products && selectedProduct
-                  ? products[selectedProduct?.[1]].quantity
+                {products && selectedProduct && selectedProduct[1] !== undefined && products[selectedProduct[1]]
+                  ? products[selectedProduct[1]].quantity
                   : ""}
               </p>
               <p>Código de barras:{selectedProduct?.[0]?.barcode_id} </p>
@@ -186,12 +186,12 @@ export default function Page() {
                 <NumberInput
                   onChange={(e) => setQuantityToModify(parseInt(e))}
                   defaultValue={
-                    products && selectedProduct
-                      ? products[selectedProduct?.[1]].quantity
-                      : ""
+                    selectedProduct !== undefined && products?.[selectedProduct[1]]?.quantity !== undefined
+                      ? products[selectedProduct[1]].quantity
+                      : 0
                   }
                   min={0}
-                  max={selectedProduct?.[0].quantity}
+                  max={selectedProduct?.[0]?.quantity ?? 0}
                   isDisabled={!isNumberInputEnabled}
                 >
                   <NumberInputField />
@@ -228,10 +228,18 @@ export default function Page() {
                     colorScheme="red"
                     onClick={(e) => {
                       try {
+
                         if (salesID && selectedProduct) {
                           removeItemFromSale({
                             sale_id: salesID.toString(),
                             item_barcode_id: selectedProduct[0].barcode_id,
+                          });
+                          onCloseItemModal();
+                          setReloadDataFromServer(prevState => !prevState);
+                          toast({
+                            title: "Recargando...",
+                            status: "info",
+                            duration: 900,
                           });
                         } else {
                           toast({
