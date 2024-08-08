@@ -16,11 +16,11 @@
     - [X] Name
     - [ ] Email (doesn't apply)
     - [X] personal_Identification
-  - [ ] Modify basic information
+  - [x] Modify basic information
 - [ ] Stadistics
-  - [ ] Generate reports
-    - [ ] Stock
-    - [ ] Cashier's productivity
+  - [X] Generate reports
+    - [X] Stock
+    - [ - ] Cashier's productivity
 
 ### Cashier
 
